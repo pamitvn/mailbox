@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,7 +12,32 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+mix.setPublicPath('public');
+
+mix.ts('resources/js/app.ts', 'public/app/js', {
+   configFile: 'tsconfig.json',
+   transpileOnly: true,
+})
+   .webpackConfig({
+      output: {
+         filename: '[name].js',
+         chunkFilename: 'chunks/[name].[chunkhash].js',
+      },
+   })
+   .vue({ version: 3 })
+   .alias({
+      '~': path.join(__dirname, 'resources', 'js'),
+      ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
+   })
+;
+
+mix.postCss('resources/css/app.css', 'public/app/css', [
+   //
+]);
+
+mix.copyDirectory('resources/dist/', 'public');
+
+if (mix.inProduction()) {
+   mix.version()
+      .extract();
+}

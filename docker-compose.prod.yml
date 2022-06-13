@@ -1,73 +1,75 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    app:
-        build:
-            context: ./docker/prod
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: php:8.1-fpm
-        volumes:
-            - ./:/var/www/html
-            - ./docker/prod/php.ini:/usr/local/etc/php/conf.d/99-prod.ini
-        environment:
-            WWWUSER: '${WWWUSER}'
-        networks:
-            - app-network
-        depends_on:
-            - mysql
-            - redis
-    webserver:
-        image: nginx:alpine
-        restart: unless-stopped
-        tty: true
-        ports:
-            - "80:80"
-            - "443:443"
-        volumes:
-            - ./:/var/www/html
-            - ./docker/prod/nginx:/etc/nginx/conf.d
-        networks:
-            - app-network
-    mysql:
-        image: 'mysql/mysql-server:8.0'
-        ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: "%"
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
-        volumes:
-            - 'sail-mysql:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-            - './docker/prod/mysql.conf:/etc/mysql/my.cnf'
-        networks:
-            - app-network
-        healthcheck:
-            test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
-            retries: 3
-            timeout: 5s
-    redis:
-        image: 'redis:alpine'
-        ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
-        volumes:
-            - 'sail-redis:/data'
-        networks:
-            - app-network
-        healthcheck:
-            test: [ "CMD", "redis-cli", "ping" ]
-            retries: 3
-            timeout: 5s
+  app:
+    build:
+      context: ./docker/prod
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP}'
+    image: php:8.1-fpm
+    ports:
+      - '${LARAVEL_WEBSOCKETS_PORT:-6001}:6001'
+    volumes:
+      - ./:/var/www/html
+      - ./docker/prod/php.ini:/usr/local/etc/php/conf.d/99-prod.ini
+    environment:
+      WWWUSER: '${WWWUSER}'
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+      - redis
+  webserver:
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/prod/nginx:/etc/nginx/conf.d
+    networks:
+      - app-network
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+    volumes:
+      - 'sail-mysql:/var/lib/mysql'
+      - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+      - './docker/prod/mysql.conf:/etc/mysql/my.cnf'
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'sail-redis:/data'
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      timeout: 5s
 networks:
-    app-network:
-        driver: bridge
+  app-network:
+    driver: bridge
 volumes:
-    sail-mysql:
-        driver: local
-    sail-redis:
-        driver: local
+  sail-mysql:
+    driver: local
+  sail-redis:
+    driver: local

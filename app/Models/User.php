@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -19,8 +20,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'balance',
+        'is_admin',
+        'api_key'
     ];
 
     /**
@@ -40,5 +45,21 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'balance' => 'integer'
     ];
+
+    public function isAdministrator()
+    {
+        return $this->is_admin;
+    }
+
+    public function blacklisted(): HasOne
+    {
+        return $this->hasOne(UserBlacklisted::class, 'user_id', 'id');
+    }
+
+    public function blacklistedByMe(): BelongsTo
+    {
+        return $this->belongsTo(UserBlacklisted::class, 'id', 'by_user_id');
+    }
 }
