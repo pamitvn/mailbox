@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StaticPageController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +16,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [StaticPageController::class, 'home']);
+
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Auth::routes([
+        'login' => true,
+        'register' => true,
+        'logout' => true,
+        'reset' => true,
+        'verify' => false,
+        'confirm' => false,
+    ]);
+});

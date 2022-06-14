@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import route from 'ziggy';
 import { Ziggy } from './ziggy';
-import { UseRoute } from '~/types/Utils';
+import { Utils } from '~/types';
 
 export function reactiveToJson<T = Object>(payload: any): T {
     return JSON.parse(JSON.stringify(payload));
@@ -44,7 +44,7 @@ export const matchedURL = (haystack: string | URL, needles: string | URL): boole
     return resolveURI(haystackValue as string) === resolveURI(needlesValue as string);
 };
 
-export const useRoute: UseRoute = (name, params, c) => {
+export const useRoute: Utils.Common.UseRoute = (name, params, c) => {
     try {
         return route(name, params, c, Ziggy);
     } catch (e) {

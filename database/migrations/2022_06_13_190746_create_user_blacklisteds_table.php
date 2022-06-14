@@ -10,8 +10,8 @@ return new class extends Migration {
     {
         Schema::create('user_blacklisted', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->unsigned()->constrained(table_name_of_model(User::class))->cascadeOnDelete();
-            $table->foreignId('by_user_id')->unique()->unsigned()->constrained(table_name_of_model(User::class))->nullOnDelete();
+            $table->foreignId('user_id')->unique()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('by_user_id')->nullable()->unsigned()->constrained('users')->nullOnDelete();
             $table->string('reason', 150)->nullable();
             $table->timestamp('duration')->nullable();
             $table->timestamps();
@@ -20,6 +20,10 @@ return new class extends Migration {
 
     public function down()
     {
+        Schema::table('user_blacklisted', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('user_id');
+            $table->dropConstrainedForeignId('by_user_id');
+        });
         Schema::dropIfExists('user_blacklisted');
     }
 };

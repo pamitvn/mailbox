@@ -41,13 +41,5 @@ return [
         'enable' => true,
         'title' => 'Thông báo!',
         'content' => 'This is notification'
-    ],
-    'web2m' => [
-        'endpoint' => 'https://api.web2m.com/historyapimb/{{ $password }}/{{ $accountId }}/{{ $token }}',
-        'options' => [
-            'token' => env('WEB2M_TOKEN'),
-            'accountId' => env('WEB2M_ACCOUNT_ID'),
-            'password' => env('WEB2M_PASSWORD'),
-        ]
     ]
 ];

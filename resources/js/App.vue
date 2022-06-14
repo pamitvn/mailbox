@@ -7,7 +7,7 @@
    import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue';
    import { usePage } from '@inertiajs/inertia-vue3';
    import { useAuth, useToast } from '~/uses';
-   import { reactiveToJson } from '~/utils';
+   import { Echo, reactiveToJson } from '~/utils';
 
    const messageChannel = ref(null);
 
@@ -43,7 +43,7 @@
 
       messageChannel.value = `user.${useAuth('user.id')}`;
 
-      window.Echo.private(messageChannel.value)
+      Echo.private(messageChannel.value)
          .listen('.message', e => {
             try {
                const { type, message } = e;
@@ -55,6 +55,6 @@
    });
 
    onUnmounted(() => {
-      window.Echo.leave(messageChannel.value);
+      Echo.leave(messageChannel.value);
    });
 </script>

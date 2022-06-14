@@ -1,8 +1,8 @@
-import { UseRoute } from '~/types/Utils';
+import { Utils } from '~/types';
 
 declare module '@vue/runtime-core' {
-    interface ComponentCustomProperties {
-        $route: UseRoute;
+    export interface ComponentCustomProperties {
+        $route: Utils.Common.UseRoute;
     }
 }
 
