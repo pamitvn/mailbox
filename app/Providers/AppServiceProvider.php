@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Observers\UserObserver;
+use App\PAM\ApiResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
+
+        $this->app->singleton(ApiResponse::$getFacadeAccessor, fn() => new ApiResponse());
     }
 
     /**
@@ -28,6 +32,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Gate::after(function ($user, $ability, $result, $arguments) {
+            if ($user->isAdministrator()) {
+                return true;
+            }
+        });
+
+
         User::observe(UserObserver::class);
     }
 }

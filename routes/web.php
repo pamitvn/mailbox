@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [StaticPageController::class, 'home']);
 
 Route::group([
+
+], function () {
+
+});
+
+Route::group([
     'prefix' => 'auth'
 ], function () {
     Auth::routes([
