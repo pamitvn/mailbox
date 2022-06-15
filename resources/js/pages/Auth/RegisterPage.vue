@@ -1,7 +1,7 @@
 <template>
-   <Head>
+   <the-head>
       <title>Register</title>
-   </Head>
+   </the-head>
    <!-- Basic registration form-->
    <div class='card shadow-lg border-0 rounded-lg mt-5'>
       <div class='card-header justify-content-center'><h3 class='fw-light my-4'>Create Account</h3></div>
@@ -9,46 +9,46 @@
          <!-- Registration form-->
          <form @submit.prevent='() => onSubmitForm()'>
             <div class='mb-3'>
-               <TheInputField v-model='form.name'
-                              :error='form.errors.name'
-                              type='text'
-                              label='Full Name'
-                              placeholder='Enter full name' />
+               <the-input-field v-model='form.name'
+                                :error='form.errors.name'
+                                type='text'
+                                label='Full Name'
+                                placeholder='Enter full name' />
             </div>
 
             <div class='mb-3'>
-               <TheInputField v-model='form.username'
-                              :error='form.errors.username'
-                              type='text'
-                              label='Username'
-                              placeholder='Enter username' />
+               <the-input-field v-model='form.username'
+                                :error='form.errors.username'
+                                type='text'
+                                label='Username'
+                                placeholder='Enter username' />
             </div>
 
             <div class='mb-3'>
-               <TheInputField v-model='form.email'
-                              :error='form.errors.email'
-                              type='email'
-                              label='Email'
-                              placeholder='Enter email address' />
+               <the-input-field v-model='form.email'
+                                :error='form.errors.email'
+                                type='email'
+                                label='Email'
+                                placeholder='Enter email address' />
             </div>
 
             <div class='row gx-3'>
                <div class='col-md-6'>
                   <div class='mb-3'>
-                     <TheInputField v-model='form.password'
-                                    :error='form.errors.password'
-                                    type='password'
-                                    label='Password'
-                                    placeholder='Enter password' />
+                     <the-input-field v-model='form.password'
+                                      :error='form.errors.password'
+                                      type='password'
+                                      label='Password'
+                                      placeholder='Enter password' />
                   </div>
                </div>
                <div class='col-md-6'>
                   <div class='mb-3'>
-                     <TheInputField v-model='form.password_confirmation'
-                                    :error='form.errors.password_confirmation'
-                                    type='password'
-                                    label='Confirm Password'
-                                    placeholder='Enter confirm password' />
+                     <the-input-field v-model='form.password_confirmation'
+                                      :error='form.errors.password_confirmation'
+                                      type='password'
+                                      label='Confirm Password'
+                                      placeholder='Enter confirm password' />
                   </div>
                </div>
             </div>
@@ -60,9 +60,9 @@
       </div>
       <div class='card-footer text-center'>
          <div class='small'>
-            <Link :href='$route("login")'>
+            <the-link :href='$route("login")'>
                Have an account? Go to login
-            </Link>
+            </the-link>
          </div>
       </div>
    </div>
@@ -70,8 +70,7 @@
 
 <script lang='ts'>
    import { defineComponent } from 'vue';
-   import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
-
+   import { useForm } from '@inertiajs/inertia-vue3';
    import { useRoute } from '~/utils';
 
    import AuthLayout from '~/layouts/AuthLayout';
@@ -81,8 +80,6 @@
       layout: (h, page) => h(AuthLayout, () => page),
       components: {
          TheInputField,
-         Head,
-         Link,
       },
       setup() {
          const form = useForm({

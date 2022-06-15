@@ -84,15 +84,15 @@
                <template v-for='(item, index) in getLinks' :key='index'>
 
                   <li v-if='index === 0 && item.url !== null' class='pager'>
-                     <Link :href='item.url'>‹</Link>
+                     <the-link :href='item.url'>‹</the-link>
                   </li>
                   <li v-if='index === (getLinks.length - 1) && item.url !== null' class='pager'>
-                     <Link :href='item.url'>›</Link>
+                     <the-link :href='item.url'>›</the-link>
                   </li>
                   <li
                      v-if='!(index === 0) && !(index === (getLinks.length - 1))'
                      :class='{active: item.active}'>
-                     <Link :href='item.url'>{{ item.label }}</Link>
+                     <the-link :href='item.url'>{{ item.label }}</the-link>
                   </li>
                </template>
 
@@ -102,45 +102,20 @@
    </div>
 </template>
 
-<script setup>
-   import _ from 'lodash';
+<script setup lang='ts'>
+   import * as _ from 'lodash';
    import { computed, ref, watch, watchEffect } from 'vue';
-   import { Link, usePage } from '@inertiajs/inertia-vue3';
-   import { isURL } from '~/utils';
+   import { usePage } from '@inertiajs/inertia-vue3';
    import qs from 'querystring';
+   import { isURL } from '~/utils';
+   import { Utils, Components } from '~/types';
 
-   const props = defineProps({
-      search: {
-         type: String,
-         required: false,
-         default: '',
-      },
-      page: {
-         type: [Number, String],
-         required: false,
-         default: 1,
-      },
-      perPage: {
-         type: [Number, String],
-         required: false,
-         default: 10,
-      },
-      data: {
-         type: Object,
-         default: {},
-      },
-      columns: {
-         type: Array,
-         default: [],
-      },
-      hasCheckbox: {
-         type: Boolean,
-         default: false,
-      },
-      checkboxByField: {
-         type: String,
-         default: 'id',
-      },
+   const props = withDefaults(defineProps<Components.Table.Props>(), {
+      search: '',
+      page: 1,
+      perPage: 10,
+      hasCheckbox: false,
+      checkboxByField: 'id',
    });
    const emit = defineEmits(['update:search', 'update:perPage', 'update:page', 'selectedRows']);
 
@@ -152,18 +127,18 @@
    const useUrl = computed(() => usePage().url.value);
    const getColumns = computed(() => props.columns);
    const getTableData = computed(() => _.get(props.data, 'data', []));
-   const getLinks = computed(() => {
+   const getLinks = computed<Utils.Pagination.Link[]>(() => {
       const results = _.get(props.data, 'links', []);
       const currentQuery = qs.parse(_.get(_.split(useUrl.value, '?'), '1'));
 
-      return _.map(results, item => {
+      return _.map<Utils.Pagination.Link, Utils.Pagination.Link>(results, item => {
          if (!item.url || !isURL(item.url)) return item;
 
          const targetUrl = new URL(item.url);
          const page = targetUrl.searchParams.get('page') ?? '1';
 
          _.forEach(currentQuery, (value, key) => {
-            targetUrl.searchParams.set(key, value);
+            targetUrl.searchParams.set(key as string, value as string);
          });
 
          targetUrl.searchParams.set('page', page);
@@ -174,7 +149,6 @@
          return item;
       });
    });
-   const hasCheckbox = computed(() => props.hasCheckbox);
 
    const getColLabel = (col) => _.get(col, 'label');
    const getRowDisplay = (row, col) => {

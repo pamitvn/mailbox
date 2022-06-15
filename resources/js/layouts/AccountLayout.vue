@@ -31,9 +31,9 @@
 
 <script setup>
    import { computed } from 'vue';
+   import { useLayout } from '~/uses';
 
    import AccountMenu from '~/components/Layouts/Menu/AccountMenu/AccountMenu';
-   import { useLayout } from '~/uses';
 
    const accountMenu = computed(() => useLayout('menu.account'));
 </script>

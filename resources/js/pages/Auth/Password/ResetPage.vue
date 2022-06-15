@@ -17,46 +17,29 @@
          <form @submit.prevent='() => onSubmitForm()'>
             <!-- Form Group (email address)-->
             <div class='mb-3'>
-               <label class='small mb-1' for='email'>Email</label>
-               <input v-model='form.email'
-                      class='form-control'
-                      :class='{"is-invalid": form.errors.email }'
-                      id='email'
-                      type='email'
-                      placeholder='Enter email address'
-                      disabled
-               />
-
-               <div v-if='form.errors.email' class='invalid-feedback'>
-                  {{ form.errors.email }}
-               </div>
+               <the-input-field v-model='form.email'
+                                :error='form.errors.email'
+                                type='email'
+                                label='Email'
+                                placeholder='Enter email address'
+                                disabled />
             </div>
 
 
             <div class='mb-3'>
-               <label class='small mb-1' for='inputPassword'>Password</label>
-               <input v-model='form.password'
-                      class='form-control'
-                      :class='{"is-invalid": form.errors.password}'
-                      id='inputPassword'
-                      type='password'
-                      placeholder='Enter password'>
-               <div v-if='form.errors.password' class='invalid-feedback'>
-                  {{ form.errors.password }}
-               </div>
+               <the-input-field v-model='form.password'
+                                :error='form.errors.password'
+                                type='password'
+                                label='Password'
+                                placeholder='Enter password' />
             </div>
 
             <div class='mb-3'>
-               <label class='small mb-1' for='inputConfirmPassword'>Confirm Password</label>
-               <input v-model='form.password_confirmation'
-                      class='form-control'
-                      :class='{"is-invalid": form.errors.password_confirmation}'
-                      id='inputConfirmPassword'
-                      type='password'
-                      placeholder='Confirm password'>
-               <div v-if='form.errors.password_confirmation' class='invalid-feedback'>
-                  {{ form.errors.password_confirmation }}
-               </div>
+               <the-input-field v-model='form.password_confirmation'
+                                :error='form.errors.password_confirmation'
+                                type='password'
+                                label='Confirm Password'
+                                placeholder='Confirm password' />
             </div>
 
 
@@ -68,25 +51,21 @@
       </div>
       <div class='card-footer text-center'>
          <div class='small'>
-            <Link :href='$route("login")'>Back to login</Link>
+            <the-link :href='$route("login")'>Back to login</the-link>
          </div>
       </div>
    </div>
 </template>
 
-<script>
-   import { defineComponent, watch, watchEffect } from 'vue';
-   import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+<script lang='ts'>
+   import { defineComponent } from 'vue';
+   import { useForm } from '@inertiajs/inertia-vue3';
 
    import AuthLayout from '~/layouts/AuthLayout';
    import { useRoute } from '~/utils';
 
    export default defineComponent({
       layout: (h, page) => h(AuthLayout, () => page),
-      components: {
-         Head,
-         Link,
-      },
       props: {
          token: String,
          email: String,

@@ -1,1 +1,1 @@
-export type UseRoute = (name?: string, params?: string | object | any[], k?: any) => any
+export type UseRoute = (name?: string, params?: string | number | object | any[], k?: any) => any

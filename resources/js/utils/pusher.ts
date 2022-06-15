@@ -5,7 +5,7 @@ const pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
     wsHost: process.env.MIX_PUSHER_HOST,
     wsPort: process.env.MIX_PUSHER_PORT,
     forceTLS: false,
-    authEndpoint: 'broadcasting/auth',
+    authEndpoint: '/broadcasting/auth',
 });
 
 export default pusher;

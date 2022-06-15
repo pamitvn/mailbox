@@ -14,7 +14,29 @@ return [
             'admin' => [
                 [
                     'group' => 'Admin Area',
-                    'items' => []
+                    'items' => [
+                        [
+                            'label' => 'Users',
+                            'class' => '',
+                            'icon' => "<i data-feather='users'></i>",
+                            'target' => fn() => route('admin.user.index'),
+                            'extraMatched' => 'admin\/users(.+)'
+                        ],
+                        [
+                            'label' => 'Banks',
+                            'class' => '',
+                            'icon' => "<i data-feather='dollar-sign'></i>",
+                            'target' => fn() => route('admin.bank.index'),
+                            'extraMatched' => 'admin\/banks(.+)'
+                        ],
+                        [
+                            'label' => 'Recharge History',
+                            'class' => '',
+                            'icon' => "<i data-feather='dollar-sign'></i>",
+                            'target' => fn() => route('admin.recharge-history.index'),
+                            'extraMatched' => 'admin\/recharge-histories(.+)'
+                        ],
+                    ]
                 ],
             ],
             'account' => [

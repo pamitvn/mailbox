@@ -1,18 +1,18 @@
 <template>
    <nav class='nav nav-borders'>
-      <Link
+      <the-link
          v-for='(item, key) in props.data'
          class='nav-link'
          :class='getClass(item, key)'
          :href='item.target ?? "javascript:;"'
       >
          {{ item.label }}
-      </Link>
+      </the-link>
    </nav>
 </template>
 
-<script setup>
-   import { Link, usePage } from '@inertiajs/inertia-vue3';
+<script setup lang='ts'>
+   import { usePage } from '@inertiajs/inertia-vue3';
    import { matchedURL } from '~/utils';
 
    const props = defineProps({

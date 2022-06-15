@@ -62,4 +62,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserBlacklisted::class, 'id', 'by_user_id');
     }
+
+    public function rechargeHistories(): BelongsTo
+    {
+        return $this->belongsTo(RechargeHistory::class, 'id', 'user_id');
+    }
 }

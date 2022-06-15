@@ -12,11 +12,11 @@
          </div>
       </h6>
       <div class='dropdown-divider'></div>
-      <Link class='dropdown-item' :href='$route("account.profile")'>
+      <the-link class='dropdown-item' :href='$route("account.profile")'>
          <div class='dropdown-item-icon'><i data-feather='settings'></i></div>
          Account
-      </Link>
-      <Link
+      </the-link>
+      <the-link
          as='button'
          :href='$route("logout")'
          method='POST'
@@ -24,13 +24,12 @@
       >
          <div class='dropdown-item-icon'><i data-feather='log-out'></i></div>
          Logout
-      </Link>
+      </the-link>
    </div>
 </template>
 
 <script setup lang='ts'>
    import { computed } from 'vue';
-   import { Link } from '@inertiajs/inertia-vue3';
    import { Models } from '~/types';
    import { useAuth } from '~/uses';
 

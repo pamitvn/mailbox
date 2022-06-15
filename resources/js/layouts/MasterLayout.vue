@@ -30,10 +30,10 @@
 
 <script setup lang='ts'>
    import { computed } from 'vue';
+   import { useAuth, useLayout } from '~/uses';
    import TopNavigation from '~/components/Layouts/Navigation/TopNavigation';
    import MainMenu from '~/components/Layouts/Menu/MainMenu/MainMenu';
    import TheFooter from '~/components/Layouts/Footer/TheFooter';
-   import { useAuth, useLayout } from '~/uses';
 
    const mainMenu = computed(() => useLayout('menu.main'));
 
