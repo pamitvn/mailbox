@@ -29,6 +29,11 @@ Route::group([
     ], function () {
 
         /**
+         * Dynamic do-action
+         */
+        Route::any('handle-action', Admin\DoActionController::class)->name('handle-action');
+
+        /**
          * Manager Users
          */
         Route::resource('users', Admin\UserManagerController::class, [
@@ -37,6 +42,14 @@ Route::group([
         ]);
         Route::get('users/{user}/balance', [Admin\UserManagerController::class, 'balance'])->name('user.balance');
         Route::post('users/{user}/balance', [Admin\UserManagerController::class, 'storeBalance']);
+
+        /**
+         * Manager User Blacklisted
+         */
+        Route::resource('blacklisted/users', Admin\UserBlacklistedManagerController::class, [
+            'names' => 'blacklisted.user',
+            'except' => ['show'],
+        ]);
 
         /**
          * Manager Banks

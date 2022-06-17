@@ -8,6 +8,7 @@
              :class='getClass'
              :id='inputId'
              @input='onInput'
+             v-on='onEvent'
       >
    </slot>
    <slot name='error' :error='error'>
@@ -33,6 +34,10 @@
          allowChange: {
             type: Boolean,
             default: true,
+         },
+         onEvent: {
+            type: Object,
+            default: {},
          },
       },
       emits: ['update:modelValue', 'input'],

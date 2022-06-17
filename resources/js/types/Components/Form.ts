@@ -7,6 +7,7 @@ export namespace Form {
             label: string;
             error: string;
             allowChange: string;
+            onEvent: Object;
         }
 
         export type Type = DefineComponent<Props>

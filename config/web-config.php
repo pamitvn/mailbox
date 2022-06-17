@@ -23,6 +23,21 @@ return [
                             'extraMatched' => 'admin\/users(.+)'
                         ],
                         [
+                            'label' => 'Blacklisted',
+                            'class' => '',
+                            'icon' => "<i data-feather='hexagon'></i>",
+                            'target' => 'javascript:;',
+                            'items' => [
+                                [
+                                    'label' => 'Users',
+                                    'class' => '',
+                                    'icon' => "<i data-feather='users'></i>",
+                                    'target' => fn() => route('admin.blacklisted.user.index'),
+                                    'extraMatched' => 'admin\/blacklisted\/users(.+)'
+                                ],
+                            ]
+                        ],
+                        [
                             'label' => 'Banks',
                             'class' => '',
                             'icon' => "<i data-feather='dollar-sign'></i>",
