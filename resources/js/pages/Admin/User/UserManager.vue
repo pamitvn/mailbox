@@ -155,7 +155,7 @@
       },
 
       {
-         path: 'balance',
+         path: 'wallet.balance',
          label: 'Balance',
          display: (row, path, lodash) => lodash.get(row, path, false),
       },

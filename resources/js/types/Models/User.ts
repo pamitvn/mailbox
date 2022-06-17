@@ -1,4 +1,5 @@
 import Blacklisted from '~/types/Models/Blacklisted';
+import Wallet from '~/types/Models/Wallet';
 import RechargeHistory from '~/types/Models/RechargeHistory';
 
 interface User {
@@ -14,6 +15,7 @@ interface User {
     created_at: string;
 
     blacklisted?: Blacklisted;
+    wallet: Wallet;
     recharge_histories?: RechargeHistory[];
 }
 

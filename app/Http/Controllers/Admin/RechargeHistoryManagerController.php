@@ -11,13 +11,17 @@ class RechargeHistoryManagerController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $perPage = $request->get('perPage', 10);
 
-        $user = RechargeHistory::with('bank')->orderBy('id', 'desc')
-            ->when($search, fn($query) => $query->where('note', 'LIKE', "%{$search}%"));
+        $records = RechargeHistory::query()
+            ->with('bank')
+            ->orderBy('id', 'desc');
+
+        search_by_cols($records, $search, [
+            'note'
+        ]);
 
         return inertia('Admin/Recharge/HistoryManager', [
-            'paginationData' => $user->paginate($perPage)
+            'paginationData' => paginate_with_params($records, $request->all())
         ]);
     }
 

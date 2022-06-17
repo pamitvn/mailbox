@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\RechargeHistory;
 use App\Models\User;
+use Bavix\Wallet\Exceptions\InsufficientFunds;
+use Bavix\Wallet\Internal\Exceptions\ExceptionInterface;
+use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
+use Bavix\Wallet\Models\Wallet;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,18 +20,28 @@ class UserManagerController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $perPage = $request->get('perPage', 10);
 
-        $user = User::orderBy('id', 'desc')
-            ->when($search, fn($query) => $query->where('name', 'LIKE', "%{$search}%")
-                ->orWhere('username', 'LIKE', "%{$search}%")
-                ->orWhere('email', 'LIKE', "%{$search}%"));
+        $user = User::query()
+            ->with('wallet')
+            ->orderBy('id', 'desc');
+
+        search_by_cols($user, $search, [
+            'name',
+            'username',
+            'email'
+        ]);
+
+        query_by_cols($user, [
+            'id',
+            'username',
+            'email',
+        ], $request->all());
 
         return inertia('Admin/User/UserManager', [
-            'paginationData' => $user->paginate($perPage),
+            'paginationData' => paginate_with_params($user, $request->all()),
             'statistics' => [
                 'total' => number_format(User::count()),
-                'totalBalance' => number_format(User::sum('balance')),
+                'totalBalance' => number_format(Wallet::where('holder_type', User::class)->sum('balance')),
             ]
         ]);
     }
@@ -44,7 +58,6 @@ class UserManagerController extends Controller
             'username' => ['required', 'string', 'min:6', 'max:32', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:150', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
-            'balance' => ['integer']
         ]);
 
         User::create(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
@@ -68,7 +81,6 @@ class UserManagerController extends Controller
             'username' => ['required', 'string', 'min:6', 'max:32', Rule::unique('users', 'username')->ignoreModel($user)],
             'email' => ['required', 'string', 'email', 'max:150', Rule::unique('users', 'email')->ignoreModel($user)],
             'password' => ['nullable', 'string', 'min:8'],
-            'balance' => ['integer']
         ]);
 
         $user->update(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
@@ -92,7 +104,7 @@ class UserManagerController extends Controller
     public function balance(User $user)
     {
         return inertia('Admin/User/Balance', [
-            'user' => $user,
+            'user' => $user->load('wallet'),
             'banks' => Bank::get(['name', 'id'])
         ]);
     }
@@ -106,7 +118,7 @@ class UserManagerController extends Controller
         ]);
 
         try {
-            DB::transaction(function () use ($request, $user) {
+            app(DatabaseServiceInterface::class)->transaction(function () use ($request, $user) {
                 $action = $request->get('action', '+');
                 $bank = $request->get('bank');
                 $amount = $request->get('amount');
@@ -114,9 +126,9 @@ class UserManagerController extends Controller
                 $balance = $user->balance;
 
                 if ($action === '+') {
-                    $user->increment('balance', $amount);
+                    $user->deposit($amount);
                 } elseif ($action === '-') {
-                    $user->decrement('balance', $amount);
+                    $user->withdraw($amount);
                 }
 
                 if ($action === '+' && $bank) {
@@ -131,6 +143,9 @@ class UserManagerController extends Controller
                 }
             });
 
+            return back()->with('success', 'Set balance successfully');
+        } catch (InsufficientFunds $exception) {
+            $user->withdraw($user->balance);
             return back()->with('success', 'Set balance successfully');
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage())->withErrors('Error', 'globalError');

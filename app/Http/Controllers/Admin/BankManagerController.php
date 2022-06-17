@@ -11,14 +11,18 @@ class BankManagerController extends Controller
 {
     public function index(Request $request)
     {
+        $params = $request->all();
         $search = $request->get('search');
-        $perPage = $request->get('perPage', 10);
 
-        $bank = Bank::orderBy('id', 'desc')
-            ->when($search, fn($query) => $query->where('name', 'LIKE', "%{$search}%"));
+        $banks = Bank::query()
+            ->orderBy('id', 'desc');
+
+        search_by_cols($banks, $search, [
+            'name'
+        ]);
 
         return inertia('Admin/Bank/BankManager', [
-            'paginationData' => $bank->paginate($perPage)
+            'paginationData' => paginate_with_params($banks, $params)
         ]);
     }
 

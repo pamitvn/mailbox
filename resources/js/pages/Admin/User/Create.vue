@@ -46,14 +46,6 @@
                </div>
 
                <div class='mb-3'>
-                  <TheInputField v-model='form.balance'
-                                 :error='form.errors.balance'
-                                 label='Balance'
-                                 type='number'
-                  />
-               </div>
-
-               <div class='mb-3'>
                   <TheInputField v-model='form.password'
                                  :error='form.errors.password'
                                  label='Password'
@@ -81,7 +73,6 @@
       name: null,
       username: null,
       email: null,
-      balance: 0,
       password: null,
    });
 

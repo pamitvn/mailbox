@@ -6,3 +6,5 @@ if (!function_exists('table_name_of_model')) {
         return with(new $model)->getTable();
     }
 }
+
+require "query.php";

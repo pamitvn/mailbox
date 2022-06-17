@@ -46,14 +46,6 @@
                </div>
 
                <div class='mb-3'>
-                  <TheInputField v-model='form.balance'
-                                 :error='form.errors.balance'
-                                 label='Balance'
-                                 type='number'
-                  />
-               </div>
-
-               <div class='mb-3'>
                   <TheInputField v-model='form.password'
                                  :error='form.errors.password'
                                  label='Password'
@@ -86,7 +78,6 @@
       name: props.user.name ?? null,
       username: props.user.username ?? null,
       email: props.user.email ?? null,
-      balance: props.user.balance ?? null,
       password: null,
    });
 
