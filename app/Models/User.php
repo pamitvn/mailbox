@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Bavix\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -9,9 +10,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Wallet\Interfaces\Wallet
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use Wallet\Traits\HasWallet;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +25,6 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'balance',
         'is_admin',
         'api_key'
     ];
@@ -45,7 +46,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'balance' => 'integer'
     ];
 
     public function isAdministrator()

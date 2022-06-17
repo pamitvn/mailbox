@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->string('email')->unique()->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('balance')->default(0);
             $table->boolean('is_admin')->default(false);
             $table->string('api_key')->nullable();
             $table->rememberToken();
