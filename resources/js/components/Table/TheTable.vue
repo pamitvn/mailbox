@@ -107,10 +107,20 @@
    import { computed, ref, watch, watchEffect } from 'vue';
    import { usePage } from '@inertiajs/inertia-vue3';
    import qs from 'querystring';
-   import { isURL } from '~/utils';
-   import { Utils, Components } from '~/types';
 
-   const props = withDefaults(defineProps<Components.Table.Props>(), {
+   import { isURL } from '~/utils';
+   import { Utils } from '~/types';
+   import Table from '~/types/Components/Table';
+
+   const props = withDefaults(defineProps<{
+      search: string;
+      page: string | number;
+      perPage: string | number;
+      data: Utils.Pagination.Type;
+      columns: Table.Columns;
+      hasCheckbox: boolean;
+      checkboxByField: string;
+   }>(), {
       search: '',
       page: 1,
       perPage: 10,
