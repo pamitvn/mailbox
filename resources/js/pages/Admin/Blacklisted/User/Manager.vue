@@ -18,12 +18,12 @@
             <TheTable v-model:search='search' v-model:per-page='perPage' :data='paginationData' :columns='columns'>
                <template #row-user='{value}'>
                   <td>
-                     <p v-if='value.name && value.username'><b>{{ value.name }}</b> - {{ value.username }}</p>
+                     <p v-if='value && value.name && value.username'><b>{{ value.name }}</b> - {{ value.username }}</p>
                   </td>
                </template>
                <template #row-byUser='{value}'>
                   <td>
-                     <p v-if='value.name && value.username'><b>{{ value.name }}</b> - {{ value.username }}</p>
+                     <p v-if='value && value.name && value.username'><b>{{ value.name }}</b> - {{ value.username }}</p>
                   </td>
                </template>
                <template #row-action='{row}'>

@@ -49,6 +49,7 @@ Route::group([
         Route::resource('blacklisted/users', Admin\UserBlacklistedManagerController::class, [
             'names' => 'blacklisted.user',
             'except' => ['show'],
+            'parameters' => 'user_blacklisted'
         ]);
 
         /**

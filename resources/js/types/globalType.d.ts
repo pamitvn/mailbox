@@ -22,6 +22,16 @@ declare module '@vue/runtime-core' {
         TheCheckboxField: Components.Form.Checkbox.Type;
         TheSelect: DefineComponent<VueSelectProps>;
         TheTable: Components.Table.Type;
+        VueGravatar: DefineComponent<Partial<{
+            hash: string
+            email: string
+            size: number
+            defaultImg: '404' | 'mp' | 'identicon' | 'monsterid' | 'wavatar' | 'retro' | 'robohash' | 'blank'
+            rating: string
+            alt: string
+            protocol: 'https' | 'http'
+            hostname: string
+        }>>;
     }
 }
 

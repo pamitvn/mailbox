@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\UserBlacklisted;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class UserBlacklistedManagerController extends Controller
 {
@@ -45,6 +47,17 @@ class UserBlacklistedManagerController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->validate([
+            'user_id' => ['required', 'integer', Rule::unique(table_name_of_model(UserBlacklisted::class), 'user_id')],
+            'reason' => ['required', 'string'],
+            'duration' => ['nullable', 'date'],
+        ]);
+
+        UserBlacklisted::create(array_merge($data, [
+            'by_user_id' => auth()->user()->id
+        ]));
+
+        return back()->with('success', __('User #:id has been added to the blacklist.', ['id' => $data['user_id']]));
     }
 
     public function show(UserBlacklisted $userBlacklisted)
@@ -61,5 +74,6 @@ class UserBlacklistedManagerController extends Controller
 
     public function destroy(UserBlacklisted $userBlacklisted)
     {
+        dd($userBlacklisted);
     }
 }

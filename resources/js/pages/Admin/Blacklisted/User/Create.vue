@@ -19,7 +19,7 @@
          <div class='card-body'>
             <form @submit.prevent='() => onSubmitForm()'>
                <div class='mb-3'>
-                  <SelectorUser v-model='form.user' label='User' :error='form.errors.user' />
+                  <SelectorUser v-model='form.user_id' label='User' :error='form.errors.user_id' />
                </div>
 
                <div class='mb-3'>
@@ -40,7 +40,6 @@
                   />
                </div>
 
-
                <!-- Submit button-->
                <button class='btn btn-primary' type='submit'>Add</button>
             </form>
@@ -57,13 +56,13 @@
    import SelectorUser from '~/components/Form/Selector/SelectorUser.vue';
 
    const form = useForm({
-      user: '',
-      reason: '',
-      duration: '',
+      user_id: null,
+      reason: null,
+      duration: null,
    });
 
    const onSubmitForm = () => {
-      return form.post(useRoute('admin.user.store'), {
+      return form.post(useRoute('admin.blacklisted.user.store'), {
          onSuccess: () => {
             form.reset();
          },

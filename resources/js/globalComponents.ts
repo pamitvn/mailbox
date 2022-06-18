@@ -1,6 +1,7 @@
 import { App } from 'vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import vSelect from 'vue-select';
+import VueGravatar from 'vue3-gravatar';
 
 import TheInputField from '~/components/Form/TheInputField.vue';
 import TheCheckBoxField from '~/components/Form/TheCheckBoxField.vue';
@@ -28,6 +29,11 @@ export default (app: VueApp): VueApp => {
      * Register Table Components
      */
     app.component('TheTable', TheTable);
+
+    /**
+     * Register Vue Gravatar
+     */
+    app.use(VueGravatar);
 
     return app;
 }
