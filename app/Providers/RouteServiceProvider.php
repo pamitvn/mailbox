@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\UserBlacklisted;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -36,6 +37,8 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        $this->defineRouteBinding();
     }
 
     /**
@@ -51,6 +54,13 @@ class RouteServiceProvider extends ServiceProvider
 
         RateLimiter::for('disable', function (Request $request) {
             return Limit::none();
+        });
+    }
+
+    protected function defineRouteBinding()
+    {
+        Route::bind('user_blacklisted', function ($value) {
+            return UserBlacklisted::findOrFail($value);
         });
     }
 }

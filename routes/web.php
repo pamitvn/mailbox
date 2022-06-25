@@ -16,57 +16,63 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [StaticPageController::class, 'home']);
-
 Route::group([
-    'middleware' => ['auth']
+    'middleware' => ['user.not.blacklisted']
 ], function () {
 
+    Route::get('/', [StaticPageController::class, 'home']);
+
     Route::group([
-        'prefix' => 'admin',
-        'as' => 'admin.',
-        'middleware' => ['can:admin']
+        'middleware' => ['auth']
     ], function () {
 
-        /**
-         * Dynamic do-action
-         */
-        Route::any('handle-action', Admin\DoActionController::class)->name('handle-action');
+        Route::group([
+            'prefix' => 'admin',
+            'as' => 'admin.',
+            'middleware' => ['can:admin']
+        ], function () {
 
-        /**
-         * Manager Users
-         */
-        Route::resource('users', Admin\UserManagerController::class, [
-            'names' => 'user',
-            'except' => ['show']
-        ]);
-        Route::get('users/{user}/balance', [Admin\UserManagerController::class, 'balance'])->name('user.balance');
-        Route::post('users/{user}/balance', [Admin\UserManagerController::class, 'storeBalance']);
+            /**
+             * Dynamic do-action
+             */
+            Route::any('handle-action', Admin\DoActionController::class)->name('handle-action');
 
-        /**
-         * Manager User Blacklisted
-         */
-        Route::resource('blacklisted/users', Admin\UserBlacklistedManagerController::class, [
-            'names' => 'blacklisted.user',
-            'except' => ['show'],
-            'parameters' => 'user_blacklisted'
-        ]);
+            /**
+             * Manager Users
+             */
+            Route::resource('users', Admin\UserManagerController::class, [
+                'names' => 'user',
+                'except' => ['show']
+            ]);
+            Route::get('users/{user}/balance', [Admin\UserManagerController::class, 'balance'])->name('user.balance');
+            Route::post('users/{user}/balance', [Admin\UserManagerController::class, 'storeBalance']);
 
-        /**
-         * Manager Banks
-         */
-        Route::resource('banks', Admin\BankManagerController::class, [
-            'names' => 'bank',
-            'except' => ['show']
-        ]);
+            /**
+             * Manager User Blacklisted
+             */
+            Route::resource('user-blacklisted', Admin\UserBlacklistedManagerController::class, [
+                'names' => 'blacklisted.user',
+                'except' => ['show'],
+                'blacklisted_user' => 'user_blacklisted'
+            ]);
 
-        /**
-         * Manager Recharge Histories
-         */
-        Route::resource('recharge-histories', Admin\RechargeHistoryManagerController::class, [
-            'names' => 'recharge-history',
-            'only' => ['index', 'destroy']
-        ]);
+            /**
+             * Manager Banks
+             */
+            Route::resource('banks', Admin\BankManagerController::class, [
+                'names' => 'bank',
+                'except' => ['show']
+            ]);
+
+            /**
+             * Manager Recharge Histories
+             */
+            Route::resource('recharge-histories', Admin\RechargeHistoryManagerController::class, [
+                'names' => 'recharge-history',
+                'only' => ['index', 'destroy']
+            ]);
+        });
+
     });
 
 });

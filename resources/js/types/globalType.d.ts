@@ -13,6 +13,7 @@ declare module '@vue/runtime-core' {
 
     export interface ComponentCustomOptions {
         layout?: DefineComponent | layoutFn;
+        allowDefaultLayout?: boolean;
     }
 
     export interface GlobalComponents {

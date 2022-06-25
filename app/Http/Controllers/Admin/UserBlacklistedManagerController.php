@@ -74,6 +74,12 @@ class UserBlacklistedManagerController extends Controller
 
     public function destroy(UserBlacklisted $userBlacklisted)
     {
-        dd($userBlacklisted);
+        $status = $userBlacklisted->delete();
+
+        if (!$status) {
+            return back()->with('error', __('Blacklist #:id cannot be deleted', $userBlacklisted->id))->withErrors('Error', 'globalError');
+        }
+
+        return back()->with('success', __('Deleted blacklist #:id', $userBlacklisted->id));
     }
 }

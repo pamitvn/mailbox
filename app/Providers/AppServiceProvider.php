@@ -32,13 +32,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->defineGate();
+        $this->defineObserver();
+    }
+
+    protected function defineGate()
+    {
         Gate::after(function ($user, $ability, $result, $arguments) {
             if ($user->isAdministrator()) {
                 return true;
             }
         });
+    }
 
-
+    protected function defineObserver()
+    {
         User::observe(UserObserver::class);
     }
 }

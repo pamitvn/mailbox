@@ -37,6 +37,7 @@ createInertiaApp({
     title: title => title ? title : 'MailBox',
     resolve: name => {
         const page = require(`./pages/${name}`).default;
+
         if (page.layout === undefined && !name.startsWith('Public/')) {
             page.layout = MasterLayout;
         }
