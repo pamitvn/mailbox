@@ -19,7 +19,7 @@ class UserNotHasBlacklistedMiddleware
 
         if (blank($blacklisted)) return $next($request);
 
-        if ($now >= $duration) {
+        if ($blacklisted?->duration and $now >= $duration) {
             $blacklisted->delete();
             return $next($request);
         }

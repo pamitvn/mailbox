@@ -10,7 +10,7 @@ interface Blacklisted {
     updated_at: string;
 
     user?: User;
-    byUser?: User;
+    by_user?: User;
 }
 
 export default Blacklisted;

@@ -53,7 +53,7 @@ class UserBlacklistedManagerController extends Controller
 
         UserBlacklisted::create(array_merge($data, [
             'by_user_id' => auth()->user()->id,
-            'duration' => Carbon::parse($data['duration'])->endOfDay()
+            'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null
         ]));
 
         return back()->with('success', __('User #:id has been added to the blacklist.', ['id' => $data['user_id']]));
@@ -73,7 +73,9 @@ class UserBlacklistedManagerController extends Controller
             'duration' => ['nullable', 'date'],
         ]);
 
-        $status = $blacklisted->update($data);
+        $status = $blacklisted->update(array_merge($data, [
+            'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null
+        ]));
 
         if (!$status) {
             return back()->with('error', __('Blacklist #:id cannot be updated', ['id' => $blacklisted->id]))

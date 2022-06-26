@@ -96,7 +96,10 @@
       {
          path: 'duration',
          label: 'Duration',
-         display: (row, path, lodash) => dateFormat(lodash.get(row, path, '') as string, 'd/m/yyyy'),
+         display: (row, path, lodash) => {
+            const duration = lodash.get(row, path, '') as string;
+            return duration ? dateFormat(duration, 'd/m/yyyy') : '';
+         },
       },
       {
          path: 'created_at',

@@ -76,6 +76,6 @@
       if (!data) return;
 
       form.reason = data.reason;
-      form.duration = dateFormat(data.duration ?? '', 'yyyy-mm-dd');
+      form.duration = data.duration ? dateFormat(data.duration ?? '', 'yyyy-mm-dd') : null;
    });
 </script>
