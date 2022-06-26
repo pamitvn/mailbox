@@ -34,9 +34,10 @@
                <div class='mb-3'>
                   <the-input-field v-model='form.duration'
                                    :error='form.errors.duration'
-                                   label='User'
+                                   label='Duration'
                                    type='date'
                                    placeholder='Enter duration ban'
+                                   :min='new Date().toISOString().split("T")[0]'
                   />
                </div>
 

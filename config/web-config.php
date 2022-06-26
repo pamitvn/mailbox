@@ -33,7 +33,7 @@ return [
                                     'class' => '',
                                     'icon' => "<i data-feather='users'></i>",
                                     'target' => fn() => route('admin.blacklisted.user.index'),
-                                    'extraMatched' => 'admin\/blacklisted\/users(.+)'
+                                    'extraMatched' => 'admin\/user-blacklisted(.+)'
                                 ],
                             ]
                         ],

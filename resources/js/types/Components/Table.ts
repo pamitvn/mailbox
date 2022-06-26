@@ -20,7 +20,7 @@ export namespace Table {
     }
 
     export type Columns<RecordType = object> = Column<RecordType>[]
-    export type Type<RecordType = object> = DefineComponent<Props<RecordType>>
+    export type Type<RecordType = object> = DefineComponent<Partial<Props<RecordType>>>
 }
 
 export default Table;

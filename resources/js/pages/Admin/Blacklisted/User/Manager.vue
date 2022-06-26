@@ -17,13 +17,13 @@
          <div class='card-body'>
             <TheTable v-model:search='search' v-model:per-page='perPage' :data='paginationData' :columns='columns'>
                <template #row-user='{value}'>
-                  <td>
-                     <p v-if='value && value.name && value.username'><b>{{ value.name }}</b> - {{ value.username }}</p>
+                  <td class='w-auto'>
+                     <UserLabel :data='value' :has-avatar='true' :gravatar='value.email' />
                   </td>
                </template>
-               <template #row-byUser='{value}'>
-                  <td>
-                     <p v-if='value && value.name && value.username'><b>{{ value.name }}</b> - {{ value.username }}</p>
+               <template #row-by_user='{value}'>
+                  <td class='w-auto'>
+                     <UserLabel :data='value' :has-avatar='true' :gravatar='value.email' />
                   </td>
                </template>
                <template #row-action='{row}'>
@@ -63,11 +63,13 @@
 
 <script setup lang='ts'>
    import { reactive } from 'vue';
+   import dateFormat from 'dateformat';
    import { Models, Utils, Components } from '~/types';
    import { usePagination } from '~/uses';
 
-   import Layout from './Layout';
+   import Layout from './Layout.vue';
    import TheTable from '~/components/Table/TheTable.vue';
+   import UserLabel from '~/components/UserLabel.vue';
 
    const props = defineProps<{
       paginationData: Utils.Pagination.Type<Models.Blacklisted>;
@@ -84,7 +86,7 @@
          label: 'User',
       },
       {
-         path: 'byUser',
+         path: 'by_user',
          label: 'Banned By',
       },
       {
@@ -93,7 +95,13 @@
       },
       {
          path: 'duration',
-         label: 'duration',
+         label: 'Duration',
+         display: (row, path, lodash) => dateFormat(lodash.get(row, path, '') as string, 'd/m/yyyy'),
+      },
+      {
+         path: 'created_at',
+         label: 'Created At',
+         display: (row, path, lodash) => dateFormat(lodash.get(row, path, '') as string, 'mmmm dS, yyyy, h:MM:ss TT'),
       },
       {
          path: 'action',

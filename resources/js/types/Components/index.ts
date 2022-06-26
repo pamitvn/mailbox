@@ -1,5 +1,5 @@
-import { Form as form } from './Form';
-import { Table as table } from './Table';
+import form from './Form';
+import table from './Table';
 
 export namespace Components {
     export import Form = form;

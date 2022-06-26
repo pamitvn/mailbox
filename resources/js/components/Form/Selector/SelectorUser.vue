@@ -1,19 +1,24 @@
 <template>
+   <label class='small mb-1' :for='elmId'>{{ label }}</label>
    <the-select
       v-model='selected'
-      placeholder='Select user'
       :filterable='false'
       :options='options'
+      :multiple='props.multiple'
+      :reduce='reduceOption'
+      :disabled='props.disabled'
+      placeholder='Select user'
       @search='onSearch'
+
    >
-      <!--      <template #search='{attributes, events}'>-->
-      <!--         <input-->
-      <!--            class='vs__search'-->
-      <!--            :required='!selected'-->
-      <!--            v-bind='attributes'-->
-      <!--            v-on='events'-->
-      <!--         />-->
-      <!--      </template>-->
+      <template #search='{attributes, events}'>
+         <input
+            class='vs__search'
+            v-bind='attributes'
+            v-on='events'
+            :id='elmId'
+         />
+      </template>
       <template #no-options='{ search, searching }'>
          <template v-if='searching && search.length >= 2'>
             No results found for <em>{{ search }}</em
@@ -48,24 +53,31 @@
    import { useToast } from '~/uses';
 
    interface RecordType {
+      id: string;
       label: string;
-      value: string;
       email: string;
    }
+
+   const elmId = `user_selector_${(Math.random() + 1).toString(36).substring(7)}`;
 
    const props = withDefaults(defineProps<{
       modelValue: string | number | null
       label?: string
       error?: string
       allowChange?: boolean
+      multiple?: boolean
+      disabled?: boolean
    }>(), {
       allowChange: true,
+      multiple: false,
+      disabled: false,
    });
    const emit = defineEmits(['update:modelValue']);
 
    const options = ref([]);
    const selected = ref(null);
 
+   const reduceOption = option => option.id;
    const onSearch = function(search: string, loading: (loading: boolean) => void) {
       search = search.trim();
 
@@ -94,7 +106,7 @@
          options.value = _.map(action.data ?? [], (item: Models.User) => ({
             label: item.name ?? item.username ?? 'Unknown Name',
             email: item.email ?? '',
-            value: item.id,
+            id: item.id,
          }));
       } catch (e) {
          const message = _.isString(e) ? e : e.message;
@@ -114,9 +126,10 @@
 
       selected.value = props.modelValue;
    });
+
    watch(selected, (val) => {
       const item = val as RecordType;
-      emit('update:modelValue', _.get(item, 'value', null));
+      emit('update:modelValue', _.get(item, 'id', val));
    });
 </script>
 

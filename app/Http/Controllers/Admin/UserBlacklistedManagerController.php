@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserBlacklisted;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,19 +16,16 @@ class UserBlacklistedManagerController extends Controller
     {
         $search = $request->get('search');
 
+        $searchByFn = fn(Builder $builder) => search_by_cols($builder, $search, [
+            'id',
+            'name',
+            'username',
+            'email'
+        ]);
         $records = UserBlacklisted::query()
             ->with(['user', 'byUser'])
             ->orderBy('id', 'desc')
-            ->when(fn() => filled($search), fn($query) => $query->orWhereHas('user', fn(Builder $builder) => search_by_cols($builder, [
-                'id',
-                'name',
-                'username',
-                'email'
-            ])));
-
-        search_by_cols($records, $search, [
-            'reason',
-        ]);
+            ->when(fn() => filled($search), fn($query) => $query->whereHas('user', $searchByFn)->orWhereHas('byUser', $searchByFn));
 
         query_by_cols($records, [
             'id',
@@ -54,32 +52,45 @@ class UserBlacklistedManagerController extends Controller
         ]);
 
         UserBlacklisted::create(array_merge($data, [
-            'by_user_id' => auth()->user()->id
+            'by_user_id' => auth()->user()->id,
+            'duration' => Carbon::parse($data['duration'])->endOfDay()
         ]));
 
         return back()->with('success', __('User #:id has been added to the blacklist.', ['id' => $data['user_id']]));
     }
 
-    public function show(UserBlacklisted $userBlacklisted)
+    public function edit(UserBlacklisted $blacklisted)
     {
+        return inertia('Admin/Blacklisted/User/Edit', [
+            'data' => $blacklisted->load(['user'])
+        ]);
     }
 
-    public function edit(UserBlacklisted $userBlacklisted)
+    public function update(Request $request, UserBlacklisted $blacklisted)
     {
-    }
+        $data = $request->validate([
+            'reason' => ['required', 'string'],
+            'duration' => ['nullable', 'date'],
+        ]);
 
-    public function update(Request $request, UserBlacklisted $userBlacklisted)
-    {
-    }
-
-    public function destroy(UserBlacklisted $userBlacklisted)
-    {
-        $status = $userBlacklisted->delete();
+        $status = $blacklisted->update($data);
 
         if (!$status) {
-            return back()->with('error', __('Blacklist #:id cannot be deleted', $userBlacklisted->id))->withErrors('Error', 'globalError');
+            return back()->with('error', __('Blacklist #:id cannot be updated', ['id' => $blacklisted->id]))
+                ->withErrors('Error', 'globalError');
         }
 
-        return back()->with('success', __('Deleted blacklist #:id', $userBlacklisted->id));
+        return back()->with('success', __('Updated blacklist #:id', ['id' => $blacklisted->id]));
+    }
+
+    public function destroy(UserBlacklisted $blacklisted)
+    {
+        $status = $blacklisted->delete();
+
+        if (!$status) {
+            return back()->with('error', __('Blacklist #:id cannot be deleted', ['id' => $blacklisted->id]))->withErrors('Error', 'globalError');
+        }
+
+        return back()->with('success', __('Deleted blacklist #:id', ['id' => $blacklisted->id]));
     }
 }

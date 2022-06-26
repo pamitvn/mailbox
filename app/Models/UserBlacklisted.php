@@ -17,7 +17,7 @@ class UserBlacklisted extends Model
     ];
 
     protected $casts = [
-        'duration' => 'timestamp'
+        'duration' => 'datetime'
     ];
 
     public function user(): HasOne

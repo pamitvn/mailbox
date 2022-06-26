@@ -113,13 +113,13 @@
    import Table from '~/types/Components/Table';
 
    const props = withDefaults(defineProps<{
-      search: string;
-      page: string | number;
-      perPage: string | number;
+      search?: string;
+      page?: string | number;
+      perPage?: string | number;
       data: Utils.Pagination.Type;
       columns: Table.Columns;
-      hasCheckbox: boolean;
-      checkboxByField: string;
+      hasCheckbox?: boolean;
+      checkboxByField?: string;
    }>(), {
       search: '',
       page: 1,
@@ -174,9 +174,9 @@
    };
    const loadCurrentPage = () => {
       const currentQuery = qs.parse(_.get(_.split(useUrl.value, '?'), '1'));
-      let page = 1;
+      let page: string | string[] = '1';
 
-      if (!page || page === 1) return;
+      if (!page || page === '1') return;
 
       page = currentQuery.page;
 
