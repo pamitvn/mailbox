@@ -1,6 +1,6 @@
 <template>
-   <!-- Sidenav Accordion (Dashboard)-->
    <a
+      v-if='checkAuth'
       ref='href'
       class='nav-link'
       :class='getClass'
@@ -37,12 +37,13 @@
    </template>
 </template>
 
-<script setup>
+<script setup lang='ts'>
    import _ from 'lodash';
    import { computed, ref, watchEffect } from 'vue';
    import { Inertia } from '@inertiajs/inertia';
    import { usePage } from '@inertiajs/inertia-vue3';
    import { isURL, matchedURL } from '~/utils';
+   import { useAuth } from '~/uses';
 
    const props = defineProps({
       id: {
@@ -77,6 +78,10 @@
          type: Array,
          default: [],
       },
+      auth: {
+         type: Boolean,
+         default: false,
+      },
    });
    const emit = defineEmits(['active']);
 
@@ -103,6 +108,7 @@
          return false;
       }
    });
+   const checkAuth = computed(() => props.auth ? useAuth<boolean>('isLoggedIn') : true);
 
    const onClick = () => {
       if (hasSubItem.value) return;
