@@ -108,7 +108,7 @@
          return false;
       }
    });
-   const checkAuth = computed(() => props.auth ? useAuth<boolean>('isLoggedIn') : true);
+   const checkAuth = computed(() => props.auth ? useAuth('isLoggedIn') : true);
 
    const onClick = () => {
       if (hasSubItem.value) return;

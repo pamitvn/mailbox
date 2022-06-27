@@ -1,4 +1,4 @@
-import { DotBranch, Join, PathsToStringProps } from '~/types/Utils/common';
+import { Join, PathsToStringProps } from '~/types/Utils/common';
 import { Models } from '~/types';
 
 export namespace Auth {
@@ -9,7 +9,7 @@ export namespace Auth {
         user: Models.User;
     }
 
-    export type StringType = DotBranch<Type>
+    export type StringType = Join<PathsToStringProps<Type>, '.'>
 }
 
 export default Auth;

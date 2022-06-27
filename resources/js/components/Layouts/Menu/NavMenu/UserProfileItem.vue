@@ -1,7 +1,9 @@
 <template>
    <a class='btn btn-icon btn-transparent-dark dropdown-toggle' id='navbarDropdownUserImage'
       href='javascript:void(0);' role='button' data-bs-toggle='dropdown' aria-haspopup='true'
-      aria-expanded='false'><img class='img-fluid' src='/assets/img/illustrations/profiles/profile-1.png' /></a>
+      aria-expanded='false'>
+      <vue-gravatar class='img-fluid' :email='user.email' default-img='mp' />
+   </a>
    <div class='dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up'
         aria-labelledby='navbarDropdownUserImage'>
       <h6 v-if='user' class='dropdown-header d-flex align-items-center'>

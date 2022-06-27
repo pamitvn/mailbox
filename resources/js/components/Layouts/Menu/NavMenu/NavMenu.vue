@@ -57,12 +57,18 @@
       </li>
       <!-- User Dropdown-->
       <li class='nav-item dropdown no-caret dropdown-user me-3 me-lg-4'>
-         <UserProfileItem />
+         <UserProfileItem v-if='userLoggedIn' />
+         <GuestMenuItem v-else />
       </li>
    </ul>
 </template>
 
-<script setup>
+<script setup lang='ts'>
+   import { computed } from 'vue';
+   import useAuth from '~/uses/useAuth';
 
    import UserProfileItem from '~/components/Layouts/Menu/NavMenu/UserProfileItem';
+   import GuestMenuItem from '~/components/Layouts/Menu/NavMenu/GuestMenuItem.vue';
+
+   const userLoggedIn = computed(() => useAuth('isLoggedIn'));
 </script>
