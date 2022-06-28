@@ -23,6 +23,17 @@ export namespace Form {
 
         export type Type = DefineComponent<Props>
     }
+
+    export namespace Switch {
+        export interface Props {
+            modelValue: string | number;
+            label: string;
+            error: string;
+            allowChange: string;
+        }
+
+        export type Type = DefineComponent<Props>
+    }
 }
 
 export default Form;

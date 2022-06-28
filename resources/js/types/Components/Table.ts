@@ -14,7 +14,7 @@ export namespace Table {
     }
 
     export interface Column<RecordType = object> {
-        path: string;
+        path: keyof RecordType | string;
         label: string;
         display?: (row: RecordType, value: any, lodash: typeof Lodash) => any;
     }

@@ -5,6 +5,7 @@ import VueGravatar from 'vue3-gravatar';
 
 import TheInputField from '~/components/Form/TheInputField.vue';
 import TheCheckBoxField from '~/components/Form/TheCheckBoxField.vue';
+import TheSwitchField from '~/components/Form/TheSwitchField.vue';
 import TheTable from '~/components/Table/TheTable.vue';
 
 import 'vue-select/dist/vue-select.css';
@@ -23,6 +24,7 @@ export default (app: VueApp): VueApp => {
      */
     app.component('TheInputField', TheInputField);
     app.component('TheCheckboxField', TheCheckBoxField);
+    app.component('TheSwitchField', TheSwitchField);
     app.component('TheSelect', vSelect);
 
     /**

@@ -12,6 +12,7 @@
         "bavix/laravel-wallet": "^9.0",
         "beyondcode/laravel-websockets": "^1.13",
         "consoletvs/charts": "^7.3",
+        "cviebrock/eloquent-sluggable": "^9.0",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.2",
         "laravel/framework": "^9.11",

@@ -21,6 +21,7 @@ declare module '@vue/runtime-core' {
         TheHead: InertiaHead;
         TheInputField: Components.Form.Input.Type;
         TheCheckboxField: Components.Form.Checkbox.Type;
+        TheSwitchField: Components.Form.Switch.Type;
         TheSelect: DefineComponent<VueSelectProps>;
         TheTable: Components.Table.Type;
         VueGravatar: DefineComponent<Partial<{

@@ -105,6 +105,15 @@ Route::group([
                 'names' => 'recharge-history',
                 'only' => ['index', 'destroy']
             ]);
+
+            /**
+             * Manager Services
+             */
+            Route::resource('services', Admin\ServiceManagerController::class, [
+                'names' => 'service',
+                'except' => ['update'],
+            ]);
+            Route::post('services/{service}', [Admin\ServiceManagerController::class, 'update'])->name('service.update');
         });
 
     });

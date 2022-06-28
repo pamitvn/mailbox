@@ -61,6 +61,13 @@ return [
                     'group' => 'Admin Area',
                     'items' => [
                         [
+                            'label' => 'Services',
+                            'class' => '',
+                            'icon' => "<i data-feather='server'></i>",
+                            'target' => fn() => route('admin.service.index'),
+                            'extraMatched' => 'admin\/services(.+)'
+                        ],
+                        [
                             'label' => 'Users',
                             'class' => '',
                             'icon' => "<i data-feather='users'></i>",
