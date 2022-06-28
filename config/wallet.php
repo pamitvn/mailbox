@@ -69,7 +69,7 @@ return [
      * A system for dealing with race conditions.
      */
     'lock' => [
-        'driver' => 'array',
+        'driver' => 'redis',
         'seconds' => 1,
     ],
 
