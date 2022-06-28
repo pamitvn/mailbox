@@ -17,27 +17,44 @@ return [
                     'target' => 'javascript:;',
                     'auth' => true,
                     'items' => [
-//                        [
-//                            'label' => 'Profile',
-//                            'class' => '',
-//                            'icon' => '<i class="fa-regular fa-user"></i>',
-//                            'target' => fn() => route('account.profile')
-//                        ],
-//                        [
-//                            'label' => 'Reset Password',
-//                            'class' => '',
-//                            'icon' => "<i data-feather='key'></i>",
-//                            'target' => fn() => route('account.reset-password')
-//                        ],
-//                        [
-//                            'label' => 'API',
-//                            'class' => '',
-//                            'icon' => "<i data-feather='tool'></i>",
-//                            'target' => fn() => route('account.api')
-//                        ],
+                        [
+                            'label' => 'Profile',
+                            'class' => '',
+                            'icon' => '<i class="fa-regular fa-user"></i>',
+                            'target' => fn() => route('account.profile')
+                        ],
+                        [
+                            'label' => 'Reset Password',
+                            'class' => '',
+                            'icon' => "<i data-feather='key'></i>",
+                            'target' => fn() => route('account.reset-password')
+                        ],
+                        [
+                            'label' => 'API',
+                            'class' => '',
+                            'icon' => "<i data-feather='tool'></i>",
+                            'target' => fn() => route('account.api')
+                        ],
                     ]
                 ],
 
+            ],
+            'account' => [
+                [
+                    'label' => 'Profile',
+                    'class' => '',
+                    'target' => fn() => route('account.profile')
+                ],
+                [
+                    'label' => 'Reset Password',
+                    'class' => '',
+                    'target' => fn() => route('account.reset-password')
+                ],
+                [
+                    'label' => 'API',
+                    'class' => '',
+                    'target' => fn() => route('account.api')
+                ],
             ],
             'admin' => [
                 [
@@ -80,23 +97,6 @@ return [
                             'extraMatched' => 'admin\/recharge-histories(.+)'
                         ],
                     ]
-                ],
-            ],
-            'account' => [
-                [
-                    'label' => 'Profile',
-                    'class' => '',
-                    'target' => fn() => '/'
-                ],
-                [
-                    'label' => 'Reset Password',
-                    'class' => '',
-                    'target' => fn() => '/'
-                ],
-                [
-                    'label' => 'API',
-                    'class' => '',
-                    'target' => fn() => '/'
                 ],
             ],
         ]

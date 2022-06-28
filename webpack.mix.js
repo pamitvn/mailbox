@@ -1,6 +1,8 @@
 const mix = require('laravel-mix');
 const path = require('path');
 
+require('./mix.extend.js');
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -29,7 +31,10 @@ mix.ts('resources/js/app.ts', 'public/app/js', {
       '~': path.join(__dirname, 'resources', 'js'),
       ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
    })
-;
+   .ziggy({
+      path: 'resources/js/utils/ziggy.js',
+      enable: true,
+   });
 
 mix.postCss('resources/css/app.css', 'public/app/css', [
    //

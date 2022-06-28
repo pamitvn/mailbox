@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\{Admin, Account};
 use App\Http\Controllers\StaticPageController;
-use App\Http\Controllers\{Admin};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +25,40 @@ Route::group([
     Route::group([
         'middleware' => ['auth']
     ], function () {
+
+        Route::group([
+            'prefix' => 'account',
+            'as' => 'account.'
+        ], function () {
+
+            Route::group([
+                'prefix' => 'profile',
+                'as' => 'profile',
+                'controller' => Account\ProfileController::class,
+            ], function () {
+                Route::get('', 'index');
+                Route::put('', 'update');
+            });
+
+            Route::group([
+                'prefix' => 'api',
+                'as' => 'api',
+                'controller' => Account\APIManagerController::class,
+            ], function () {
+                Route::get('', 'index');
+                Route::post('', 'store');
+            });
+
+            Route::group([
+                'prefix' => 'reset-password',
+                'as' => 'reset-password',
+                'controller' => Account\ResetPasswordController::class,
+            ], function () {
+                Route::get('reset-password', 'index');
+                Route::put('reset-password', 'update');
+            });
+
+        });
 
         Route::group([
             'prefix' => 'admin',
