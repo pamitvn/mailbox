@@ -1,4 +1,7 @@
 <template>
+   <the-head>
+      <title>Account Profile</title>
+   </the-head>
    <!-- Account details card-->
    <div class='card mb-4'>
       <div class='card-header'>Account Details</div>

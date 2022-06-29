@@ -1,4 +1,7 @@
 <template>
+   <the-head>
+      <title>User Managers</title>
+   </the-head>
    <Layout>
       <template #header-link>
          <the-link class='btn btn-sm btn-light text-primary' :href='$route("admin.user.create")'>

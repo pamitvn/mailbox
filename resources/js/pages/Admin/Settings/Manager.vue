@@ -1,4 +1,7 @@
 <template>
+   <the-head>
+      <title>Setting Managers</title>
+   </the-head>
    <Layout :menu='groups'>
       <div class='card mb-4'>
          <div class='card-header'>{{ group.label }} Settings</div>

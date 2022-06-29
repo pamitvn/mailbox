@@ -1,4 +1,7 @@
 <template>
+   <the-head>
+      <title>Add new Bank</title>
+   </the-head>
    <Layout>
       <the-head>
          <title>Create New Bank</title>
