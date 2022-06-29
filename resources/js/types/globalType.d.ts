@@ -20,6 +20,7 @@ declare module '@vue/runtime-core' {
         TheLink: InertiaLink;
         TheHead: InertiaHead;
         TheInputField: Components.Form.Input.Type;
+        TheTextareaField: Components.Form.Textarea.Type;
         TheCheckboxField: Components.Form.Checkbox.Type;
         TheSwitchField: Components.Form.Switch.Type;
         TheSelect: DefineComponent<VueSelectProps>;

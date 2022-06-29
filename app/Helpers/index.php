@@ -1,5 +1,8 @@
 <?php
 
+use App\PAM\Facades\AdminSetting;
+use Illuminate\Support\Arr;
+
 if (!function_exists('table_name_of_model')) {
     function table_name_of_model(string $model)
     {
@@ -20,6 +23,19 @@ if (!function_exists('dispatch_action')) {
         }
 
         abort(404);
+    }
+}
+
+if (!function_exists('settings')) {
+    function settings($key = null, $default = null, $group = null)
+    {
+        $group ??= config('admin.settings.default');
+
+        $settings = AdminSetting::get($group);
+
+        return $key
+            ? Arr::get($settings, $key, $default)
+            : $settings;
     }
 }
 

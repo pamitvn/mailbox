@@ -13,6 +13,18 @@ export namespace Form {
         export type Type = DefineComponent<Props>
     }
 
+    export namespace Textarea {
+        export interface Props {
+            modelValue: string | number;
+            label: string;
+            error: string;
+            allowChange: string;
+            onEvent: Object;
+        }
+
+        export type Type = DefineComponent<Props>
+    }
+
     export namespace Checkbox {
         export interface Props {
             modelValue: string | number;

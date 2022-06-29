@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Observers\UserObserver;
+use App\PAM\AdminSetting;
 use App\PAM\ApiResponse;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(ApiResponse::$getFacadeAccessor, fn() => new ApiResponse());
+        $this->app->singleton(AdminSetting::$getFacadeAccessor, fn(Application $app) => new AdminSetting($app->make('config')->get('admin.settings')));
     }
 
     /**
@@ -151,6 +154,13 @@ class AppServiceProvider extends ServiceProvider
                             'icon' => "<i data-feather='dollar-sign'></i>",
                             'target' => route('admin.recharge-history.index'),
                             'extraMatched' => 'admin\/recharge-histories(.+)'
+                        ],
+                        [
+                            'label' => 'Settings',
+                            'class' => '',
+                            'icon' => "<i data-feather='settings'></i>",
+                            'target' => route('admin.setting', config('admin.settings.default')),
+                            'extraMatched' => 'admin\/settings(.+)'
                         ],
                     ]
                 ],

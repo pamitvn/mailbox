@@ -69,6 +69,17 @@ Route::group([
             Route::any('handle-action', Admin\DoActionController::class)->name('handle-action');
 
             /**
+             * Manager Dynamic Settings
+             */
+            Route::group([
+                'prefix' => 'settings',
+                'controller' => Admin\SettingManagerController::class
+            ], function () {
+                Route::get('{setting?}', 'index')->name('setting');
+                Route::post('{setting?}', 'update');
+            });
+
+            /**
              * Manager Users
              */
             Route::resource('users', Admin\UserManagerController::class, [

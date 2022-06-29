@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Events\Admin\DoActionEvent;
 use App\Listeners\Admin\DoAction;
+use App\Listeners\Settings\SettingsSavedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Spatie\LaravelSettings\Events\SettingsSaved;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         DoActionEvent::class => [
             DoAction\SelectorUserDataListener::class,
+        ],
+        SettingsSaved::class => [
+            SettingsSavedListener::class,
         ],
     ];
 

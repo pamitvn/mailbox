@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\PAM\Layout;
+use App\Settings\GeneralSetting;
+use App\Settings\NotificationSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Middleware;
@@ -39,6 +41,9 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
+            'site' => [
+                'name' => settings('site_name')
+            ],
             'auth' => [
                 'isLoggedIn' => fn() => auth()->check(),
                 'user' => fn() => auth()->user(),
@@ -54,7 +59,7 @@ class HandleInertiaRequests extends Middleware
                     'main' => Gate::allows('admin') ? array_merge(Layout::make()->all('menu.main'), Layout::make()->all('menu.admin')) : Layout::make()->all('menu.main')
                 ])
             ]),
-            'notification' => fn() => config('web-config.notification')
+            'notification' => fn() => settings(group: 'notification')
         ]);
     }
 }
