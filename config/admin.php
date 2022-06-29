@@ -7,6 +7,7 @@ return [
         'defines' => [
             \App\Settings\GeneralSetting::class,
             \App\Settings\NotificationSetting::class,
+            \App\Settings\PaymentSetting::class,
         ]
     ]
 ];
