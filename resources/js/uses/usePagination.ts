@@ -7,8 +7,8 @@ const usePagination = () => {
     const url = reactive(new URL(location.href));
     const query = reactive(qs.parse(url.searchParams.toString()));
 
-    const search = ref(query.search ?? '');
-    const perPage = ref(query.perPage ?? 10);
+    const search = ref<string>(query.search as string ?? '');
+    const perPage = ref<number | string>(query.perPage as number ?? 10);
     const isTableChange = ref(false);
 
     watch(search, _.debounce(function(val) {

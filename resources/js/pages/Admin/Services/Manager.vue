@@ -44,7 +44,7 @@
                <template #row-action='{row}'>
                   <td>
                      <the-link class='btn btn-datatable btn-icon btn-transparent-dark me-2'
-                               as='button'>
+                               :href='$route("admin.service.product.index", {service: row.id})'>
                         <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'
                              stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
                              class='feather feather-database'>
@@ -103,6 +103,7 @@
 
    import Layout from './Layout';
    import TheTable from '~/components/Table/TheTable';
+   import dateFormat from 'dateformat';
 
    const props = defineProps<{
       paginationData: Utils.Pagination.Type<Models.Service>
@@ -133,7 +134,7 @@
       {
          path: 'created_at',
          label: 'Created At',
-         display: (row, path, lodash) => lodash.get(row, path, false),
+         display: (row, path, lodash) => dateFormat(lodash.get(row, path, '') as string, 'mmmm dS, yyyy, h:MM:ss TT'),
       },
       {
          path: 'action',

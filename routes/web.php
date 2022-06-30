@@ -117,11 +117,22 @@ Route::group([
             /**
              * Manager Services
              */
-            Route::resource('services', Admin\ServiceManagerController::class, [
+            $servicePrefix = 'services';
+
+            Route::group([
+                'prefix' => $servicePrefix,
+            ], function () {
+                Route::resource('products', Admin\ProductManagerController::class, [
+                    'names' => 'service.product',
+                    'except' => ['show', 'edit', 'update']
+                ]);
+                Route::post("{service}", [Admin\ServiceManagerController::class, 'update'])->name('service.update');
+            });
+
+            Route::resource($servicePrefix, Admin\ServiceManagerController::class, [
                 'names' => 'service',
                 'except' => ['update'],
             ]);
-            Route::post('services/{service}', [Admin\ServiceManagerController::class, 'update'])->name('service.update');
         });
 
     });
