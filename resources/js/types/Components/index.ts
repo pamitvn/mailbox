@@ -2,12 +2,12 @@ import { DefineComponent } from 'vue';
 
 import form from './Form';
 import table from './Table';
-import model from './Model';
+import modal from './Modal';
 
 export namespace Components {
     export import Form = form;
     export import Table = table;
-    export import Model = model;
+    export import Modal = modal;
     export namespace VueGravatar {
         export interface Props {
             hash: string;

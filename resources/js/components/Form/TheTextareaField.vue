@@ -43,7 +43,7 @@
       emits: ['update:modelValue', 'input'],
       setup(props, { emit, attrs }) {
          const input = ref(props.modelValue ?? '');
-         const inputId = `input-field-${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)}`;
+         const inputId = `textarea-field-${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)}`;
 
          const inputProp = computed(() => props.modelValue);
          const getClass = computed(() => ({

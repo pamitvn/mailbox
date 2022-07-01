@@ -35,12 +35,9 @@ class ProductManagerController extends Controller
         ]);
     }
 
-    public function create()
-    {
-    }
-
     public function store(Request $request)
     {
+        dd($request->all());
     }
 
     public function destroy(Product $product)

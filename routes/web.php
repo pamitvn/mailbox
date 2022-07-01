@@ -124,7 +124,7 @@ Route::group([
             ], function () {
                 Route::resource('products', Admin\ProductManagerController::class, [
                     'names' => 'service.product',
-                    'except' => ['show', 'edit', 'update']
+                    'only' => ['index', 'store', 'destroy']
                 ]);
                 Route::post("{service}", [Admin\ServiceManagerController::class, 'update'])->name('service.update');
             });
