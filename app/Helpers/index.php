@@ -39,5 +39,12 @@ if (!function_exists('settings')) {
     }
 }
 
+if (!function_exists('send_current_user_message')) {
+    function send_current_user_message($type, $message)
+    {
+
+    }
+}
+
 
 require "query.php";

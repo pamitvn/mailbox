@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class ProductManagerController extends Controller
 {
@@ -37,7 +41,40 @@ class ProductManagerController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        $data = $request->validate([
+            'products' => [
+                'nullable',
+                Rule::requiredIf(fn() => !$request->file('file') instanceof UploadedFile),
+                'array',
+                'min:1'
+            ],
+            'file' => [
+                'nullable',
+                Rule::requiredIf(fn() => $request->file('file') instanceof UploadedFile),
+                'file',
+                'mimes:txt',
+                'mimetypes:text/plain',
+                'max:10240',
+            ]
+        ]);
+
+        $file = $request->file('file');
+
+        if ($file) {
+            $dir = 'app/handlers/products';
+            $fileName = md5(now() . $file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+
+            File::ensureDirectoryExists(storage_path($dir));
+
+            $file?->move(storage_path($dir), $fileName);
+            $payload = "handlers/products/$fileName";
+        } else {
+            $payload = array_unique($data['products'], SORT_REGULAR);
+        }
+
+        send_current_user_message('info', __('This action has been added to the pending queue'));
+
+        return back();
     }
 
     public function destroy(Product $product)

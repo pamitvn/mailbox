@@ -51,3 +51,9 @@ export const useRoute: Utils.Common.UseRoute = (name, params, c) => {
         return 'javascript:;';
     }
 };
+
+export const randomString = (length: number = 5): string => {
+    return new Array(length).join().replace(/(.|$)/g, function() {
+        return ((Math.random() * 36) | 0).toString(36)[Math.random() < .5 ? 'toString' : 'toUpperCase']();
+    });
+};
