@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
             'site' => [
                 'name' => settings('site_name')
             ],
+            'urlPrev' => fn() => url()->previous(),
             'auth' => [
                 'isLoggedIn' => fn() => auth()->check(),
                 'user' => fn() => auth()->user(),

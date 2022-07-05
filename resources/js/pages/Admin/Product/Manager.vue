@@ -6,7 +6,7 @@
       <template #header-link>
          <import-modal :service='service' />
       </template>
-      <the-filter-table-card />
+      <the-filter-table-card :fields='filterFields' />
       <div class='card'>
          <div class='card-body'>
             <TheTable v-model:search='search' v-model:per-page='perPage' :data='paginationData' :columns='columns'>
@@ -54,6 +54,9 @@
       statusHtmlLabel: {
          [key: string]: string
       }
+      statusLabel: {
+         [key: string]: string
+      }
 
       service: Models.Service
       paginationData: Utils.Pagination.Type<Models.Product>
@@ -89,6 +92,18 @@
       {
          path: 'action',
          label: '',
+      },
+   ]);
+   const filterFields = reactive<Components.Table.FilterCard.Fields>([
+      {
+         name: 'status',
+         label: 'Status',
+         options: props.statusLabel,
+      },
+      {
+         name: 'status2',
+         label: 'Status2',
+         options: props.statusLabel,
       },
    ]);
 </script>

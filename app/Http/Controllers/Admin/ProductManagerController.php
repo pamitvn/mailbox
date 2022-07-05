@@ -39,6 +39,7 @@ class ProductManagerController extends Controller
 
         return inertia('Admin/Product/Manager', [
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
+            'statusLabel' => ProductStatus::toLabelArray(),
             'service' => $service,
             'paginationData' => paginate_with_params($records, $params)
         ]);

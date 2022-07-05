@@ -32,6 +32,8 @@ export namespace Table {
         export interface Field {
             name: string;
             is?: string;
+            label?: string;
+            options?: any;
 
             [key: string]: any;
         }
