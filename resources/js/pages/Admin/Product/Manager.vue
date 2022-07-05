@@ -4,11 +4,16 @@
    </the-head>
    <Layout :service='service'>
       <template #header-link>
-         <import-modal />
+         <import-modal :service='service' />
       </template>
+      <the-filter-table-card />
       <div class='card'>
          <div class='card-body'>
             <TheTable v-model:search='search' v-model:per-page='perPage' :data='paginationData' :columns='columns'>
+               <template #row-status='{value}'>
+                  <td v-html='statusHtmlLabel[value]'></td>
+               </template>
+
                <template #row-action='{row}'>
                   <td>
                      <the-link class='btn btn-datatable btn-icon btn-transparent-dark'
@@ -43,8 +48,13 @@
    import Layout from './Layout.vue';
    import TheTable from '~/components/Table/TheTable.vue';
    import ImportModal from '~/pages/Admin/Product/ImportModal.vue';
+   import TheFilterTableCard from '~/components/Table/TheFilterTableCard.vue';
 
    const props = defineProps<{
+      statusHtmlLabel: {
+         [key: string]: string
+      }
+
       service: Models.Service
       paginationData: Utils.Pagination.Type<Models.Product>
    }>();
@@ -66,6 +76,10 @@
       {
          path: 'recovery_mail',
          label: 'Recovery Mail',
+      },
+      {
+         path: 'status',
+         label: 'Status',
       },
       {
          path: 'created_at',

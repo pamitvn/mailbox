@@ -21,6 +21,23 @@ export namespace Table {
 
     export type Columns<RecordType = object> = Column<RecordType>[]
     export type Type<RecordType = object> = DefineComponent<Partial<Props<RecordType>>>
+
+    export namespace FilterCard {
+        export interface Props {
+            id: string;
+            title: string;
+            fields: Fields;
+        }
+
+        export interface Field {
+            name: string;
+            is?: string;
+
+            [key: string]: any;
+        }
+
+        export type Fields = Field[]
+    }
 }
 
 export default Table;

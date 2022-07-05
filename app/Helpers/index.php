@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\Sockets\UserMessageEvent;
 use App\PAM\Facades\AdminSetting;
 use Illuminate\Support\Arr;
 
@@ -40,9 +41,14 @@ if (!function_exists('settings')) {
 }
 
 if (!function_exists('send_current_user_message')) {
-    function send_current_user_message($type, $message)
+    function send_current_user_message($type, $message, $userId = null): void
     {
+        $userId ??= auth()->id();
 
+        UserMessageEvent::dispatch($userId, [
+            'type' => $type,
+            'message' => $message
+        ]);
     }
 }
 

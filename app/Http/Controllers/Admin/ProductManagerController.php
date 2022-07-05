@@ -3,18 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\Products\ImportProductJob;
 use App\Models\Product;
 use App\Models\Service;
+use App\PAM\Enums\ProductStatus;
+use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 
 class ProductManagerController extends Controller
 {
-    public function __construct()
+    private ProductService $_productService;
+
+    public function __construct(ProductService $service)
     {
+        $this->_productService = $service;
     }
 
     public function index(Request $request)
@@ -23,17 +27,18 @@ class ProductManagerController extends Controller
         $serviceId = $request->get('service');
         $search = $request->get('search');
 
-        abort_if(blank($serviceId), 404);
-
         $service = Service::findOrFail($serviceId);
-        $records = Product::query()->whereId($service->id)->orderBy('id', 'desc');
+        $records = Product::query()
+            ->whereServiceId($service->id)
+            ->orderBy('id', 'desc');
 
         search_by_cols($records, $search, [
-            'name',
-            'slug'
+            'mail',
+            'recovery_mail'
         ]);
 
         return inertia('Admin/Product/Manager', [
+            'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
             'service' => $service,
             'paginationData' => paginate_with_params($records, $params)
         ]);
@@ -41,6 +46,7 @@ class ProductManagerController extends Controller
 
     public function store(Request $request)
     {
+        $service = Service::findOrFail($request->get('service'));
         $data = $request->validate([
             'products' => [
                 'nullable',
@@ -61,16 +67,12 @@ class ProductManagerController extends Controller
         $file = $request->file('file');
 
         if ($file) {
-            $dir = 'app/handlers/products';
-            $fileName = md5(now() . $file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
-
-            File::ensureDirectoryExists(storage_path($dir));
-
-            $file?->move(storage_path($dir), $fileName);
-            $payload = "handlers/products/$fileName";
+            $payload = $this->_productService->uploadFile($file);
         } else {
             $payload = array_unique($data['products'], SORT_REGULAR);
         }
+
+        ImportProductJob::dispatch($this->_productService, auth()->user(), $service, $payload);
 
         send_current_user_message('info', __('This action has been added to the pending queue'));
 

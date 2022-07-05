@@ -90,7 +90,12 @@
    import { useForm, usePage } from '@inertiajs/inertia-vue3';
    import { refDebounced } from '@vueuse/core';
    import { randomString, useRoute } from '~/utils';
-   import Model from '~/types/Components/Modal';
+   import Modal from '~/types/Components/Modal';
+   import { Models } from '~/types';
+
+   const props = defineProps<{
+      service: Models.Service
+   }>();
 
    const form = useForm({
       products: '',
@@ -98,7 +103,7 @@
    });
 
    const modalRef = ref<HTMLElement | null>(null);
-   const modalBootstrap = ref<Model.Bootstrap | null>(null);
+   const modalBootstrap = ref<Modal.Bootstrap | null>(null);
    const products = ref(form.products);
    const productsDebounced = refDebounced(products, 300);
 
@@ -148,7 +153,7 @@
          } : {
             products: transformData.value.valid,
          }),
-      })).post(useRoute('admin.service.product.store'), {
+      })).post(useRoute('admin.service.product.store', { service: props.service.id }), {
          onSuccess: () => {
             forgetModel();
          },

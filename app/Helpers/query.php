@@ -30,7 +30,7 @@ if (!function_exists('search_by_cols')) {
 }
 
 if (!function_exists('paginate_with_params')) {
-    function paginate_with_params(Builder $query, array $params = []): LengthAwarePaginator
+    function paginate_with_params($query, array $params = []): LengthAwarePaginator
     {
         $perPage = config('app.pagination');
 
