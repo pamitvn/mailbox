@@ -4,7 +4,7 @@
 
 <script setup>
    import _ from 'lodash';
-   import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue';
+   import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
    import { usePage } from '@inertiajs/inertia-vue3';
    import { useAuth, useToast } from '~/uses';
    import { Echo, reactiveToJson } from '~/utils';
@@ -13,7 +13,27 @@
 
    const flashMessage = computed(() => _.get(reactiveToJson(usePage().props.value ?? {}), 'flash', {}));
 
-   watchEffect(() => {
+   onMounted(() => {
+      if (!useAuth('isLoggedIn', false)) return;
+
+      messageChannel.value = `user.${useAuth('user.id')}`;
+
+      Echo.private(messageChannel.value)
+         .listen('.message', e => {
+            try {
+               const { type, message } = e;
+               useToast(message, { type });
+            } catch (e) {
+
+            }
+         });
+   });
+
+   onUnmounted(() => {
+      Echo.leave(messageChannel.value);
+   });
+
+   watch(() => flashMessage.value, () => {
       if (!flashMessage.value) return;
 
       Object.keys(_.pickBy(flashMessage.value, _.identity))
@@ -36,25 +56,5 @@
                type,
             });
          });
-   });
-
-   onMounted(() => {
-      if (!useAuth('isLoggedIn', false)) return;
-
-      messageChannel.value = `user.${useAuth('user.id')}`;
-
-      Echo.private(messageChannel.value)
-         .listen('.message', e => {
-            try {
-               const { type, message } = e;
-               useToast(message, { type });
-            } catch (e) {
-
-            }
-         });
-   });
-
-   onUnmounted(() => {
-      Echo.leave(messageChannel.value);
    });
 </script>

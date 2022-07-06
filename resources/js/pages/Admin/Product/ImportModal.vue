@@ -107,7 +107,7 @@
    const products = ref(form.products);
    const productsDebounced = refDebounced(products, 300);
 
-   const modalId = computed(() => randomString(10));
+   const modalId = computed(() => 'product-import-modal');
    const transformData = computed(() => {
       const values = productsDebounced.value.trim();
       const list = _.compact(values.split('\n'));

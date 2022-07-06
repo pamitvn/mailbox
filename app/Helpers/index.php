@@ -52,5 +52,16 @@ if (!function_exists('send_current_user_message')) {
     }
 }
 
+if (!function_exists('send_message_if')) {
+    function send_message_if($boolean, $message, $unlessMessage, $userId = null): void
+    {
+        send_current_user_message(
+            $boolean ? 'success' : 'danger',
+            $boolean ? $message : $unlessMessage,
+            $userId
+        );
+    }
+}
+
 
 require "query.php";

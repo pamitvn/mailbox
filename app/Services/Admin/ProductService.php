@@ -7,6 +7,7 @@ use App\PAM\Enums\ProductStatus;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use TheSeer\Tokenizer\Exception;
 
 class ProductService
 {
@@ -21,6 +22,17 @@ class ProductService
                 'service_id' => $serviceId
             ]);
         });
+    }
+
+    public function delete(Product $model)
+    {
+        try {
+            return DB::transaction(function () use ($model) {
+                return $model->delete();
+            });
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     public function uploadFile(UploadedFile $file): string

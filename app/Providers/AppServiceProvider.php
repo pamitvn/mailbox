@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
 use App\Models\User;
+use App\Observers\ProductObserver;
 use App\Observers\UserObserver;
 use App\PAM\AdminSetting;
 use App\PAM\ApiResponse;
@@ -51,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
     protected function defineObserver()
     {
         User::observe(UserObserver::class);
+        Product::observe(ProductObserver::class);
     }
 
     protected function defineLayoutMenu()

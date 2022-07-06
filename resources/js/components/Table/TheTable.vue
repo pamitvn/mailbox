@@ -21,6 +21,10 @@
             </div>
          </div>
       </slot>
+      <div class='mb-1'>
+         <slot v-if='isSelected' name='header-actions'>
+         </slot>
+      </div>
       <div class='dataTable-container'>
          <table class='dataTable-table'>
             <thead>
@@ -159,6 +163,7 @@
          return item;
       });
    });
+   const isSelected = computed(() => _.filter(_.cloneDeep(selected.value), i => i).length);
 
    const getColLabel = (col) => _.get(col, 'label');
    const getRowDisplay = (row, col) => {

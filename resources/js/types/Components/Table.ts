@@ -33,6 +33,7 @@ export namespace Table {
             name: string;
             is?: string;
             label?: string;
+            placeholder?: string;
             options?: any;
 
             [key: string]: any;

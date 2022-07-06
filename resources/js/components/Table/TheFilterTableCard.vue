@@ -11,14 +11,25 @@
          <div class='card-body'>
             <div class='row'>
                <div v-for='(field, index) in fields' :key='index' class='col-4'>
-                  <slot :name='`custom-${field.name}`' :field='field'>
-                     <select v-model='values[field.name]' class='form-control'>
-                        <option :value='null'>{{ field.label }}</option>
-                        <option v-for='(st,index) in field.options' :value='index'>
-                           {{ st }}
-                        </option>
-                     </select>
-                  </slot>
+                  <template v-if='field.is'>
+                     <keep-alive>
+                        <component :is='field.is' v-bind='field'></component>
+                     </keep-alive>
+                  </template>
+                  <template v-else>
+                     <slot :name='`custom-${field.name}`' :field='field'>
+                        <label :for='`table-filter-${field.name}-field`' class='small mb-1'>{{ field.label }}</label>
+                        <select v-model='values[field.name]'
+                                :id='`table-filter-${field.name}-field`'
+                                class='form-control'
+                        >
+                           <option :value='null'>{{ field.placeholder ?? field.label }}</option>
+                           <option v-for='(label,index) in field.options' :value='index'>
+                              {{ label }}
+                           </option>
+                        </select>
+                     </slot>
+                  </template>
                </div>
             </div>
          </div>
@@ -29,17 +40,17 @@
 <script setup lang='ts'>
    import _ from 'lodash';
    import { onMounted, ref, watchEffect } from 'vue';
+   import { Inertia } from '@inertiajs/inertia';
    import { isURL } from '~/utils';
    import Table from '~/types/Components/Table';
-   import FilterCard = Table.FilterCard;
 
    const props = withDefaults(defineProps<{
       id?: string
       title?: string
-      fields: FilterCard.Fields
+      fields: Table.FilterCard.Fields
    }>(), {
-      id: 'the-filter-table-card',
-      title: 'Filter Table',
+      id: 'the-table-filter-card',
+      title: 'Table of filters',
    });
 
    const values = ref({});
@@ -61,7 +72,18 @@
 
 
    watchEffect(() => {
-      console.log(_.cloneDeep(values.value));
+      const currentURL = window.location.href;
+      const url = new URL(currentURL);
+
+      _.forEach(values.value, (item, index) => {
+         values.value[index] !== null
+            ? url.searchParams.set(String(index), values.value[index])
+            : url.searchParams.delete(String(index));
+      });
+
+      if (url.toString() === currentURL) return;
+
+      return Inertia.get(url.toString());
    });
 </script>
 

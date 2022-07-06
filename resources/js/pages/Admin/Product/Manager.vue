@@ -9,7 +9,19 @@
       <the-filter-table-card :fields='filterFields' />
       <div class='card'>
          <div class='card-body'>
-            <TheTable v-model:search='search' v-model:per-page='perPage' :data='paginationData' :columns='columns'>
+            <TheTable v-model:search='search'
+                      v-model:per-page='perPage'
+                      :has-checkbox='true'
+                      :data='paginationData'
+                      :columns='columns'
+                      @selected-rows='onSelectedRows'
+            >
+               <template #header-actions>
+                  <button class='btn btn-danger btn-xs' @click='() => bulkDeleter()'>
+                     <i class='fa-solid fa-trash-can me-1'></i>
+                     Delete (Selected rows)
+                  </button>
+               </template>
                <template #row-status='{value}'>
                   <td v-html='statusHtmlLabel[value]'></td>
                </template>
@@ -40,10 +52,13 @@
 </template>
 
 <script setup lang='ts'>
-   import { reactive } from 'vue';
-   import { Components, Models, Utils } from '~/types';
-   import { usePagination } from '~/uses';
+   import _ from 'lodash';
+   import { reactive, watch } from 'vue';
+   import { Inertia } from '@inertiajs/inertia';
    import dateFormat from 'dateformat';
+   import { Components, Models, Utils } from '~/types';
+   import { useRoute } from '~/utils';
+   import { usePagination, usePaginationCUSocket, useTableCheckbox } from '~/uses';
 
    import Layout from './Layout.vue';
    import TheTable from '~/components/Table/TheTable.vue';
@@ -62,7 +77,6 @@
       paginationData: Utils.Pagination.Type<Models.Product>
    }>();
 
-   const { search, perPage } = usePagination();
    const columns = reactive<Components.Table.Columns<Models.Product>>([
       {
          path: 'id',
@@ -97,13 +111,38 @@
    const filterFields = reactive<Components.Table.FilterCard.Fields>([
       {
          name: 'status',
-         label: 'Status',
-         options: props.statusLabel,
-      },
-      {
-         name: 'status2',
-         label: 'Status2',
+         label: 'Filter by status',
+         placeholder: 'Status',
          options: props.statusLabel,
       },
    ]);
+
+   const { search, perPage } = usePagination();
+   const { selected, onSelected: onSelectedRows } = useTableCheckbox();
+   const {
+      paginationData,
+      setPaginationData,
+   } = usePaginationCUSocket<Models.Product>(_.cloneDeep(props.paginationData), {
+      channel: `user.admin`,
+      event: {
+         create: `.service.${props.service.id}.product.create`,
+         update: `.service.${props.service.id}.product.update`,
+      },
+   });
+
+   const bulkDeleter = () => {
+      if (confirm('Warning! You won\'t be able to undo the deletion once you confirm it. Are you certain?') === false) return;
+
+      const url = useRoute('admin.service.product.bulk-destroy', {
+         service: props.service.id,
+      });
+      const data = { includes: selected };
+
+      return Inertia.post(url, data);
+   };
+
+   watch(() => props.paginationData, () => {
+      setPaginationData(_.cloneDeep(props.paginationData));
+   });
+
 </script>

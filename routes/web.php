@@ -121,12 +121,14 @@ Route::group([
 
             Route::group([
                 'prefix' => $servicePrefix,
+                'controller' => Admin\ProductManagerController::class
             ], function () {
+                Route::post('products/bulk-destroy', 'bulkDestroy')->name('service.product.bulk-destroy');
                 Route::resource('products', Admin\ProductManagerController::class, [
                     'names' => 'service.product',
                     'only' => ['index', 'store', 'destroy']
                 ]);
-                Route::post("{service}", [Admin\ServiceManagerController::class, 'update'])->name('service.update');
+                Route::post("{service}", 'update')->name('service.update');
             });
 
             Route::resource($servicePrefix, Admin\ServiceManagerController::class, [
