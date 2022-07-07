@@ -13,8 +13,10 @@ class ServiceManagerController extends Controller
 
     protected array $rules = [
         'name' => ['required', 'string', 'max:150'],
+        'lifetime' => ['required', 'string', 'max:150'],
         'price' => ['required', 'integer'],
-        'recovery_mail' => ['nullable', 'boolean'],
+        'pop3' => ['nullable', 'boolean'],
+        'imap' => ['nullable', 'boolean'],
         'visible' => ['nullable', 'boolean'],
         'feature_image' => [
             'nullable',
@@ -63,10 +65,6 @@ class ServiceManagerController extends Controller
         return $this->_service->create($data)
             ? back()->with('success', __('Created new service'))
             : back()->with('error', __('Service cannot be created'))->withErrors('Error', 'globalError');
-    }
-
-    public function show(Service $service)
-    {
     }
 
     public function edit(Service $service)

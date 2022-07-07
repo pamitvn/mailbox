@@ -133,7 +133,7 @@ Route::group([
 
             Route::resource($servicePrefix, Admin\ServiceManagerController::class, [
                 'names' => 'service',
-                'except' => ['update'],
+                'except' => ['update', 'show'],
             ]);
         });
 

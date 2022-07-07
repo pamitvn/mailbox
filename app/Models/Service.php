@@ -13,14 +13,17 @@ class Service extends Model
         'name',
         'slug',
         'feature_image',
+        'lifetime',
         'price',
-        'recovery_mail',
+        'pop3',
+        'imap',
         'visible'
     ];
 
     protected $casts = [
         'price' => 'integer',
-        'recovery_mail' => 'boolean',
+        'pop3' => 'boolean',
+        'imap' => 'boolean',
         'visible' => 'boolean'
     ];
 

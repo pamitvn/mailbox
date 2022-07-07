@@ -28,6 +28,15 @@
                </div>
 
                <div class='mb-3'>
+                  <TheInputField v-model='form.lifetime'
+                                 :error='form.errors.lifetime'
+                                 label='Lifetime'
+                                 type='text'
+                                 placeholder='Enter lifetime'
+                  />
+               </div>
+
+               <div class='mb-3'>
                   <the-input-field
                      label='Image'
                      type='file'
@@ -47,9 +56,15 @@
                </div>
 
                <div class='mb-3'>
-                  <the-switch-field v-model='form.recovery_mail'
-                                    :error='form.errors.recovery_mail'
-                                    label='Recovery Mail'
+                  <the-switch-field v-model='form.pop3'
+                                    :error='form.errors.pop3'
+                                    label='Pop3'
+                  />
+               </div>
+               <div class='mb-3'>
+                  <the-switch-field v-model='form.imap'
+                                    :error='form.errors.imap'
+                                    label='IMAP'
                   />
                </div>
 
@@ -75,13 +90,15 @@
 
    import Layout from './Layout.vue';
 
-   type FormType = Pick<Models.Service, 'name' | 'feature_image' | 'price' | 'recovery_mail' | 'visible'>;
+   type FormType = Pick<Models.Service, 'name' | 'lifetime' | 'feature_image' | 'price' | 'pop3' | 'imap' | 'visible'>;
 
    const form = useForm<FormType>({
       name: null,
+      lifetime: null,
       feature_image: null,
       price: 0,
-      recovery_mail: false,
+      pop3: false,
+      imap: false,
       visible: false,
    });
 

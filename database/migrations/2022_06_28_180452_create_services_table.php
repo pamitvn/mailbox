@@ -12,8 +12,10 @@ return new class extends Migration {
             $table->string('name', 150);
             $table->string('slug')->unique()->index();
             $table->string('feature_image')->nullable();
+            $table->string('lifetime');
             $table->integer('price', false)->default(0)->index();
-            $table->boolean('recovery_mail')->default(false);
+            $table->boolean('pop3')->default(false);
+            $table->boolean('imap')->default(false);
             $table->boolean('visible')->default(false)->index();
             $table->timestamps();
         });
