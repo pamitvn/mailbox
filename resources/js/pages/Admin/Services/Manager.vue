@@ -18,8 +18,8 @@
          <div class='card-body'>
             <TheTable v-model:search='search' v-model:per-page='perPage' :data='paginationData' :columns='columns'>
                <template #row-feature_image='{row,value}'>
-                  <td class='w-25'>
-                     <img v-if='value' class='ratio ratio-16x9' :src='`/storage/${value}`' :alt='row.name'>
+                  <td style='width: 10%'>
+                     <img v-if='value' class='' width='50' :src='`/storage/${value}`' :alt='row.name'>
                   </td>
                </template>
                <template #row-pop3='{value}'>
