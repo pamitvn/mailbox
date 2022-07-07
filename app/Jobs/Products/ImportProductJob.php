@@ -59,7 +59,6 @@ class ImportProductJob implements ShouldQueue
                 Log::error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
             }
         }
-
     }
 
     private function getFilePayload($filePath): array

@@ -23,4 +23,15 @@ class StaticPageController extends Controller
             'services' => $services->get()
         ]);
     }
+
+    public function statistic()
+    {
+        $user = auth()->user();
+
+        return inertia('Statistics', [
+            'balance' => number_format($user->balance),
+            'spending' => number_format($user->orders()->sum('price')),
+            'order' => number_format($user->orders()->count()),
+        ]);
+    }
 }

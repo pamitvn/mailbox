@@ -67,4 +67,9 @@ class User extends Authenticatable implements Wallet\Interfaces\Wallet, Wallet\I
     {
         return $this->belongsTo(RechargeHistory::class, 'id', 'user_id');
     }
+
+    public function orders(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'id', 'user_id');
+    }
 }

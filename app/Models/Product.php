@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\PAM\Enums\ProductStatus;
 use Bavix\Wallet\Interfaces\Customer;
 use Bavix\Wallet\Interfaces\ProductLimitedInterface;
 use Bavix\Wallet\Traits\HasWallet;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 
 class Product extends Model implements ProductLimitedInterface
 {
@@ -45,7 +47,7 @@ class Product extends Model implements ProductLimitedInterface
 
     public function canBuy(Customer $customer, int $quantity = 1, bool $force = false): bool
     {
-        return blank($this->order?->id);
+        return $this->status === ProductStatus::LIVE && blank($this->order?->id);
     }
 
     public function service(): HasOne
@@ -66,5 +68,13 @@ class Product extends Model implements ProductLimitedInterface
     public function scopeWithoutBought(Builder $query): Builder
     {
         return $query->whereNot(fn(Builder $builder) => $builder->whereHas('order'));
+    }
+
+    public function scopeRandomQuantity(Builder $query, $quantity = 1): Builder
+    {
+        return $query->where('status', ProductStatus::LIVE)
+            ->whereNot(fn(Builder $builder) => $builder->whereHas('order'))
+            ->inRandomOrder()
+            ->take($quantity);
     }
 }

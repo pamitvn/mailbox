@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminServiceController;
+use App\Http\Controllers\API\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth.api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::group([
+    'controller' => ServiceController::class
+], function () {
+    Route::get('services', 'index');
+    Route::get('buy-product', 'buyProduct')->middleware('auth.api');
+});
+
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => ['auth.api', 'can:admin'],
+    'controller' => AdminServiceController::class,
+], function () {
+    Route::get('services', 'index');
+    Route::get('add-product', 'addProduct');
 });

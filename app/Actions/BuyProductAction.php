@@ -59,23 +59,21 @@ class BuyProductAction extends Action
         int           $quantity
     )
     {
+        $orders = [];
         $messages = [];
         $_service = app(ProductService::class);
         $products = $service->products()
-            ->whereStatus(ProductStatus::LIVE)
-            ->withoutBought()
-            ->inRandomOrder()
-            ->take($quantity)
+            ->randomQuantity($quantity)
             ->get();
 
         if (blank($products)) {
-            send_current_user_message('danger', 'The product is out of stock');
+            send_current_user_message('danger', __('The product is out of stock'));
             return back()->withErrors('globalError', '');
         }
 
         foreach ($products as $product) {
             try {
-                $_service->buy($service, $product, $user, $service->price);
+                $orders[] = $_service->buy($service, $product, $user, $service->price);
             } catch (Exception $exception) {
                 Log::error($exception->getMessage());
                 break;
@@ -86,13 +84,12 @@ class BuyProductAction extends Action
 
         $messages = array_unique($messages, SORT_REGULAR);
 
-        if (filled($messages)) {
+        if (blank($orders) || filled($messages)) {
             foreach ($messages as $message) {
                 send_current_user_message('danger', $message, $user->id);
             }
         } else {
             send_current_user_message('success', 'Product purchased successfully', $user->id);
-
         }
 
         return back();

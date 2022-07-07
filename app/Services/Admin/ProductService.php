@@ -18,7 +18,7 @@ class ProductService
     public function save($serviceId, $email, $password, $recoveryEmail = null)
     {
         return DB::transaction(function () use ($serviceId, $email, $password, $recoveryEmail) {
-            Product::create([
+            return Product::create([
                 'mail' => $email,
                 'password' => $password,
                 'recovery_mail' => $recoveryEmail,
@@ -55,6 +55,8 @@ class ProductService
     public function buy(\App\Models\Service $service, Product $product, User $user, $price)
     {
         return app(DatabaseServiceInterface::class)->transaction(function () use ($service, $product, $user, $price) {
+            if ($price <= 0) $user->payFree($product);
+
             $user->pay($product);
 
             return Order::create([

@@ -33,4 +33,9 @@ enum ProductStatus: int
         return self::toBadgeHtmlArray()[$status];
     }
 
+    static function toArray()
+    {
+        return [self::LIVE, self::DIE];
+    }
+
 }

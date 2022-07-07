@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Charts;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Service;
@@ -12,11 +13,11 @@ use App\Observers\ServiceObserver;
 use App\Observers\UserObserver;
 use App\PAM\AdminSetting;
 use App\PAM\ApiResponse;
+use ConsoleTVs\Charts\Registrar as RegistrarCharts;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Lorisleiva\Actions\Facades\Actions;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(RegistrarCharts $charts)
     {
         $this->defineGate();
         $this->defineObserver();
@@ -44,6 +45,10 @@ class AppServiceProvider extends ServiceProvider
         Route::matched(function () {
             $this->defineLayoutMenu();
         });
+
+        $charts->register([
+            Charts\UserSpendingChart::class
+        ]);
     }
 
     protected function defineGate()
@@ -72,6 +77,13 @@ class AppServiceProvider extends ServiceProvider
                     'class' => '',
                     'icon' => "<i data-feather='activity'></i>",
                     'target' => url('/')
+                ],
+                [
+                    'label' => 'Statistics',
+                    'class' => '',
+                    'icon' => "<i data-feather='bar-chart-2'></i>",
+                    'target' => fn() => route('statistic'),
+                    'auth' => true
                 ],
                 [
                     'label' => 'Account',
@@ -129,6 +141,12 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'group' => 'Admin Area',
                     'items' => [
+                        [
+                            'label' => 'Statistics',
+                            'class' => '',
+                            'icon' => "<i data-feather='bar-chart-2'></i>",
+                            'target' => fn() => route('admin.statistics')
+                        ],
                         [
                             'label' => 'Services',
                             'class' => '',

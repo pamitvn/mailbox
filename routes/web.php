@@ -62,6 +62,7 @@ Route::group([
         });
 
         Route::get('orders', \App\Http\Controllers\OrderController::class)->name('orders');
+        Route::get('statistic', [StaticPageController::class, 'statistic'])->name('statistic');
 
         Route::group([
             'prefix' => 'admin',
@@ -142,6 +143,8 @@ Route::group([
                 'names' => 'service',
                 'except' => ['update'],
             ]);
+
+            Route::get('statistics', Admin\StatisticController::class)->name('statistics');
         });
 
     });
