@@ -3,7 +3,7 @@ import { Api } from '~/types/Utils/Api';
 import { useRoute } from '~/utils/common';
 import * as _ from 'lodash';
 
-async function DoAction<T = object, >(action: string, options: Partial<AxiosRequestConfig> = {}): Promise<Api.Response<T>> {
+async function DoAction<T = object, D = any>(action: string, options: AxiosRequestConfig<D> = {}): Promise<Api.Response<T>> {
     try {
         const route = useRoute('admin.handle-action');
         const params = {

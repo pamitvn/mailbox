@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions;
 use App\Http\Controllers\{Admin, Account};
 use App\Http\Controllers\StaticPageController;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,9 @@ Route::group([
     Route::group([
         'middleware' => ['auth']
     ], function () {
+
+        Route::post('buy-product', Actions\BuyProductAction::class)->name('product.buy');
+        Route::post('export-product', Actions\ExportProductAction::class)->name('product.export');
 
         Route::group([
             'prefix' => 'account',
@@ -56,6 +60,8 @@ Route::group([
             });
 
         });
+
+        Route::get('orders', \App\Http\Controllers\OrderController::class)->name('orders');
 
         Route::group([
             'prefix' => 'admin',
@@ -124,16 +130,17 @@ Route::group([
                 'controller' => Admin\ProductManagerController::class
             ], function () {
                 Route::post('products/bulk-destroy', 'bulkDestroy')->name('service.product.bulk-destroy');
+                Route::post('{service}/orders/bulk-destroy', [Admin\ServiceManagerController::class, 'bulkDestroy'])->name('service.order.bulk-destroy');
                 Route::resource('products', Admin\ProductManagerController::class, [
                     'names' => 'service.product',
                     'only' => ['index', 'store', 'destroy']
                 ]);
-                Route::post("{service}", 'update')->name('service.update');
+                Route::post("{service}", [Admin\ServiceManagerController::class, 'update'])->name('service.update');
             });
 
             Route::resource($servicePrefix, Admin\ServiceManagerController::class, [
                 'names' => 'service',
-                'except' => ['update', 'show'],
+                'except' => ['update'],
             ]);
         });
 

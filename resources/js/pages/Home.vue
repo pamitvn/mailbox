@@ -1,5 +1,4 @@
 <template>
-   <!-- Main page content-->
    <div class='container-xl px-4 mt-5'>
       <div v-if='notification.enable' class='alert alert-primary alert-solid alert-icon' role='alert'>
          <div class='alert-icon-aside'>
@@ -12,163 +11,131 @@
             <div v-html='notification.content'></div>
          </div>
       </div>
-      <!--      <div class='row'>-->
-      <!--         <div class='col-lg-6 col-xl-3 mb-4'>-->
-      <!--            <div class='card bg-primary text-white h-100'>-->
-      <!--               <div class='card-body'>-->
-      <!--                  <div class='d-flex justify-content-between align-items-center'>-->
-      <!--                     <div class='me-3'>-->
-      <!--                        <div class='text-white-75 small'>Balance</div>-->
-      <!--                        <div class='text-lg fw-bold'>{{ balance }}</div>-->
-      <!--                     </div>-->
-      <!--                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'-->
-      <!--                          stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'-->
-      <!--                          class='feather feather-dollar-sign feather-xl text-white-50'>-->
-      <!--                        <line x1='12' y1='1' x2='12' y2='23'></line>-->
-      <!--                        <path d='M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'></path>-->
-      <!--                     </svg>-->
-      <!--                  </div>-->
-      <!--               </div>-->
-      <!--            </div>-->
-      <!--         </div>-->
-      <!--         <div class='col-lg-6 col-xl-3 mb-4'>-->
-      <!--            <div class='card bg-warning text-white h-100'>-->
-      <!--               <div class='card-body'>-->
-      <!--                  <div class='d-flex justify-content-between align-items-center'>-->
-      <!--                     <div class='me-3'>-->
-      <!--                        <div class='text-white-75 small'>Spending</div>-->
-      <!--                        <div class='text-lg fw-bold'>{{ spending }}</div>-->
-      <!--                     </div>-->
-      <!--                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'-->
-      <!--                          stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'-->
-      <!--                          class='feather feather-dollar-sign feather-xl text-white-50'>-->
-      <!--                        <line x1='12' y1='1' x2='12' y2='23'></line>-->
-      <!--                        <path d='M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'></path>-->
-      <!--                     </svg>-->
-      <!--                  </div>-->
-      <!--               </div>-->
-      <!--            </div>-->
-      <!--         </div>-->
-      <!--         <div class='col-lg-6 col-xl-3 mb-4'>-->
-      <!--            <div class='card bg-success text-white h-100'>-->
-      <!--               <div class='card-body'>-->
-      <!--                  <div class='d-flex justify-content-between align-items-center'>-->
-      <!--                     <div class='me-3'>-->
-      <!--                        <div class='text-white-75 small'>Order</div>-->
-      <!--                        <div class='text-lg fw-bold'>{{ order }}</div>-->
-      <!--                     </div>-->
-      <!--                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'-->
-      <!--                          stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'-->
-      <!--                          class='feather feather-check-square feather-xl text-white-50'>-->
-      <!--                        <polyline points='9 11 12 14 22 4'></polyline>-->
-      <!--                        <path d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'></path>-->
-      <!--                     </svg>-->
-      <!--                  </div>-->
-      <!--               </div>-->
-      <!--            </div>-->
-      <!--         </div>-->
-      <!--         <div class='col-lg-6 col-xl-3 mb-4'>-->
-      <!--            <div class='card bg-danger text-white h-100'>-->
-      <!--               <div class='card-body'>-->
-      <!--                  <div class='d-flex justify-content-between align-items-center'>-->
-      <!--                     <div class='me-3'>-->
-      <!--                        <div class='text-white-75 small'>Order Refund</div>-->
-      <!--                        <div class='text-lg fw-bold'>{{ order_refund }}</div>-->
-      <!--                     </div>-->
-      <!--                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'-->
-      <!--                          stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'-->
-      <!--                          class='feather feather-message-circle feather-xl text-white-50'>-->
-      <!--                        <path-->
-      <!--                           d='M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z'></path>-->
-      <!--                     </svg>-->
-      <!--                  </div>-->
-      <!--               </div>-->
-      <!--            </div>-->
-      <!--         </div>-->
 
-      <!--         <div class='col-lg-6 col-xl-3 mb-4'>-->
-      <!--            <div class='card bg-cyan text-white h-100'>-->
-      <!--               <div class='card-body'>-->
-      <!--                  <div class='d-flex justify-content-between align-items-center'>-->
-      <!--                     <div class='me-3'>-->
-      <!--                        <div class='text-white-75 small'>Order Failed</div>-->
-      <!--                        <div class='text-lg fw-bold'>{{ order_failed }}</div>-->
-      <!--                     </div>-->
-      <!--                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'-->
-      <!--                          stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'-->
-      <!--                          class='feather feather-message-circle feather-xl text-white-50'>-->
-      <!--                        <path-->
-      <!--                           d='M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z'></path>-->
-      <!--                     </svg>-->
-      <!--                  </div>-->
-      <!--               </div>-->
-      <!--            </div>-->
-      <!--         </div>-->
-      <!--      </div>-->
-
-      <!--      <div class='card card-header-actions h-100 mb-4'>-->
-      <!--         <div class='card-header'>-->
-      <!--            Spending in the last 24 hours-->
-      <!--         </div>-->
-      <!--         <div class='card-body'>-->
-      <!--            <div ref='spendingChart' style='height: 300px'></div>-->
-      <!--         </div>-->
-      <!--      </div>-->
-
-      <!--      <div class='card card-header-actions h-100'>-->
-      <!--         <div class='card-header'>-->
-      <!--            Order in the last 24 hours-->
-      <!--         </div>-->
-      <!--         <div class='card-body'>-->
-      <!--            <div ref='orderChart' style='height: 300px'></div>-->
-      <!--         </div>-->
-      <!--      </div>-->
-
+      <div class='card'>
+         <div class='card-body'>
+            <the-table v-model:search='search'
+                       :data='records'
+                       :columns='columns'
+                       :is-pagination='false'
+                       :has-select-per-page='false'
+            >
+               <template #row-service='{row}'>
+                  <td style='width: 30%'>
+                     <div class='d-flex g-2 align-items-center'>
+                        <div class='flex-shrink-0 avatar avatar-lg'>
+                           <img class='avatar-img img-fluid'
+                                :src='`/storage/${row.feature_image}`'
+                                :alt='row.name'
+                                width='100'
+                                height='100'
+                           >
+                        </div>
+                        <div class='flex-grow-1 ms-2'>
+                           <span class='text-dark'><b>{{ row.name }}</b></span>
+                        </div>
+                     </div>
+                  </td>
+               </template>
+               <template #row-pop3='{value}'>
+                  <td style='width: 3%'>
+                     <svg v-if='value' width='25' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+                        <!--! Font Awesome Pro 6.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                        <path
+                           d='M235.3 331.3C229.1 337.6 218.9 337.6 212.7 331.3L148.7 267.3C142.4 261.1 142.4 250.9 148.7 244.7C154.9 238.4 165.1 238.4 171.3 244.7L224 297.4L340.7 180.7C346.9 174.4 357.1 174.4 363.3 180.7C369.6 186.9 369.6 197.1 363.3 203.3L235.3 331.3zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 32C132.3 32 32 132.3 32 256C32 379.7 132.3 480 256 480C379.7 480 480 379.7 480 256C480 132.3 379.7 32 256 32z' />
+                     </svg>
+                  </td>
+               </template>
+               <template #row-imap='{value}'>
+                  <td style='width: 3%'>
+                     <svg v-if='value' width='25' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+                        <!--! Font Awesome Pro 6.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                        <path
+                           d='M235.3 331.3C229.1 337.6 218.9 337.6 212.7 331.3L148.7 267.3C142.4 261.1 142.4 250.9 148.7 244.7C154.9 238.4 165.1 238.4 171.3 244.7L224 297.4L340.7 180.7C346.9 174.4 357.1 174.4 363.3 180.7C369.6 186.9 369.6 197.1 363.3 203.3L235.3 331.3zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 32C132.3 32 32 132.3 32 256C32 379.7 132.3 480 256 480C379.7 480 480 379.7 480 256C480 132.3 379.7 32 256 32z' />
+                     </svg>
+                  </td>
+               </template>
+               <template #row-price='{value}'>
+                  <td style='width: 3%'>
+                     {{ value }}
+                  </td>
+               </template>
+               <template #row-in_stock_count='{value}'>
+                  <td style='width: 15%'>
+                     {{ value }}
+                  </td>
+               </template>
+               <template #row-actions='{row}'>
+                  <td style='width: 10%'>
+                     <button class='btn btn-sm btn-info' @click='() => onBuy(row)'>
+                        Buy
+                     </button>
+                  </td>
+               </template>
+            </the-table>
+         </div>
+      </div>
    </div>
 
+   <buy-product-modal v-model:service='service' />
 </template>
 
-<script lang='ts'>
+<script setup lang='ts'>
    import _ from 'lodash';
-   import { computed, defineComponent, ref } from 'vue';
+   import { computed, reactive, ref, watchEffect } from 'vue';
    import { usePage } from '@inertiajs/inertia-vue3';
+   import { Components, Models } from '~/types';
+   import { useCreateUpdateSocket, usePagination, usePaginationCUSocket } from '~/uses';
 
-   export default defineComponent({
-      props: ['balance', 'spending', 'order', 'order_refund', 'order_failed'],
-      setup() {
-         const spendingChart = ref(null);
-         const orderChart = ref(null);
+   import TheTable from '~/components/Table/TheTable.vue';
+   import BuyProductModal from '~/components/Product/BuyProductModal.vue';
 
-         const notification = computed(() => _.get(usePage().props.value, 'notification', {
-            enable: false,
-         }));
+   const props = defineProps<{
+      services: Models.Service[]
+   }>();
 
-         // onMounted(() => {
-         //    new Chartisan({
-         //       el: orderChart.value,
-         //       url: '/api/chart/user_order_chart',
-         //       hooks: new ChartisanHooks()
-         //          .colors()
-         //          .beginAtZero()
-         //          .datasets('bar')
-         //          .responsive(true),
-         //       options: {},
-         //    });
-         //
-         //    new Chartisan({
-         //       el: spendingChart.value,
-         //       url: '/api/chart/user_spending_chart',
-         //       hooks: new ChartisanHooks()
-         //          .colors()
-         //          .beginAtZero()
-         //          .datasets('bar')
-         //          .responsive(true),
-         //       options: {},
-         //    });
-         // });
+   const notification = computed(() => _.get(usePage().props.value, 'notification', {
+      enable: false,
+   }));
 
-         return { spendingChart, orderChart, notification };
+   const service = ref<Models.Service | null>(null);
+   const columns = reactive<Components.Table.Columns<Models.Service>>([
+      {
+         path: 'service',
+         label: 'Service',
       },
+      {
+         path: 'pop3',
+         label: 'Pop3',
+      },
+      {
+         path: 'imap',
+         label: 'Imap',
+      },
+      {
+         path: 'price',
+         label: 'Price',
+      },
+      {
+         path: 'in_stock_count',
+         label: 'In Stock',
+      },
+      {
+         path: 'actions',
+         label: '',
+      },
+   ]);
+
+   const { search } = usePagination();
+   const { records, setRecords } = useCreateUpdateSocket('service', { update: '.stock' }, {
+      privateChannel: false,
    });
 
+   const onBuy = (row: Models.Service) => {
+      service.value = row;
+   };
+
+   watchEffect(() => {
+      setRecords(_.cloneDeep(props.services));
+   });
 </script>

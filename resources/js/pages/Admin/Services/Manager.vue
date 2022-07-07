@@ -62,7 +62,8 @@
                            <path d='M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5'></path>
                         </svg>
                      </the-link>
-                     <the-link class='btn btn-datatable btn-icon btn-transparent-dark me-2' as='button'>
+                     <the-link class='btn btn-datatable btn-icon btn-transparent-dark me-2' as='button'
+                               :href='$route("admin.service.show", row.id)'>
                         <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'
                              stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
                              class='feather feather-eye'>
@@ -109,7 +110,7 @@
    import { usePagination } from '~/uses';
 
    import Layout from './Layout';
-   import TheTable from '~/components/Table/TheTable';
+   import TheTable from '~/components/Table/TheTable.vue';
    import dateFormat from 'dateformat';
 
    const props = defineProps<{
@@ -127,8 +128,8 @@
          label: 'Name',
       },
       {
-         path: 'name',
-         label: 'Name',
+         path: 'lifetime',
+         label: 'Lifetime',
       },
       {
          path: 'feature_image',

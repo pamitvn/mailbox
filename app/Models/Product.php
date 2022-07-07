@@ -45,7 +45,7 @@ class Product extends Model implements ProductLimitedInterface
 
     public function canBuy(Customer $customer, int $quantity = 1, bool $force = false): bool
     {
-        return !$customer->paid($this) && blank($this->order?->id);
+        return blank($this->order?->id);
     }
 
     public function service(): HasOne

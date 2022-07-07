@@ -2,8 +2,12 @@
 
 namespace App\Services\Admin;
 
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use App\PAM\Enums\ProductStatus;
+use Bavix\Wallet\Internal\Exceptions\ExceptionInterface;
+use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -46,5 +50,19 @@ class ProductService
         $file->move($rootLocation, $fileName);
 
         return "$dir/$fileName";
+    }
+
+    public function buy(\App\Models\Service $service, Product $product, User $user, $price)
+    {
+        return app(DatabaseServiceInterface::class)->transaction(function () use ($service, $product, $user, $price) {
+            $user->pay($product);
+
+            return Order::create([
+                'service_id' => $service->id,
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+                'price' => $price
+            ]);
+        });
     }
 }

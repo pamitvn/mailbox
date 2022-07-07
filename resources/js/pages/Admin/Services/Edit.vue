@@ -38,6 +38,7 @@
 
                <div class='mb-3'>
                   <the-input-field
+                     :error='form.errors.feature_image'
                      label='Image'
                      type='file'
                      accept='image/*'

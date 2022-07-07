@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\PAM\Enums\ProductStatus;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use function Clue\StreamFilter\fun;
 
 class Service extends Model
 {
@@ -27,6 +31,10 @@ class Service extends Model
         'visible' => 'boolean'
     ];
 
+    protected $appends = [
+        'in_stock_count'
+    ];
+
     /**
      * Return the sluggable configuration array for this model.
      *
@@ -39,5 +47,22 @@ class Service extends Model
                 'source' => ['name', 'id']
             ]
         ];
+    }
+
+    public function products(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'id', 'service_id');
+    }
+
+    public function inStockCount(): Attribute
+    {
+        return Attribute::get(function () {
+            $products = $this->products()
+                ->select(['id'])
+                ->whereStatus(ProductStatus::LIVE)
+                ->withoutBought();
+
+            return $products->count();
+        });
     }
 }

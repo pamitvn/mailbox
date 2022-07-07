@@ -46,15 +46,18 @@ class ImportProductJob implements ShouldQueue
             $payload = $this->getFilePayload($payload);
         }
 
-        foreach ($payload as $key => $data) {
+        foreach ($payload as $data) {
             $email = Arr::get($data, 'email');
             $password = Arr::get($data, 'password');
             $recoveryEmail = Arr::get($data, 'recovery_mail');
 
             if (blank($email) || blank($password)) continue;
 
-            Log::info("$key", $data);
-            $this->_productService->save($this->service->id, $email, $password, $recoveryEmail);
+            try {
+                $this->_productService->save($this->service->id, $email, $password, $recoveryEmail);
+            } catch (\Exception $exception) {
+                Log::error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
+            }
         }
 
     }

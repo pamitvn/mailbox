@@ -3,13 +3,14 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { Echo } from '~/utils';
 
 export interface Event {
-    create: string;
-    update: string;
+    create?: string;
+    update?: string;
 }
 
 export interface Options<T> {
-    transFormCreate: TransFormType<T>;
-    transFormUpdate: TransFormType<T>;
+    privateChannel?: boolean;
+    transFormCreate?: TransFormType<T>;
+    transFormUpdate?: TransFormType<T>;
 }
 
 type TransFormType<T> = (list: T[], data: T, index: string | number) => T
@@ -19,6 +20,7 @@ function useCreateUpdateSocket<T = object>(
     event: Event,
     options?: Options<T>,
 ) {
+    const privateChannel = _.get(options, 'privateChannel', true);
     const records = ref<T[] | any>([]);
 
     const setRecords = (values) => {
@@ -31,8 +33,12 @@ function useCreateUpdateSocket<T = object>(
 
         if (currentPage !== 1 || index !== -1) return;
 
-        const newArray = [options?.transFormCreate ? options.transFormCreate(records.value, event, index) : event];
-        newArray.push(...records);
+        const object = options?.transFormCreate
+            ? options.transFormCreate(records.value, event, index)
+            : event;
+
+        const newArray = [object];
+        newArray.push(...(records.value ?? []));
 
         records.value = newArray;
     };
@@ -45,14 +51,14 @@ function useCreateUpdateSocket<T = object>(
     };
 
     onMounted(() => {
-        const echoChannel = Echo.private(channel);
+        const echoChannel = Echo[privateChannel ? 'private' : 'channel'](channel);
 
-        echoChannel.listen(event.create, handleCreateEvent);
-        echoChannel.listen(event.update, handleUpdateEvent);
+        event.create && echoChannel.listen(event.create, handleCreateEvent);
+        event.update && echoChannel.listen(event.update, handleUpdateEvent);
 
         onUnmounted(() => {
-            echoChannel.stopListening(event.create, handleCreateEvent);
-            echoChannel.stopListening(event.update, handleUpdateEvent);
+            event.create && echoChannel.stopListening(event.create, handleCreateEvent);
+            event.update && echoChannel.stopListening(event.update, handleUpdateEvent);
         });
     });
 

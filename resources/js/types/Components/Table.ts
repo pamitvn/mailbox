@@ -7,10 +7,14 @@ export namespace Table {
         search: string;
         page: string | number;
         perPage: string | number;
-        data: Utils.Pagination.Type<RecordType>;
+        data: Utils.Pagination.Type<RecordType> | RecordType[];
         columns: Columns;
-        hasCheckbox: boolean;
         checkboxByField: string;
+        hasCheckbox: boolean;
+        hasSelectPerPage?: boolean;
+        hasSearch?: boolean;
+        hasFooter?: boolean;
+        isPagination?: boolean;
     }
 
     export interface Column<RecordType = object> {
@@ -40,6 +44,10 @@ export namespace Table {
         }
 
         export type Fields = Field[]
+
+        export interface defineField {
+            [key: string]: string;
+        }
     }
 }
 

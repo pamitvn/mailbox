@@ -14,6 +14,20 @@ if (!function_exists('query_by_cols')) {
     }
 }
 
+if (!function_exists('query_relation_by_cols')) {
+    function query_relation_by_cols(Builder &$query, array $relations = [], array $params = []): Builder
+    {
+        foreach ($relations as $relation => $cols) {
+            foreach ($cols as $col) {
+                $value = \Illuminate\Support\Arr::get($params, $col);
+                $query = $query->when(filled($value), fn(Builder $query) => $query->whereRelation($relation, $col, $value));
+            }
+        }
+
+        return $query;
+    }
+}
+
 if (!function_exists('search_by_cols')) {
     function search_by_cols(Builder &$query, $value, array $cols = []): Builder
     {
@@ -24,6 +38,23 @@ if (!function_exists('search_by_cols')) {
                 $query->orWhere($col, 'like', '%' . $value . '%');
             }
         });
+
+        return $query;
+    }
+}
+
+if (!function_exists('search_relation_by_cols')) {
+    function search_relation_by_cols(Builder &$query, $value, array $relations = []): Builder
+    {
+        if (blank($value) || blank($relations)) return $query;
+
+        foreach ($relations as $relation => $cols) {
+            $query = $query->where(function (Builder $query) use ($relation, $value, $cols) {
+                foreach ($cols as $col) {
+                    $query->orWhereRelation($relation, $col, 'like', '%' . $value . '%');
+                }
+            });
+        }
 
         return $query;
     }

@@ -2,7 +2,7 @@
    <div class='dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns'>
       <slot name='table-header' :perPage='perPage' :search='search'>
          <div class='dataTable-top'>
-            <div class='dataTable-dropdown'>
+            <div v-if='isPagination && hasSelectPerPage' class='dataTable-dropdown'>
                <label>
                   <select v-model='perPage' class='dataTable-selector'>
                      <option value='5'>5</option>
@@ -16,7 +16,7 @@
                   Entries per page
                </label>
             </div>
-            <div class='dataTable-search'>
+            <div v-if='hasSearch' class='dataTable-search'>
                <input v-model='search' class='dataTable-input' placeholder='Search...' type='text'>
             </div>
          </div>
@@ -79,7 +79,7 @@
             </tbody>
          </table>
       </div>
-      <div class='dataTable-bottom'>
+      <div v-if='isPagination && hasFooter' class='dataTable-bottom'>
          <div v-if='getTableData.length' class='dataTable-info'>Showing {{ data.from }} to {{ data.to }} of
             {{ data.total }} entries
          </div>
@@ -120,16 +120,24 @@
       search?: string;
       page?: string | number;
       perPage?: string | number;
-      data: Utils.Pagination.Type;
+      data: any;
       columns: Table.Columns;
       hasCheckbox?: boolean;
       checkboxByField?: string;
+      hasSelectPerPage?: boolean;
+      hasSearch?: boolean;
+      hasFooter?: boolean;
+      isPagination?: boolean;
    }>(), {
       search: '',
       page: 1,
       perPage: 10,
       hasCheckbox: false,
+      hasSelectPerPage: true,
+      hasSearch: true,
+      hasFooter: true,
       checkboxByField: 'id',
+      isPagination: true,
    });
    const emit = defineEmits(['update:search', 'update:perPage', 'update:page', 'selectedRows']);
 
@@ -140,7 +148,7 @@
 
    const useUrl = computed(() => usePage().url.value);
    const getColumns = computed(() => props.columns);
-   const getTableData = computed(() => _.get(props.data, 'data', []));
+   const getTableData = computed(() => props.isPagination ? _.get(props.data, 'data', []) : props.data);
    const getLinks = computed<Utils.Pagination.Link[]>(() => {
       const results = _.get(props.data, 'links', []);
       const currentQuery = qs.parse(_.get(_.split(useUrl.value, '?'), '1'));

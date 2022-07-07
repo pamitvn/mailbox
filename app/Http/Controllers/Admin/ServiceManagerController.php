@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\Product;
 use App\Models\Service;
+use App\PAM\Enums\ProductStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -67,6 +71,41 @@ class ServiceManagerController extends Controller
             : back()->with('error', __('Service cannot be created'))->withErrors('Error', 'globalError');
     }
 
+    public function show(Request $request, Service $service)
+    {
+        $search = $request->get('search');
+        $params = $request->except('search');
+
+        $records = Order::query()
+            ->with('user')
+            ->withWhereHas('product', fn($query) => $query->where('service_id', $service->id))
+            ->orderByDesc('id');
+
+        search_relation_by_cols($records, $search, [
+            'product' => [
+                'id',
+                'mail',
+                'password',
+                'recovery_mail'
+            ]
+        ]);
+
+        query_by_cols($records, ['id'], $params);
+        query_relation_by_cols($records, [
+            'product' => [
+                'status',
+                'service_id'
+            ]
+        ], $params);
+
+        return inertia('Admin/Services/Orders', [
+            'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
+            'statusLabel' => ProductStatus::toLabelArray(),
+            'service' => $service,
+            'paginationData' => paginate_with_params($records, $params)
+        ]);
+    }
+
     public function edit(Service $service)
     {
         return inertia('Admin/Services/Edit', [
@@ -94,5 +133,32 @@ class ServiceManagerController extends Controller
         return $this->_service->delete($service)
             ? back()->with('success', __('Deleted service #:id', ['id' => $service->id]))
             : back()->with('error', __('Service #:id cannot be deleted', ['id' => $service->id]))->withErrors('Error', 'globalError');
+    }
+
+    public function bulkDestroy(Request $request, Service $service)
+    {
+        $data = $request->validate([
+            'includes' => ['required', 'array', 'min:1'],
+        ]);
+
+        $results = DB::transaction(function () use ($service, $data) {
+            return Order::query()
+                ->select(['id', 'service_id'])
+                ->withWhereHas('product', fn($query) => $query->where('service_id', $service->id))
+                ->where(function ($query) use ($data) {
+                    foreach ($data['includes'] as $id) {
+                        $query->orWhere('id', $id);
+                    }
+                })
+                ->delete();
+        });
+
+        send_message_if(
+            $results,
+            __('The specified records were successfully removed.'),
+            __('There was a problem with the deletion.')
+        );
+
+        return back();
     }
 }

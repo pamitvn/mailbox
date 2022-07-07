@@ -37,7 +37,7 @@ class ProductEvent implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
-        return $this->product->toArray();
+        return $this->product->refresh()->toArray();
     }
 
     protected function as(): string

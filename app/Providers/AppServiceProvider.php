@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\Service;
 use App\Models\User;
+use App\Observers\OrderObserver;
 use App\Observers\ProductObserver;
+use App\Observers\ServiceObserver;
 use App\Observers\UserObserver;
 use App\PAM\AdminSetting;
 use App\PAM\ApiResponse;
@@ -12,6 +16,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Lorisleiva\Actions\Facades\Actions;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,6 +59,8 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         Product::observe(ProductObserver::class);
+        Service::observe(ServiceObserver::class);
+        Order::observe(OrderObserver::class);
     }
 
     protected function defineLayoutMenu()
@@ -92,6 +99,13 @@ class AppServiceProvider extends ServiceProvider
                             'target' => route('account.api')
                         ],
                     ]
+                ],
+                [
+                    'label' => 'Orders',
+                    'class' => '',
+                    'icon' => "<i data-feather='shopping-bag'></i>",
+                    'target' => route('orders'),
+                    'auth' => true,
                 ],
             ],
             'account' => [

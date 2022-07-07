@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\ServiceEvent;
 use App\Http\Controllers\Controller;
 use App\Jobs\Products\ImportProductJob;
 use App\Models\Product;
 use App\Models\Service;
+use App\Observers\ServiceObserver;
 use App\PAM\Enums\ProductStatus;
 use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
@@ -112,11 +114,14 @@ class ProductManagerController extends Controller
                 ->delete();
         });
 
+        ServiceEvent::dispatch($service->id);
+
         send_message_if(
             $results,
             __('The specified records were successfully removed.'),
             __('There was a problem with the deletion.')
         );
+
 
         return back();
     }
