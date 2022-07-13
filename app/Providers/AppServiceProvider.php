@@ -123,13 +123,15 @@ class AppServiceProvider extends ServiceProvider
                     'label' => 'Recharge',
                     'class' => '',
                     'icon' => "<i data-feather='dollar-sign'></i>",
-                    'target' => route('recharge')
+                    'target' => route('recharge'),
+                    'auth' => true,
                 ],
                 [
                     'label' => 'API Docs',
                     'class' => '',
                     'icon' => "<i data-feather='paperclip'></i>",
-                    'target' => 'https://documenter.getpostman.com/view/12129573/UzQrRn9d'
+                    'target' => 'https://documenter.getpostman.com/view/12129573/UzQrRn9d',
+                    'auth' => true,
                 ],
             ],
             'account' => [
