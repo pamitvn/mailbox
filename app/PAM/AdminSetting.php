@@ -2,10 +2,12 @@
 
 namespace App\PAM;
 
+use App\Settings\PaymentSetting;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Spatie\LaravelSettings\Exceptions\MissingSettings;
 use Spatie\LaravelSettings\Settings;
 
 class AdminSetting
@@ -53,7 +55,10 @@ class AdminSetting
                     'define' => $define,
                     'fields' => $groupFields,
                 ];
-                $settings[$groupKey] = $setting->toArray();
+                try {
+                    $settings[$groupKey] = $setting->toArray();
+                } catch (MissingSettings $exception) {
+                }
             }
 
             return [$groups, $settings];

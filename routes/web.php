@@ -1,7 +1,7 @@
 <?php
 
 use App\Actions;
-use App\Http\Controllers\{Admin, Account};
+use App\Http\Controllers\{Account, Admin, RechargeController};
 use App\Http\Controllers\StaticPageController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +61,7 @@ Route::group([
 
         });
 
+        Route::get('recharge', [RechargeController::class, 'index'])->name('recharge');
         Route::get('orders', \App\Http\Controllers\OrderController::class)->name('orders');
         Route::get('statistic', [StaticPageController::class, 'statistic'])->name('statistic');
 

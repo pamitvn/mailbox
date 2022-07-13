@@ -119,6 +119,18 @@ class AppServiceProvider extends ServiceProvider
                     'target' => route('orders'),
                     'auth' => true,
                 ],
+                [
+                    'label' => 'Recharge',
+                    'class' => '',
+                    'icon' => "<i data-feather='dollar-sign'></i>",
+                    'target' => route('recharge')
+                ],
+                [
+                    'label' => 'API Docs',
+                    'class' => '',
+                    'icon' => "<i data-feather='paperclip'></i>",
+                    'target' => 'https://documenter.getpostman.com/view/12129573/UzQrRn9d'
+                ],
             ],
             'account' => [
                 [
@@ -196,6 +208,12 @@ class AppServiceProvider extends ServiceProvider
                             'icon' => "<i data-feather='settings'></i>",
                             'target' => route('admin.setting', config('admin.settings.default')),
                             'extraMatched' => 'admin\/settings(.+)'
+                        ],
+                        [
+                            'label' => 'Admin API Docs',
+                            'class' => '',
+                            'icon' => "<i data-feather='paperclip'></i>",
+                            'target' => 'https://documenter.getpostman.com/view/12129573/UzQrRnDv'
                         ],
                     ]
                 ],

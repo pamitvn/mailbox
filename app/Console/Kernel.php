@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('clean:products')->hourly();
+        $schedule->command('recharge:acb')->everyMinute();
     }
 
     /**

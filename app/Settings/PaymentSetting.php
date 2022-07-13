@@ -13,6 +13,7 @@ class PaymentSetting extends Settings
     protected ?string $adminGroup = null;
 
     public string $recharge_code;
+    public string $web2m_acb = '';
 
     public static function group(): string
     {
@@ -22,10 +23,16 @@ class PaymentSetting extends Settings
     function adminFields(): array
     {
         return [
-            'recharge_code' => [
-                'rule' => ['required', 'string'],
+//            'recharge_code' => [
+//                'rule' => ['required', 'string'],
+//                'attribute' => [
+//                    'label' => 'Recharge code',
+//                ]
+//            ],
+            'web2m_acb' => [
+                'rule' => ['required', 'url'],
                 'attribute' => [
-                    'label' => 'Recharge code',
+                    'label' => 'Web2m ACB endpoint',
                 ]
             ],
         ];
