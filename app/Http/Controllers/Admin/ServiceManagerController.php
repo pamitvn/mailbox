@@ -22,6 +22,7 @@ class ServiceManagerController extends Controller
         'pop3' => ['nullable', 'boolean'],
         'imap' => ['nullable', 'boolean'],
         'visible' => ['nullable', 'boolean'],
+        'clean_after' => ['nullable', 'integer'],
         'feature_image' => [
             'nullable',
             'image',

@@ -21,14 +21,16 @@ class Service extends Model
         'price',
         'pop3',
         'imap',
-        'visible'
+        'visible',
+        'clean_after'
     ];
 
     protected $casts = [
         'price' => 'integer',
         'pop3' => 'boolean',
         'imap' => 'boolean',
-        'visible' => 'boolean'
+        'visible' => 'boolean',
+        'clean_after' => 'integer'
     ];
 
     protected $appends = [
@@ -52,6 +54,11 @@ class Service extends Model
     public function products(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'id', 'service_id');
+    }
+
+    public function expiredProducts(): BelongsTo
+    {
+        return $this->products()->whereDate('created_at', '<', now()->subHours($this->clean_after));
     }
 
     public function inStockCount(): Attribute

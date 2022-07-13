@@ -57,6 +57,15 @@
                </div>
 
                <div class='mb-3'>
+                  <the-input-field v-model='form.clean_after'
+                                   :error='form.errors.clean_after'
+                                   label='Auto Clean After (Hours)'
+                                   type='number'
+                                   placeholder='Enter hours'
+                  />
+               </div>
+
+               <div class='mb-3'>
                   <the-switch-field v-model='form.pop3'
                                     :error='form.errors.pop3'
                                     label='Pop3'
@@ -91,7 +100,7 @@
 
    import Layout from './Layout.vue';
 
-   type FormType = Pick<Models.Service, 'name' | 'lifetime' | 'feature_image' | 'price' | 'pop3' | 'imap' | 'visible'>;
+   type FormType = Omit<Models.Service, 'id' | 'slug' | 'created_at' | 'updated_at'>;
 
    const props = defineProps<{
       service: Models.Service
@@ -105,6 +114,7 @@
       pop3: props.service.pop3 ?? false,
       imap: props.service.imap ?? false,
       visible: props.service.visible ?? false,
+      clean_after: props.service.clean_after ?? 4,
    });
 
    const onSubmitForm = () => {
