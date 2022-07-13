@@ -14,7 +14,7 @@ class CleanProductCommand extends Command
     public function handle()
     {
         $services = Service::with('products')
-            ->where('cleanAfter', '>', 0)
+            ->where('clean_after', '>', 0)
             ->get();
 
         foreach ($services as $service) {
