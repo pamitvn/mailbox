@@ -19,6 +19,7 @@
                        :columns='columns'
                        :is-pagination='false'
                        :has-select-per-page='false'
+                       :has-hide-mobile='true'
             >
                <template #row-service='{row}'>
                   <td style='width: 30%'>
@@ -103,6 +104,7 @@
       {
          path: 'service',
          label: 'Service',
+         showMobile: true,
       },
       {
          path: 'pop3',
@@ -119,10 +121,12 @@
       {
          path: 'in_stock_count',
          label: 'In Stock',
+         showMobile: true,
       },
       {
          path: 'actions',
          label: '',
+         showMobile: true,
       },
    ]);
 

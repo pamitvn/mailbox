@@ -14,12 +14,14 @@ export namespace Table {
         hasSelectPerPage?: boolean;
         hasSearch?: boolean;
         hasFooter?: boolean;
+        hasHideMobile?: boolean;
         isPagination?: boolean;
     }
 
     export interface Column<RecordType = object> {
         path: keyof RecordType | string;
         label: string;
+        showMobile?: boolean;
         display?: (row: RecordType, value: any, lodash: typeof Lodash) => any;
     }
 

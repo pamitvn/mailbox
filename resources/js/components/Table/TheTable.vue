@@ -115,6 +115,7 @@
    import { isURL } from '~/utils';
    import { Utils } from '~/types';
    import Table from '~/types/Components/Table';
+   import { useMobile } from '~/uses';
 
    const props = withDefaults(defineProps<{
       search?: string;
@@ -127,6 +128,7 @@
       hasSelectPerPage?: boolean;
       hasSearch?: boolean;
       hasFooter?: boolean;
+      hasHideMobile?: boolean;
       isPagination?: boolean;
    }>(), {
       search: '',
@@ -136,10 +138,13 @@
       hasSelectPerPage: true,
       hasSearch: true,
       hasFooter: true,
+      hasHideMobile: false,
       checkboxByField: 'id',
       isPagination: true,
    });
    const emit = defineEmits(['update:search', 'update:perPage', 'update:page', 'selectedRows']);
+
+   const { isMobile } = useMobile();
 
    const search = ref(props.search);
    const perPage = ref(props.perPage);
@@ -147,7 +152,13 @@
    const selected = ref({});
 
    const useUrl = computed(() => usePage().url.value);
-   const getColumns = computed(() => props.columns);
+   const getColumns = computed(() => {
+      const columns = props.columns;
+
+      return props.hasHideMobile && isMobile.value
+         ? _.filter(columns, { showMobile: true })
+         : props.columns;
+   });
    const getTableData = computed(() => props.isPagination ? _.get(props.data, 'data', []) : props.data);
    const getLinks = computed<Utils.Pagination.Link[]>(() => {
       const results = _.get(props.data, 'links', []);
