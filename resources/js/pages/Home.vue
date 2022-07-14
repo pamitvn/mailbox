@@ -56,6 +56,11 @@
                      </svg>
                   </td>
                </template>
+               <template #row-lifetime='{value}'>
+                  <td style='width: 3%'>
+                     {{ value }}
+                  </td>
+               </template>
                <template #row-price='{value}'>
                   <td style='width: 3%'>
                      {{ value }}
@@ -83,13 +88,14 @@
 
 <script setup lang='ts'>
    import _ from 'lodash';
-   import { computed, reactive, ref, watchEffect } from 'vue';
+   import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
    import { usePage } from '@inertiajs/inertia-vue3';
    import { Components, Models } from '~/types';
-   import { useCreateUpdateSocket, usePagination, usePaginationCUSocket } from '~/uses';
+   import { useCreateUpdateSocket, usePagination } from '~/uses';
 
    import TheTable from '~/components/Table/TheTable.vue';
    import BuyProductModal from '~/components/Product/BuyProductModal.vue';
+   import { Echo } from '~/utils';
 
    const props = defineProps<{
       services: Models.Service[]
@@ -105,6 +111,10 @@
          path: 'service',
          label: 'Service',
          showMobile: true,
+      },
+      {
+         path: 'lifetime',
+         label: 'Lifetime',
       },
       {
          path: 'pop3',
@@ -138,6 +148,29 @@
    const onBuy = (row: Models.Service) => {
       service.value = row;
    };
+
+   onMounted(() => {
+      const channel = Echo.channel('product');
+
+      const handlingCheckCount = (e) => {
+         const cloneRecords: Models.Service[] = _.cloneDeep(records.value);
+
+         _.forEach(_.keys(e), (key) => {
+            const value = e[key];
+            const index = _.findIndex(cloneRecords, item => !item.is_local && _.get(item, 'extras.parent_count_key') === key);
+
+            if (index === -1) return;
+
+            _.set(cloneRecords, `${index}.in_stock_count`, value);
+         });
+
+         setRecords(cloneRecords);
+      };
+
+      channel.listen('.count', handlingCheckCount);
+
+      onUnmounted(() => channel.stopListening('.count', handlingCheckCount));
+   });
 
    watchEffect(() => {
       setRecords(_.cloneDeep(props.services));

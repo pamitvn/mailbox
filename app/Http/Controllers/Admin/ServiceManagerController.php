@@ -9,7 +9,9 @@ use App\Models\Service;
 use App\PAM\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ServiceManagerController extends Controller
 {
@@ -22,7 +24,9 @@ class ServiceManagerController extends Controller
         'pop3' => ['nullable', 'boolean'],
         'imap' => ['nullable', 'boolean'],
         'visible' => ['nullable', 'boolean'],
+        'is_local' => ['nullable', 'boolean'],
         'clean_after' => ['nullable', 'integer'],
+        'extras' => ['nullable', 'array'],
         'feature_image' => [
             'nullable',
             'image',
@@ -35,6 +39,14 @@ class ServiceManagerController extends Controller
     public function __construct(\App\Services\Admin\Service $_service)
     {
         $this->_service = $_service;
+        $this->rules = array_merge($this->rules, collect(Service::extraFields())
+            ->map(
+                fn($item) => blank(Arr::get($item, 'rule', []))
+                    ? ['nullable']
+                    : Arr::get($item, 'rule', [])
+            )
+            ->keyBy(fn($value, $key) => sprintf('extras.%s', $key))
+            ->toArray());
     }
 
     public function index(Request $request)
@@ -56,7 +68,9 @@ class ServiceManagerController extends Controller
 
     public function create()
     {
-        return inertia('Admin/Services/Create');
+        return inertia('Admin/Services/Create', [
+            'extraFields' => Service::extraFields()
+        ]);
     }
 
     public function store(Request $request)
@@ -110,7 +124,8 @@ class ServiceManagerController extends Controller
     public function edit(Service $service)
     {
         return inertia('Admin/Services/Edit', [
-            'service' => $service
+            'service' => $service,
+            'extraFields' => Service::extraFields()
         ]);
     }
 

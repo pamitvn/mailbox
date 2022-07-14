@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\PAM\Enums\ProductStatus;
+use App\PAM\Facades\ParentManager;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Validation\Rule;
 use function Clue\StreamFilter\fun;
 
 class Service extends Model
@@ -22,7 +24,9 @@ class Service extends Model
         'pop3',
         'imap',
         'visible',
-        'clean_after'
+        'clean_after',
+        'is_local',
+        'extras'
     ];
 
     protected $casts = [
@@ -30,11 +34,13 @@ class Service extends Model
         'pop3' => 'boolean',
         'imap' => 'boolean',
         'visible' => 'boolean',
-        'clean_after' => 'integer'
+        'is_local' => 'boolean',
+        'clean_after' => 'integer',
+        'extras' => 'collection'
     ];
 
     protected $appends = [
-        'in_stock_count'
+//        'in_stock_count'
     ];
 
     /**
@@ -64,12 +70,35 @@ class Service extends Model
     public function inStockCount(): Attribute
     {
         return Attribute::get(function () {
-            $products = $this->products()
-                ->select(['id'])
-                ->whereStatus(ProductStatus::LIVE)
-                ->withoutBought();
+            if ($this->is_local) {
+                $products = $this->products()
+                    ->select(['id'])
+                    ->whereStatus(ProductStatus::LIVE)
+                    ->withoutBought();
+                return $products->count();
+            }
 
-            return $products->count();
+            return ParentManager::getCount($this->extras?->get('parent_count_key'));
         });
+    }
+
+    static function extraFields(): array
+    {
+        return [
+            'parent_count_key' => [
+                'rule' => [Rule::requiredIf(fn() => (bool)request()->get('is_local') === false), 'string'],
+                'show_unless' => 'is_local',
+                'attribute' => [
+                    'label' => 'Parent Count Key',
+                ]
+            ],
+            'parent_type' => [
+                'rule' => [Rule::requiredIf(fn() => (bool)request()->get('is_local') === false), 'string'],
+                'show_unless' => 'is_local',
+                'attribute' => [
+                    'label' => 'Parent Type',
+                ]
+            ],
+        ];
     }
 }

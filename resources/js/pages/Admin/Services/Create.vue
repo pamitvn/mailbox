@@ -85,6 +85,23 @@
                   />
                </div>
 
+               <div class='mb-3'>
+                  <the-switch-field v-model='form.is_local'
+                                    :error='form.errors.is_local'
+                                    label='Product From Local'
+                  />
+               </div>
+
+               <div v-for='(item, index) in getExtraFields' :key='index'>
+                  <div class='mb-3'>
+                     <component :is='getComponent(item)'
+                                v-model='form.extras[`${item.key}`]'
+                                v-bind='item.attribute'
+                                :error='form.errors[`extras.${item.key}`]'
+                     ></component>
+                  </div>
+               </div>
+
                <!-- Submit button-->
                <button class='btn btn-primary' type='submit'>Add</button>
             </form>
@@ -99,8 +116,23 @@
    import { Models } from '~/types';
 
    import Layout from './Layout.vue';
+   import _ from 'lodash';
+   import { computed } from 'vue';
 
    type FormType = Omit<Models.Service, 'id' | 'slug' | 'created_at' | 'updated_at'>;
+
+   const props = defineProps<{
+      extraFields: {
+         [key: string]: {
+            rule: string
+            show_unless?: string
+            show_if?: string
+            attribute: {
+               [key: string]: any
+            }
+         }
+      }
+   }>();
 
    const form = useForm<FormType>({
       name: null,
@@ -110,9 +142,24 @@
       pop3: false,
       imap: false,
       visible: false,
+      is_local: true,
       clean_after: 4,
+      extras: {},
    });
 
+   const getExtraFields = computed(() => {
+      let fields = props.extraFields;
+
+      return _.filter(_.map(fields, (item, key) => ({ ...item, key })), (item) => {
+
+         if (item.show_if && form[item.show_if]) return true;
+         if (item.show_unless && !form[item.show_unless]) return true;
+
+         return false;
+      });
+   });
+
+   const getComponent = (item) => _.get(item, 'is', 'the-input-field');
    const onSubmitForm = () => {
       return form.post(useRoute('admin.service.store'), {
          forceFormData: true,

@@ -27,10 +27,10 @@ class Product extends Model implements ProductLimitedInterface
         'status' => 'integer'
     ];
 
-    protected $with = [
-        'service',
-        'order'
-    ];
+//    protected $with = [
+//        'service',
+//        'order'
+//    ];
 
     public function getAmountProduct(Customer $customer): int|string
     {

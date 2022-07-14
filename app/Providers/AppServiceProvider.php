@@ -13,6 +13,7 @@ use App\Observers\ServiceObserver;
 use App\Observers\UserObserver;
 use App\PAM\AdminSetting;
 use App\PAM\ApiResponse;
+use App\PAM\ParentManager;
 use ConsoleTVs\Charts\Registrar as RegistrarCharts;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Gate;
@@ -30,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ApiResponse::$getFacadeAccessor, fn() => new ApiResponse());
         $this->app->singleton(AdminSetting::$getFacadeAccessor, fn(Application $app) => new AdminSetting($app->make('config')->get('admin.settings')));
+        $this->app->singleton(ParentManager::$getFacadeAccessor, fn() => new ParentManager);
     }
 
     /**

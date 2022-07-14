@@ -6,6 +6,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 if (!function_exists('query_by_cols')) {
     function query_by_cols(Builder &$query, array $cols = [], array $params = []): Builder
     {
+        if (blank($cols) || blank($params)) return $query;
+
         foreach ($cols as $col) {
             $value = \Illuminate\Support\Arr::get($params, $col);
             $query = $query->when(filled($value), fn($query) => $query->where($col, $value));
@@ -17,6 +19,8 @@ if (!function_exists('query_by_cols')) {
 if (!function_exists('query_relation_by_cols')) {
     function query_relation_by_cols(Builder &$query, array $relations = [], array $params = []): Builder
     {
+        if (blank($relations) || blank($params)) return $query;
+
         foreach ($relations as $relation => $cols) {
             foreach ($cols as $col) {
                 $value = \Illuminate\Support\Arr::get($params, $col);

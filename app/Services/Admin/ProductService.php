@@ -67,4 +67,27 @@ class ProductService
             ]);
         });
     }
+
+    public function createProductAndBuy(
+        \App\Models\Service $service,
+        array               $product,
+        User                $user,
+                            $price
+    )
+    {
+        return app(DatabaseServiceInterface::class)->transaction(function () use ($service, $product, $user, $price) {
+            $product = Product::create($product);
+
+            if ($price <= 0) $user->payFree($product);
+
+            $user->pay($product);
+
+            return Order::create([
+                'service_id' => $service->id,
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+                'price' => $price
+            ]);
+        });
+    }
 }

@@ -33,7 +33,6 @@ class ServiceEvent implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
-        Log::info($this->service->toJson());
         return $this->service?->refresh()?->toArray() ?? [];
     }
 

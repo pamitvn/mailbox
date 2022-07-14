@@ -2,17 +2,16 @@
 
 namespace App\Actions;
 
-use App\Models\Product;
+use App\Jobs\Products\PurchaseProcessingJob;
 use App\Models\Service;
 use App\Models\User;
 use App\PAM\Enums\ProductStatus;
+use App\PAM\Facades\ParentManager;
 use App\Services\Admin\ProductService;
 use Bavix\Wallet\Exceptions\ProductEnded;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 use Lorisleiva\Actions\Action;
 use Lorisleiva\Actions\ActionRequest;
 use PHPUnit\Exception;
@@ -59,38 +58,16 @@ class BuyProductAction extends Action
         int           $quantity
     )
     {
-        $orders = [];
-        $messages = [];
         $_service = app(ProductService::class);
-        $products = $service->products()
-            ->randomQuantity($quantity)
-            ->get();
 
-        if (blank($products)) {
-            send_current_user_message('danger', __('The product is out of stock'));
-            return back()->withErrors('globalError', '');
-        }
+        PurchaseProcessingJob::dispatch(
+            $_service,
+            $service,
+            $user,
+            $quantity
+        );
 
-        foreach ($products as $product) {
-            try {
-                $orders[] = $_service->buy($service, $product, $user, $service->price);
-            } catch (Exception $exception) {
-                Log::error($exception->getMessage());
-                break;
-            } catch (ProductEnded $exception) {
-                $messages[] = $exception->getMessage();
-            }
-        }
-
-        $messages = array_unique($messages, SORT_REGULAR);
-
-        if (blank($orders) || filled($messages)) {
-            foreach ($messages as $message) {
-                send_current_user_message('danger', $message, $user->id);
-            }
-        } else {
-            send_current_user_message('success', 'Product purchased successfully', $user->id);
-        }
+        send_current_user_message('info', 'Your order has been added to the list of pending orders.', $user->id);
 
         return back();
     }

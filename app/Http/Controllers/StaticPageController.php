@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ServiceResource;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
@@ -10,8 +11,7 @@ class StaticPageController extends Controller
     public function home(Request $request)
     {
         $search = $request->get('search');
-        $services = Service::query()
-            ->whereVisible(true);
+        $services = Service::query()->whereVisible(true);
 
         search_by_cols($services, $search, [
             'name',
@@ -20,7 +20,7 @@ class StaticPageController extends Controller
         ]);
 
         return inertia('Home', [
-            'services' => $services->get()
+            'services' => ServiceResource::collection($services->get())->toArray($request)
         ]);
     }
 
