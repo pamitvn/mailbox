@@ -5,11 +5,11 @@ namespace App\Console\Commands;
 use App\Models\Bank;
 use App\Models\RechargeHistory;
 use App\Models\User;
+use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CheckACBRechargeCommand extends Command
@@ -57,7 +57,7 @@ class CheckACBRechargeCommand extends Command
                 if (!$userMatched || !$userId) continue;
 
                 try {
-                    DB::transaction(function () use ($bank, $userId, $transId, $amount) {
+                    app(DatabaseServiceInterface::class)->transaction(function () use ($bank, $userId, $transId, $amount) {
                         $user = User::findOrFail($userId);
                         $rechargeExists = RechargeHistory::whereUserId($user->id)
                             ->whereJsonContains('extras->transId', $transId)
@@ -67,7 +67,7 @@ class CheckACBRechargeCommand extends Command
 
                         $userBalanceBeforeTrans = $user->balance;
 
-                        $user->increment('balance', $amount);
+                        $user->deposit($amount);
 
                         RechargeHistory::create([
                             'bank_id' => $bank?->id,
