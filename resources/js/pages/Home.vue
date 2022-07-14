@@ -141,7 +141,7 @@
    ]);
 
    const { search } = usePagination();
-   const { records, setRecords } = useCreateUpdateSocket('service', { update: '.stock' }, {
+   const { records, setRecords } = useCreateUpdateSocket('service', { update: '.stocks' }, {
       privateChannel: false,
    });
 
