@@ -13,7 +13,7 @@ class RechargeHistoryManagerController extends Controller
         $search = $request->get('search');
 
         $records = RechargeHistory::query()
-            ->with('bank')
+            ->with(['bank', 'user'])
             ->orderBy('id', 'desc');
 
         search_by_cols($records, $search, [

@@ -6,6 +6,11 @@
       <div class='card'>
          <div class='card-body'>
             <TheTable v-model:search='search' v-model:per-page='perPage' :data='paginationData' :columns='columns'>
+               <template #row-user='{value}'>
+                  <td class='w-auto'>
+                     <user-label :data='value' :has-avatar='true' :gravatar='value.email' />
+                  </td>
+               </template>
                <template #row-action='{row}'>
                   <td>
                      <the-link class='btn btn-datatable btn-icon btn-transparent-dark'
@@ -38,6 +43,7 @@
 
    import Layout from './Layout.vue';
    import TheTable from '~/components/Table/TheTable.vue';
+   import UserLabel from '~/components/UserLabel.vue';
 
    const props = defineProps<{
       paginationData: Utils.Pagination.Type<Models.RechargeHistory>
@@ -48,6 +54,10 @@
       {
          path: 'id',
          label: '#',
+      },
+      {
+         path: 'user',
+         label: 'User',
       },
       {
          path: 'bank.name',
