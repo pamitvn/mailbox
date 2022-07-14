@@ -15,6 +15,7 @@ class CleanProductCommand extends Command
     {
         $services = Service::with('products')
             ->where('clean_after', '>', 0)
+            ->where('is_local', true)
             ->get();
 
         foreach ($services as $service) {
