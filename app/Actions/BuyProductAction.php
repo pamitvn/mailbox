@@ -5,16 +5,11 @@ namespace App\Actions;
 use App\Jobs\Products\PurchaseProcessingJob;
 use App\Models\Service;
 use App\Models\User;
-use App\PAM\Enums\ProductStatus;
-use App\PAM\Facades\ParentManager;
 use App\Services\Admin\ProductService;
-use Bavix\Wallet\Exceptions\ProductEnded;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\Action;
 use Lorisleiva\Actions\ActionRequest;
-use PHPUnit\Exception;
 
 class BuyProductAction extends Action
 {

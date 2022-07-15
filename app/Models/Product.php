@@ -8,8 +8,8 @@ use Bavix\Wallet\Interfaces\ProductLimitedInterface;
 use Bavix\Wallet\Traits\HasWallet;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\Log;
 
 class Product extends Model implements ProductLimitedInterface
 {
@@ -55,9 +55,9 @@ class Product extends Model implements ProductLimitedInterface
         return $this->hasOne(Service::class, 'id', 'service_id');
     }
 
-    public function order(): HasOne
+    public function order(): BelongsToMany
     {
-        return $this->hasOne(Order::class, 'product_id', 'id');
+        return $this->belongsToMany(Order::class, 'order_has_products', 'product_id', 'order_id');
     }
 
     public function scopeBought(Builder $query): Builder

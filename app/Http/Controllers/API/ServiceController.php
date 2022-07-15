@@ -7,12 +7,11 @@ use App\Http\Resources\OrderProductResource;
 use App\Models\Service;
 use App\PAM\Facades\ApiResponse;
 use App\Services\Admin\ProductService;
-use Bavix\Wallet\Exceptions\ProductEnded;
+use Bavix\Wallet\Exceptions\BalanceIsEmpty;
+use Bavix\Wallet\Exceptions\InsufficientFunds;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use PHPUnit\Exception;
 
 class ServiceController extends Controller
 {
@@ -62,36 +61,24 @@ class ServiceController extends Controller
             return ApiResponse::withFailed()->withMessage(__('The balance in the account is not enough to make the request'));
         }
 
-        $orders = [];
-        $messages = [];
-        $products = $service->products()
-            ->randomQuantity($quantity)
-            ->get();
+        $products = $this->_service->{$service->is_local ? 'buyRandomProduct' : 'buyProductFromParent'}($service, $quantity);
 
-        if (blank($products)) return ApiResponse::withFailed()->withMessage(__('The product is out of stock'));
-
-        foreach ($products as $product) {
-            try {
-                $orders[] = $this->_service->buy($service, $product, $user, $service->price);
-            } catch (Exception $exception) {
-                Log::info($exception->getMessage());
-                break;
-//                return ApiResponse::withFailed()->withSuccess('Failed');
-            } catch (ProductEnded $exception) {
-                $messages[] = $exception->getMessage();
-            }
+        if (blank($products)) {
+            return ApiResponse::withFailed()->withMessage(__('The product is out of stock'));
         }
 
-        $messages = array_unique($messages, SORT_REGULAR);
+        try {
+            $order = $this->_service->createOrderAndBuy($user, [
+                'service_id' => $service->id,
+                'user_id' => $user->id,
+                'price' => $service->price,
+            ], collect($products));
 
-        if (blank($orders) || filled($messages)) {
-            return ApiResponse::withFailed()
-                ->withSuccess(Arr::first($messages))
-                ->withErrors($messages);
+            return ApiResponse::withSuccess()
+                ->withData(new OrderProductResource($order))
+                ->withMessage(__('Your purchase has been completed.'));
+        } catch (BalanceIsEmpty|InsufficientFunds $exception) {
+            return ApiResponse::withFailed()->withMessage($exception->getMessage());
         }
-
-        return ApiResponse::withSuccess()
-            ->withData(OrderProductResource::collection($orders))
-            ->withMessage(__('Product purchased successfully'));
     }
 }

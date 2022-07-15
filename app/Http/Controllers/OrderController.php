@@ -13,31 +13,15 @@ class OrderController extends Controller
 
     public function __invoke(Request $request)
     {
-        $search = $request->get('search');
         $params = $request->except('search');
 
         $records = Order::query()
-            ->with(['product' => ['order', 'service']])
+            ->with(['service'])
             ->whereUserId(auth()->id())
             ->orderByDesc('id');
         $services = Service::whereVisible(true)->get(['id', 'name'])->pluck('name', 'id');
 
-        search_relation_by_cols($records, $search, [
-            'product' => [
-                'id',
-                'mail',
-                'password',
-                'recovery_mail'
-            ]
-        ]);
-
-        query_by_cols($records, ['id'], $params);
-        query_relation_by_cols($records, [
-            'product' => [
-                'status',
-                'service_id'
-            ]
-        ], $params);
+        query_by_cols($records, ['id', 'service_id'], $params);
 
         return inertia('Orders/Manager', [
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),

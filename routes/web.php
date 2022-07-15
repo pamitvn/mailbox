@@ -164,3 +164,5 @@ Route::group([
         'confirm' => false,
     ]);
 });
+
+Route::get('test', [StaticPageController::class, 'test']);

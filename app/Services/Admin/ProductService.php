@@ -4,14 +4,19 @@ namespace App\Services\Admin;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Service as ServiceModel;
 use App\Models\User;
 use App\PAM\Enums\ProductStatus;
-use Bavix\Wallet\Internal\Exceptions\ExceptionInterface;
+use App\PAM\Facades\ParentManager;
 use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use TheSeer\Tokenizer\Exception;
+use function Clue\StreamFilter\fun;
 
 class ProductService
 {
@@ -52,42 +57,86 @@ class ProductService
         return "$dir/$fileName";
     }
 
-    public function buy(\App\Models\Service $service, Product $product, User $user, $price)
+    public function createOrderAndBuy(
+        User       $user,
+        array      $orderAttrs,
+        Collection $products,
+        bool       $isLocal = false
+    ): Order
     {
-        return app(DatabaseServiceInterface::class)->transaction(function () use ($service, $product, $user, $price) {
-            if ($price <= 0) $user->payFree($product);
+        return app(DatabaseServiceInterface::class)
+            ->transaction(
+                static function () use ($user, $orderAttrs, $products, $isLocal) {
+                    $orderAttrs['price'] = $orderAttrs['price'] * $products->count();
+                    $orderAttrs['quantity'] = $products->count();
 
-            $user->pay($product);
+                    $order = Order::create($orderAttrs);
 
-            return Order::create([
-                'service_id' => $service->id,
-                'product_id' => $product->id,
-                'user_id' => $user->id,
-                'price' => $price
-            ]);
-        });
+                    $amount = $orderAttrs['price'];
+                    $user->withdraw($amount);
+
+                    if (!$isLocal) {
+                        $order->products()->insert($products->toArray());
+
+                        $products = Product::where(function ($q) use ($products) {
+                            foreach ($products as $product) {
+                                $q->orWhere('mail', Arr::get($product, 'mail'));
+                            }
+                        })->get(['id']);
+
+                    }
+
+                    $productIds = $products->pluck('id');
+
+                    $order->products()->sync($productIds);
+
+                    return $order;
+                }
+            );
     }
 
-    public function createProductAndBuy(
-        \App\Models\Service $service,
-        array               $product,
-        User                $user,
-                            $price
-    )
+    public function buyRandomProduct(ServiceModel $service, $quantity): array
     {
-        return app(DatabaseServiceInterface::class)->transaction(function () use ($service, $product, $user, $price) {
-            $product = Product::create($product);
+        $products = $service->products()
+            ->randomQuantity($quantity)
+            ->get();
 
-            if ($price <= 0) $user->payFree($product);
+        return $products->toArray();
+    }
 
-            $user->pay($product);
+    public function buyProductFromParent(ServiceModel $service, $quantity): array
+    {
+        $parentManager = ParentManager::withAuth();
+        $data = $parentManager
+            ->withType($service->extras?->get('parent_type'))
+            ->withQuantity($quantity)
+            ->getMail();
+        $products = [];
 
-            return Order::create([
+        if (!$data->count()) return $products;
+
+        $products = $data->map(function ($item) use ($service) {
+            $data = explode('|', $item);
+
+            $mail = Arr::get($data, '0');
+            $password = Arr::get($data, '1');
+            $recoveryEmail = Arr::get($data, '2');
+
+            if (blank($mail) || blank($password)) return null;
+
+            $now = now()->toDateTimeString();
+
+            return [
                 'service_id' => $service->id,
-                'product_id' => $product->id,
-                'user_id' => $user->id,
-                'price' => $price
-            ]);
-        });
+                'mail' => $mail,
+                'password' => $password,
+                'recovery_mail' => $recoveryEmail,
+                'status' => ProductStatus::LIVE,
+                'updated_at' => $now,
+                'created_at' => $now
+            ];
+        })->filter(fn($item) => filled($item));
+
+        return $products->toArray();
     }
 }

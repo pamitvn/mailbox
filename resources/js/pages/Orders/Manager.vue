@@ -19,18 +19,32 @@
                      Export (Selected rows)
                   </button>
                </template>
-               <template #row-product.status='{value}'>
-                  <td v-html='statusHtmlLabel[value]'></td>
+               <template #row-action='{row}'>
+                  <td>
+                     <the-link class='btn btn-datatable btn-icon btn-transparent-dark me-2'
+                               data-bs-toggle='modal'
+                               data-bs-target='#view-product-model'
+                               @click='() => viewProduct(row)'>
+                        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'
+                             stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
+                             class='feather feather-eye'>
+                           <path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'></path>
+                           <circle cx='12' cy='12' r='3'></circle>
+                        </svg>
+                     </the-link>
+                  </td>
                </template>
             </TheTable>
          </div>
       </div>
    </Layout>
+
+   <view-product-modal v-model:order='order' />
 </template>
 
 <script setup lang='ts'>
    import axios from 'axios';
-   import { reactive } from 'vue';
+   import { reactive, ref } from 'vue';
    import dateFormat from 'dateformat';
    import fileSaver from 'file-saver';
 
@@ -41,6 +55,7 @@
    import Layout from './Layout.vue';
    import TheTable from '~/components/Table/TheTable.vue';
    import TheFilterTableCard from '~/components/Table/TheFilterTableCard.vue';
+   import ViewProductModal from '~/pages/Orders/ViewProductModal.vue';
 
    const props = defineProps<{
       statusHtmlLabel: Components.Table.FilterCard.defineField
@@ -49,34 +64,26 @@
       paginationData: Utils.Pagination.Type<Models.Order>
    }>();
 
+   const order = ref<Models.Order | null>(null);
    const columns = reactive<Components.Table.Columns<Models.Order>>([
       {
          path: 'id',
          label: '#',
       },
       {
-         path: 'product',
+         path: 'service.name',
          label: 'Product',
-         display: (row, value, lodash) => lodash.get(row, `${value}.service.name`),
       },
       {
-         path: 'product.mail',
-         label: 'Mail',
+         path: 'price',
+         label: 'Price',
       },
       {
-         path: 'product.password',
-         label: 'Password',
+         path: 'quantity',
+         label: 'Quantity',
       },
       {
-         path: 'product.recovery_mail',
-         label: 'Recovery Mail',
-      },
-      {
-         path: 'product.status',
-         label: 'Status',
-      },
-      {
-         path: 'product.created_at',
+         path: 'created_at',
          label: 'Created At',
          display: (row, path, lodash) => dateFormat(lodash.get(row, path, '') as string, 'mmmm dS, yyyy, h:MM:ss TT'),
       },
@@ -86,12 +93,6 @@
       },
    ]);
    const filterFields = reactive<Components.Table.FilterCard.Fields>([
-      {
-         name: 'status',
-         label: 'Filter by status',
-         placeholder: 'Status',
-         options: props.statusLabel,
-      },
       {
          name: 'service_id',
          label: 'Filter by Product',
@@ -126,5 +127,14 @@
          });
       }
 
+   };
+   const viewProduct = (row) => {
+      // return Inertia.post(useRoute('product.export', { action: 'view' }), { includes: [id.toString()] }, {
+      //    headers: {
+      //       'Content-Type': 'application/json',
+      //    },
+      // });
+
+      order.value = row;
    };
 </script>

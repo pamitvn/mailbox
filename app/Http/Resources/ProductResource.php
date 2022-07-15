@@ -5,8 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Order */
-class OrderProductResource extends JsonResource
+/** @mixin \App\Models\Product */
+class ProductResource extends JsonResource
 {
     /**
      * @param Request $request
@@ -15,9 +15,9 @@ class OrderProductResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'service_id' => $this->service_id,
-            'products' => ProductResource::collection($this->products()->get()),
+            'mail' => $this->mail,
+            'password' => $this->password,
+            'recovery_mail' => $this->recovery_mail,
         ];
     }
 }

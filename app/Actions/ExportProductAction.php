@@ -19,19 +19,23 @@ class ExportProductAction extends Action
 
     public function asController(ActionRequest $request)
     {
+        $action = $request->get('action');
         $data = $request->validated();
 
         $builder = Order::query()
             ->select([
                 'id',
-                'product_id'
             ])
-            ->with('product')
+            ->with('products')
             ->where(function ($query) use ($data) {
                 foreach ($data['includes'] as $id) {
                     $query->orWhere('id', $id);
                 }
             });
+
+        if ($action === 'view') {
+            return $this->handleView($builder);
+        }
 
         return $this->handle($builder);
     }
@@ -46,7 +50,9 @@ class ExportProductAction extends Action
             $builder->chunk(100,
                 function ($rows) use ($handle) {
                     foreach ($rows as $row) {
-                        fputcsv($handle, array_filter([$row->product?->mail, $row->product?->password, $row->product?->recovery_mail]), '|');
+                        foreach ($row?->products ?? [] as $product) {
+                            fputcsv($handle, array_filter([$product?->mail, $product?->password, $product?->recovery_mail]), '|');
+                        }
                     }
                 }
             );
@@ -56,6 +62,18 @@ class ExportProductAction extends Action
         }, 200, [
             'Content-Type' => 'text/plain;charset=utf-8',
         ]);
+    }
 
+    public function handleView(Builder $builder)
+    {
+        $data = [];
+
+        foreach ($builder->get() as $item) {
+
+            $data = array_merge($data, $item->products->toArray());
+        }
+
+
+        return $data;
     }
 }
