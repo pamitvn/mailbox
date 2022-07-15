@@ -63,7 +63,7 @@
          let output = '';
 
          _.forEach(responseData || [], (item: Models.Product) => {
-            output += `${item.mail}|${item.password}${item.recovery_mail && '|' + item.recovery_mail}` + '\n';
+            output += `${item.mail}|${item.password}${item.recovery_mail && `|${item.recovery_mail}`}` + '\n';
          });
 
          payload.value = output;
