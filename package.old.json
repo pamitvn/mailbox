@@ -1,0 +1,48 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production",
+        "husky:install": "husky install"
+    },
+    "devDependencies": {
+        "@babel/preset-typescript": "^7.17.12",
+        "@types/axios": "^0.14.0",
+        "@types/dateformat": "^5.0.0",
+        "@types/file-saver": "^2.0.5",
+        "@types/lodash": "^4.14.182",
+        "@types/vue": "^2.0.0",
+        "@types/vue-select": "^3.16.0",
+        "axios": "^0.27.2",
+        "husky": "^8.0.1",
+        "laravel-mix": "^6.0.6",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "ts-loader": "^9.3.0",
+        "typescript": "^4.7.3",
+        "vue-loader": "^17.0.0"
+    },
+    "dependencies": {
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@chartisan/chartjs": "^2.1.0",
+        "@inertiajs/inertia": "^0.11.0",
+        "@inertiajs/inertia-vue3": "^0.6.0",
+        "@inertiajs/progress": "^0.2.7",
+        "@vueuse/core": "^8.6.0",
+        "chart.js": "^2.9.3",
+        "dateformat": "^5.0.3",
+        "file-saver": "^2.0.5",
+        "laravel-echo": "^1.11.7",
+        "mosha-vue-toastify": "^1.0.23",
+        "pusher-js": "^7.1.1-beta",
+        "slugify": "^1.6.5",
+        "vue": "^3.2.37",
+        "vue-select": "^4.0.0-beta.3",
+        "vue3-gravatar": "^3.0.0"
+    }
+}

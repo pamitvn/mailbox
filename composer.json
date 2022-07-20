@@ -15,7 +15,7 @@
         "cviebrock/eloquent-sluggable": "^9.0",
         "guzzlehttp/guzzle": "^7.2",
         "http-interop/http-factory-guzzle": "^1.2",
-        "inertiajs/inertia-laravel": "^0.6.2",
+        "inertiajs/inertia-laravel": "^v0.6.3",
         "laravel/framework": "^v9.21.0",
         "laravel/sanctum": "^2.14.1",
         "laravel/scout": "^9.4",
