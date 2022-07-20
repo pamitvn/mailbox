@@ -11,7 +11,9 @@ class SelectorUserDataListener
 {
     public function handle(DoActionEvent $event)
     {
-        if (!$event->isAction('selector') || !$event->isTarget('type', 'user')) return null;
+        if (! $event->isAction('selector') || ! $event->isTarget('type', 'user')) {
+            return null;
+        }
 
         $params = $event->request->except('action', 'type');
         $search = Arr::get($params, 'search');
@@ -22,7 +24,7 @@ class SelectorUserDataListener
             'id',
             'name',
             'username',
-            'email'
+            'email',
         ]);
 
         return ApiResponse::withSuccess()->withData($users->get());

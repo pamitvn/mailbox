@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-./vendor/bin/sail composer run-script pint
+./vendor/bin/sail exec laravel.test ./vendor/bin/pint

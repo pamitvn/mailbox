@@ -10,6 +10,7 @@ class GeneralSetting extends Settings
     use AdminSetting;
 
     protected ?string $adminLabel = 'General';
+
     protected ?string $adminGroup = null;
 
     public string $site_name;
@@ -19,7 +20,7 @@ class GeneralSetting extends Settings
         return 'general';
     }
 
-    function adminFields(): array
+    public function adminFields(): array
     {
         return [
             'site_name' => [
@@ -27,8 +28,8 @@ class GeneralSetting extends Settings
                 'attribute' => [
                     'type' => 'text',
                     'label' => 'Site Name',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

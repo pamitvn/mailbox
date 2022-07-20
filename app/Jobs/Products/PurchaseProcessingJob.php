@@ -18,17 +18,19 @@ class PurchaseProcessingJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private ProductService $_productService;
+
     private Service $service;
+
     private User $user;
+
     private int $quantity;
 
     public function __construct(
         ProductService $productService,
-        Service        $service,
-        User           $user,
-        int            $quantity
-    )
-    {
+        Service $service,
+        User $user,
+        int $quantity
+    ) {
         $this->_productService = $productService;
         $this->service = $service;
         $this->user = $user;
@@ -52,7 +54,7 @@ class PurchaseProcessingJob implements ShouldQueue
                 'service_id' => $this->service->id,
                 'user_id' => $this->user->id,
                 'price' => $this->service->price,
-//                'quantity' => $productIds->count()
+                //                'quantity' => $productIds->count()
             ], $products);
             $this->sendMessage('success', __('Your purchase has been completed.'));
         } catch (BalanceIsEmpty|InsufficientFunds $exception) {

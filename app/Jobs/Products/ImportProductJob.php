@@ -5,6 +5,7 @@ namespace App\Jobs\Products;
 use App\Models\Service;
 use App\Models\User;
 use App\Services\Admin\ProductService;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -21,16 +22,17 @@ class ImportProductJob implements ShouldQueue
     private ProductService $_productService;
 
     private User $user;
+
     private Service $service;
+
     private array|string $payload;
 
     public function __construct(
         ProductService $productService,
-        User           $user,
-        Service        $service,
-        array|string   $payload
-    )
-    {
+        User $user,
+        Service $service,
+        array|string $payload
+    ) {
         $this->_productService = $productService;
         $this->user = $user;
         $this->service = $service;
@@ -51,11 +53,13 @@ class ImportProductJob implements ShouldQueue
             $password = Arr::get($data, 'password');
             $recoveryEmail = Arr::get($data, 'recovery_mail');
 
-            if (blank($email) || blank($password)) continue;
+            if (blank($email) || blank($password)) {
+                continue;
+            }
 
             try {
                 $this->_productService->save($this->service->id, $email, $password, $recoveryEmail);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 Log::error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
             }
         }
@@ -63,7 +67,9 @@ class ImportProductJob implements ShouldQueue
 
     private function getFilePayload($filePath): array
     {
-        if (!Storage::exists($filePath)) return [];
+        if (! Storage::exists($filePath)) {
+            return [];
+        }
 
         $content = Storage::get($filePath);
         $content = collect(explode("\n", $content))
@@ -84,7 +90,6 @@ class ImportProductJob implements ShouldQueue
 
         return array_unique($content->toArray(), SORT_REGULAR);
     }
-
 
     private function sendMessage($type, $message)
     {

@@ -11,12 +11,10 @@ use App\PAM\Facades\ParentManager;
 use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use TheSeer\Tokenizer\Exception;
-use function Clue\StreamFilter\fun;
 
 class ProductService
 {
@@ -28,7 +26,7 @@ class ProductService
                 'password' => $password,
                 'recovery_mail' => $recoveryEmail,
                 'status' => ProductStatus::LIVE,
-                'service_id' => $serviceId
+                'service_id' => $serviceId,
             ]);
         });
     }
@@ -46,9 +44,9 @@ class ProductService
 
     public function uploadFile(UploadedFile $file): string
     {
-        $dir = "handlers/products";
+        $dir = 'handlers/products';
         $rootLocation = storage_path("app/$dir");
-        $fileName = sprintf('%s.%s', md5(now() . $file->getClientOriginalName()), $file->getClientOriginalExtension());
+        $fileName = sprintf('%s.%s', md5(now().$file->getClientOriginalName()), $file->getClientOriginalExtension());
 
         File::ensureDirectoryExists($rootLocation);
 
@@ -58,12 +56,11 @@ class ProductService
     }
 
     public function createOrderAndBuy(
-        User       $user,
-        array      $orderAttrs,
+        User $user,
+        array $orderAttrs,
         Collection $products,
-        bool       $isLocal = false
-    ): Order
-    {
+        bool $isLocal = false
+    ): Order {
         return app(DatabaseServiceInterface::class)
             ->transaction(
                 static function () use ($user, $orderAttrs, $products, $isLocal) {
@@ -75,7 +72,7 @@ class ProductService
                     $amount = $orderAttrs['price'];
                     $user->withdraw($amount);
 
-                    if (!$isLocal) {
+                    if (! $isLocal) {
                         $order->products()->insert($products->toArray());
 
                         $products = Product::where(function ($q) use ($products) {
@@ -83,7 +80,6 @@ class ProductService
                                 $q->orWhere('mail', Arr::get($product, 'mail'));
                             }
                         })->get(['id']);
-
                     }
 
                     $productIds = $products->pluck('id');
@@ -113,7 +109,9 @@ class ProductService
             ->getMail();
         $products = [];
 
-        if (!$data->count()) return $products;
+        if (! $data->count()) {
+            return $products;
+        }
 
         $products = $data->map(function ($item) use ($service) {
             $data = explode('|', $item);
@@ -122,7 +120,9 @@ class ProductService
             $password = Arr::get($data, '1');
             $recoveryEmail = Arr::get($data, '2');
 
-            if (blank($mail) || blank($password)) return null;
+            if (blank($mail) || blank($password)) {
+                return null;
+            }
 
             $now = now()->toDateTimeString();
 
@@ -133,9 +133,9 @@ class ProductService
                 'recovery_mail' => $recoveryEmail,
                 'status' => ProductStatus::LIVE,
                 'updated_at' => $now,
-                'created_at' => $now
+                'created_at' => $now,
             ];
-        })->filter(fn($item) => filled($item));
+        })->filter(fn ($item) => filled($item));
 
         return $products->toArray();
     }

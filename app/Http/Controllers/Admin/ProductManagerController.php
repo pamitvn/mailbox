@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Jobs\Products\ImportProductJob;
 use App\Models\Product;
 use App\Models\Service;
-use App\Observers\ServiceObserver;
 use App\PAM\Enums\ProductStatus;
 use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
@@ -38,7 +37,7 @@ class ProductManagerController extends Controller
         search_by_cols($records, $search, [
             'mail',
             'recovery_mail',
-            'password'
+            'password',
         ]);
 
         query_by_cols($records, ['id', 'email', 'status'], $params);
@@ -47,7 +46,7 @@ class ProductManagerController extends Controller
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
             'statusLabel' => ProductStatus::toLabelArray(),
             'service' => $service,
-            'paginationData' => paginate_with_params($records, $params)
+            'paginationData' => paginate_with_params($records, $params),
         ]);
     }
 
@@ -57,18 +56,18 @@ class ProductManagerController extends Controller
         $data = $request->validate([
             'products' => [
                 'nullable',
-                Rule::requiredIf(fn() => !$request->file('file') instanceof UploadedFile),
+                Rule::requiredIf(fn () => ! $request->file('file') instanceof UploadedFile),
                 'array',
-                'min:1'
+                'min:1',
             ],
             'file' => [
                 'nullable',
-                Rule::requiredIf(fn() => $request->file('file') instanceof UploadedFile),
+                Rule::requiredIf(fn () => $request->file('file') instanceof UploadedFile),
                 'file',
                 'mimes:txt',
                 'mimetypes:text/plain',
                 'max:10240',
-            ]
+            ],
         ]);
 
         $file = $request->file('file');
@@ -121,7 +120,6 @@ class ProductManagerController extends Controller
             __('The specified records were successfully removed.'),
             __('There was a problem with the deletion.')
         );
-
 
         return back();
     }

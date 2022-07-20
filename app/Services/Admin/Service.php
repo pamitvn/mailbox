@@ -14,7 +14,7 @@ class Service
     {
         try {
             return DB::transaction(function () use ($data) {
-                return !!ServiceModel::create($data);
+                return (bool) ServiceModel::create($data);
             });
         } catch (Exception $exception) {
             return false;
@@ -56,12 +56,12 @@ class Service
         }
 
         $folder = storage_path('app/public/services');
-        $filename = md5(date('YmdHi') . $file->getClientOriginalName()) . '.' . $file->extension();
+        $filename = md5(date('YmdHi').$file->getClientOriginalName()).'.'.$file->extension();
 
         File::ensureDirectoryExists($folder);
         $file->move($folder, $filename);
 
-        return 'services/' . $filename;
+        return 'services/'.$filename;
     }
 
     public function deleteFeatureImage($path): void

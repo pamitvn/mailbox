@@ -2,7 +2,6 @@
 
 namespace App\Events\Sockets;
 
-use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -15,6 +14,7 @@ class UserMessageEvent implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, InteractsWithBroadcasting, SerializesModels;
 
     protected int|string $userId;
+
     protected array $payload;
 
     public function __construct(int|string $userId, array $payload)
@@ -27,7 +27,7 @@ class UserMessageEvent implements ShouldBroadcastNow
 
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('user.' . $this->userId);
+        return new PrivateChannel('user.'.$this->userId);
     }
 
     public function broadcastAs(): string
@@ -39,5 +39,4 @@ class UserMessageEvent implements ShouldBroadcastNow
     {
         return $this->payload;
     }
-
 }

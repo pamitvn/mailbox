@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\Service;
 use App\PAM\Enums\ProductStatus;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class ServiceManagerController extends Controller
 {
@@ -33,7 +30,7 @@ class ServiceManagerController extends Controller
             'mimes:jpeg,png',
             'mimetypes:image/jpeg,image/png',
             'max:2048',
-        ]
+        ],
     ];
 
     public function __construct(\App\Services\Admin\Service $_service)
@@ -41,11 +38,11 @@ class ServiceManagerController extends Controller
         $this->_service = $_service;
         $this->rules = array_merge($this->rules, collect(Service::extraFields())
             ->map(
-                fn($item) => blank(Arr::get($item, 'rule', []))
+                fn ($item) => blank(Arr::get($item, 'rule', []))
                     ? ['nullable']
                     : Arr::get($item, 'rule', [])
             )
-            ->keyBy(fn($value, $key) => sprintf('extras.%s', $key))
+            ->keyBy(fn ($value, $key) => sprintf('extras.%s', $key))
             ->toArray());
     }
 
@@ -58,18 +55,18 @@ class ServiceManagerController extends Controller
 
         search_by_cols($records, $search, [
             'name',
-            'slug'
+            'slug',
         ]);
 
         return inertia('Admin/Services/Manager', [
-            'paginationData' => paginate_with_params($records, $params)
+            'paginationData' => paginate_with_params($records, $params),
         ]);
     }
 
     public function create()
     {
         return inertia('Admin/Services/Create', [
-            'extraFields' => Service::extraFields()
+            'extraFields' => Service::extraFields(),
         ]);
     }
 
@@ -93,7 +90,7 @@ class ServiceManagerController extends Controller
 
         $records = Order::query()
             ->with('user')
-            ->withWhereHas('product', fn($query) => $query->where('service_id', $service->id))
+            ->withWhereHas('product', fn ($query) => $query->where('service_id', $service->id))
             ->orderByDesc('id');
 
         search_relation_by_cols($records, $search, [
@@ -101,23 +98,23 @@ class ServiceManagerController extends Controller
                 'id',
                 'mail',
                 'password',
-                'recovery_mail'
-            ]
+                'recovery_mail',
+            ],
         ]);
 
         query_by_cols($records, ['id'], $params);
         query_relation_by_cols($records, [
             'product' => [
                 'status',
-                'service_id'
-            ]
+                'service_id',
+            ],
         ], $params);
 
         return inertia('Admin/Services/Orders', [
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
             'statusLabel' => ProductStatus::toLabelArray(),
             'service' => $service,
-            'paginationData' => paginate_with_params($records, $params)
+            'paginationData' => paginate_with_params($records, $params),
         ]);
     }
 
@@ -125,7 +122,7 @@ class ServiceManagerController extends Controller
     {
         return inertia('Admin/Services/Edit', [
             'service' => $service,
-            'extraFields' => Service::extraFields()
+            'extraFields' => Service::extraFields(),
         ]);
     }
 
@@ -160,7 +157,7 @@ class ServiceManagerController extends Controller
         $results = DB::transaction(function () use ($service, $data) {
             return Order::query()
                 ->select(['id', 'service_id'])
-                ->withWhereHas('product', fn($query) => $query->where('service_id', $service->id))
+                ->withWhereHas('product', fn ($query) => $query->where('service_id', $service->id))
                 ->where(function ($query) use ($data) {
                     foreach ($data['includes'] as $id) {
                         $query->orWhere('id', $id);

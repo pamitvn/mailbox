@@ -54,9 +54,10 @@ class LoginController extends Controller
         $field = filter_var($request->input($this->username()), FILTER_VALIDATE_EMAIL)
             ? $this->email()
             : $this->username();
+
         return [
             $field => strtolower($request->input($this->username())),
-            'password' => $request->input('password')
+            'password' => $request->input('password'),
         ];
     }
 

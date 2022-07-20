@@ -7,14 +7,13 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Str;
 
 class ProfileController extends Controller
 {
     public function index(Request $request)
     {
         return inertia('Account/Profile', [
-            'user' => (new UserResource(User::find(auth()->id())))->toArray($request)
+            'user' => (new UserResource(User::find(auth()->id())))->toArray($request),
         ]);
     }
 
@@ -22,15 +21,14 @@ class ProfileController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:150'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore(auth()->id())]
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore(auth()->id())],
         ]);
 
         auth()->user()->update([
             'name' => $request->input('name'),
-            'email' => $request->input('email')
+            'email' => $request->input('email'),
         ]);
 
         return back()->with('status', __('Updated user profile'));
     }
-
 }

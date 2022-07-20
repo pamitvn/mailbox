@@ -20,9 +20,8 @@ Route::middleware('auth.api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::group([
-    'controller' => ServiceController::class
+    'controller' => ServiceController::class,
 ], function () {
     Route::get('services', 'index');
     Route::get('buy-product', 'buyProduct')->middleware('auth.api');

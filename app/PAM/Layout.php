@@ -15,15 +15,15 @@ class Layout
 
         $value = Arr::get($layouts, $key, $default);
 
-        return !$key
-            ? (!$collect ? $layouts : collect($layouts))
-            : (!$collect ? $value : collect($value));
+        return ! $key
+            ? (! $collect ? $layouts : collect($layouts))
+            : (! $collect ? $value : collect($value));
     }
 
     public function menu($type = 'main'): array
     {
         return $this->all("menu.{$type}", [], true)
-            ->sortBy(fn($item) => Arr::get($item, 'order', 10))
+            ->sortBy(fn ($item) => Arr::get($item, 'order', 10))
             ->toArray();
     }
 
@@ -34,10 +34,10 @@ class Layout
             $menuDoted = Arr::dot($menu);
 
             @[0 => [0 => $keys]] = Arr::divide(array_filter($menuDoted, function ($val) {
-                return preg_match("/groupId/", $val);
+                return preg_match('/groupId/', $val);
             }, ARRAY_FILTER_USE_KEY));
 
-            $path = Str::replaceLast(".groupId", '', $keys);
+            $path = Str::replaceLast('.groupId', '', $keys);
 
             $parents = Arr::get($menu, $path, []);
             $parentItems = Arr::get($parents, 'items', []);
@@ -46,18 +46,17 @@ class Layout
                 'web-config.layouts.menu',
                 $type,
                 $path,
-                'items'
+                'items',
             ];
 
             config([
-                Arr::join($parentPath, '.') => array_merge($parentItems, $items)
+                Arr::join($parentPath, '.') => array_merge($parentItems, $items),
             ]);
         } catch (Exception $exception) {
-
         }
     }
 
-    static function make(): self
+    public static function make(): self
     {
         return new self();
     }

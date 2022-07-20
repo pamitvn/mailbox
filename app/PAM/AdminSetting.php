@@ -2,7 +2,7 @@
 
 namespace App\PAM;
 
-use App\Settings\PaymentSetting;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -12,12 +12,16 @@ use Spatie\LaravelSettings\Settings;
 
 class AdminSetting
 {
-    static string $getFacadeAccessor = 'core.support.admin-setting';
-    static string $cacheKey = 'core.support.admin-setting';
+    public static string $getFacadeAccessor = 'core.support.admin-setting';
+
+    public static string $cacheKey = 'core.support.admin-setting';
 
     protected Collection $configs;
+
     protected array $defines;
+
     protected array $groups;
+
     protected array $settings;
 
     public function __construct(array $configs = [])
@@ -39,7 +43,9 @@ class AdminSetting
             foreach ($this->defines as $define) {
                 $setting = app($define);
 
-                if (!$setting instanceof Settings) continue;
+                if (! $setting instanceof Settings) {
+                    continue;
+                }
 
                 [$groupKey, $groupLabel, $groupFields] = [
                     method_exists($setting, 'getAdminGroup') ? $setting->getAdminGroup() : null,
@@ -47,7 +53,9 @@ class AdminSetting
                     method_exists($setting, 'adminFields') ? $setting->adminFields() : [],
                 ];
 
-                if (!$groupKey) continue;
+                if (! $groupKey) {
+                    continue;
+                }
 
                 $groups[$groupKey] = [
                     'label' => $groupLabel,
@@ -75,12 +83,14 @@ class AdminSetting
 
     public function groupsOnly($keys): array
     {
-        return collect($this->groups())->map(fn($item) => Arr::only($item, $keys))->values()->toArray();
+        return collect($this->groups())->map(fn ($item) => Arr::only($item, $keys))->values()->toArray();
     }
 
     public function get($group = null)
     {
-        if (blank($group)) return $this->settings;
+        if (blank($group)) {
+            return $this->settings;
+        }
 
         return Arr::get($this->settings, $group, []);
     }
@@ -125,7 +135,9 @@ class AdminSetting
         try {
             $setting = app(Arr::get($this->getGroup($group), 'define'));
 
-            if (!$setting instanceof Settings) return false;
+            if (! $setting instanceof Settings) {
+                return false;
+            }
 
             $setting->fill($values);
             $setting->save();
@@ -133,8 +145,9 @@ class AdminSetting
             $this->defining();
 
             return true;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception);
+
             return false;
         }
     }

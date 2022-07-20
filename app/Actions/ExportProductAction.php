@@ -69,10 +69,8 @@ class ExportProductAction extends Action
         $data = [];
 
         foreach ($builder->get() as $item) {
-
             $data = array_merge($data, $item->products->toArray());
         }
-
 
         return $data;
     }

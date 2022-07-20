@@ -18,11 +18,11 @@ class StaticPageController extends Controller
         search_by_cols($services, $search, [
             'name',
             'slug',
-            'lifetime'
+            'lifetime',
         ]);
 
         return inertia('Home', [
-            'services' => ServiceResource::collection($services->get())->toArray($request)
+            'services' => ServiceResource::collection($services->get())->toArray($request),
         ]);
     }
 

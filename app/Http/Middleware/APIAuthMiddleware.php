@@ -15,7 +15,9 @@ class APIAuthMiddleware
 
         $user = User::where('api_key', $apiToken)->first();
 
-        if (!$apiToken || !$user) return response()->json(ApiResponse::withFailed()->withMessage(__('Not Authorized')));
+        if (! $apiToken || ! $user) {
+            return response()->json(ApiResponse::withFailed()->withMessage(__('Not Authorized')));
+        }
 
         auth()->login($user);
 

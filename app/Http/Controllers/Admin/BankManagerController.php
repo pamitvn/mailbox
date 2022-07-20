@@ -18,11 +18,11 @@ class BankManagerController extends Controller
             ->orderBy('id', 'desc');
 
         search_by_cols($banks, $search, [
-            'name'
+            'name',
         ]);
 
         return inertia('Admin/Bank/BankManager', [
-            'paginationData' => paginate_with_params($banks, $params)
+            'paginationData' => paginate_with_params($banks, $params),
         ]);
     }
 
@@ -43,16 +43,16 @@ class BankManagerController extends Controller
                 'mimes:jpeg,png',
                 'mimetypes:image/jpeg,image/png',
                 'max:2048',
-            ]
+            ],
         ]);
 
         if ($request->file('image')) {
             File::ensureDirectoryExists(storage_path('app/public/banks'));
 
             $file = $request->file('image');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $filename = date('YmdHi').$file->getClientOriginalName();
             $file->move(storage_path('app/public/banks'), $filename);
-            $data['image'] = 'banks/' . $filename;
+            $data['image'] = 'banks/'.$filename;
         }
 
         Bank::create($data);
@@ -63,7 +63,7 @@ class BankManagerController extends Controller
     public function edit(Bank $bank)
     {
         return inertia('Admin/Bank/Edit', [
-            'bank' => $bank
+            'bank' => $bank,
         ]);
     }
 
@@ -79,7 +79,7 @@ class BankManagerController extends Controller
                 'mimes:jpeg,png',
                 'mimetypes:image/jpeg,image/png',
                 'max:2048',
-            ]
+            ],
         ]);
 
         if ($request->file('image')) {
@@ -87,9 +87,9 @@ class BankManagerController extends Controller
             File::ensureDirectoryExists(storage_path('app/public/banks'));
 
             $file = $request->file('image');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $filename = date('YmdHi').$file->getClientOriginalName();
             $file->move(storage_path('app/public/banks'), $filename);
-            $data['image'] = 'banks/' . $filename;
+            $data['image'] = 'banks/'.$filename;
         } else {
             unset($data['image']);
         }

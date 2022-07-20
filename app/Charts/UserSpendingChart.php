@@ -24,15 +24,15 @@ class UserSpendingChart extends BaseChart
             ->orders()
             ->whereDay('created_at', Carbon::now())
             ->get()
-            ->groupBy(fn($date) => Carbon::parse($date->created_at)->format('H'))
-            ->map(fn($item) => $item->sum('price'));
+            ->groupBy(fn ($date) => Carbon::parse($date->created_at)->format('H'))
+            ->map(fn ($item) => $item->sum('price'));
 
         $recharge = auth()->user()->rechargeHistories()
             ->whereDay('created_at', Carbon::now())
             ->whereNotNull('bank_id')
             ->get()
-            ->groupBy(fn($date) => Carbon::parse($date->created_at)->format('H'))
-            ->map(fn($item) => $item->sum('amount'));
+            ->groupBy(fn ($date) => Carbon::parse($date->created_at)->format('H'))
+            ->map(fn ($item) => $item->sum('amount'));
 
         $values = [];
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Service;
-use App\PAM\Enums\ProductStatus;
 use App\PAM\Facades\ApiResponse;
 use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class AdminServiceController extends Controller
 
         $services = Service::query()->orderByDesc('id');
 
-        search_by_cols($services, $search, ['name', 'slug', 'lifetime',]);
+        search_by_cols($services, $search, ['name', 'slug', 'lifetime']);
         query_by_cols($services, ['id', 'name'], $params);
 
         return ApiResponse::withSuccess()->withData($services->get());

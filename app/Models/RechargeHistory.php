@@ -14,14 +14,14 @@ class RechargeHistory extends Model
         'after_transaction',
         'before_transaction',
         'note',
-        'extras'
+        'extras',
     ];
 
     protected $casts = [
         'amount' => 'float',
         'after_transaction' => 'float',
         'before_transaction' => 'float',
-        'extras' => 'array'
+        'extras' => 'array',
     ];
 
     public function user(): HasOne

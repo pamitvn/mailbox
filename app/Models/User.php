@@ -26,7 +26,7 @@ class User extends Authenticatable implements Wallet\Interfaces\Wallet, Wallet\I
         'email',
         'password',
         'is_admin',
-        'api_key'
+        'api_key',
     ];
 
     /**

@@ -16,7 +16,7 @@ class SettingManagerController extends Controller
         return inertia('Admin/Settings/Manager', [
             'groups' => AdminSetting::groupsOnly(['label', 'key']),
             'group' => AdminSetting::getGroup($group),
-            'settings' => AdminSetting::get($group)
+            'settings' => AdminSetting::get($group),
         ]);
     }
 
@@ -35,11 +35,12 @@ class SettingManagerController extends Controller
 
     protected function group($group)
     {
-        if (blank($group)) $group = config('admin.settings.default', 'general');
+        if (blank($group)) {
+            $group = config('admin.settings.default', 'general');
+        }
 
         abort_unless(AdminSetting::groupExists($group), 404);
 
         return $group;
     }
-
 }

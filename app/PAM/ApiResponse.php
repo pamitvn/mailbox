@@ -9,10 +9,14 @@ use Illuminate\Support\Collection;
 
 class ApiResponse implements Arrayable
 {
-    static string $getFacadeAccessor = 'core.support.api-response';
+    public static string $getFacadeAccessor = 'core.support.api-response';
+
     protected bool $success;
+
     protected ?string $message;
+
     protected array|Collection|JsonResource|null $data;
+
     protected array|Collection|null $errors;
 
     protected array $endData;

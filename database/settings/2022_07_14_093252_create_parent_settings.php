@@ -14,9 +14,8 @@ class CreateParentSettings extends SettingsMigration
             $blueprint->add('api_count', 'http://139.59.236.2:55/api/get-log');
             $blueprint->add('types', [
                 'hotmail' => 'Hotmail',
-                'outlook' => 'Outlook'
+                'outlook' => 'Outlook',
             ]);
         });
-
     }
 }

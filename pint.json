@@ -1,0 +1,18 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "assign_null_coalescing_to_coalesce_equal": true,
+        "blank_line_after_namespace": true,
+        "blank_line_after_opening_tag": true,
+        "clean_namespace": true,
+        "global_namespace_import": {
+            "import_classes": true,
+            "import_constants": true,
+            "import_functions": true
+        },
+        "no_empty_comment": true,
+        "no_blank_lines_after_class_opening": true,
+        "no_blank_lines_after_phpdoc": true,
+        "no_closing_tag": true
+    }
+}

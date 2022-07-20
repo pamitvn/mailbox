@@ -2,7 +2,7 @@
 
 return [
     'layouts' => [
-        'menu' => []
+        'menu' => [],
     ],
-    'recharge_code' => 'mailbox{{ $id }}'
+    'recharge_code' => 'mailbox{{ $id }}',
 ];

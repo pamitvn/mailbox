@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Validation\Rules;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
 
 class ResetPasswordController extends Controller
 {
@@ -51,7 +51,7 @@ class ResetPasswordController extends Controller
 
         return inertia('Auth/Password/ResetPage', [
             'token' => $token,
-            'email' => $request->input('email')
+            'email' => $request->input('email'),
         ]);
     }
 }

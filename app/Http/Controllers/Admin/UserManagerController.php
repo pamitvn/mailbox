@@ -7,10 +7,9 @@ use App\Models\Bank;
 use App\Models\RechargeHistory;
 use App\Models\User;
 use Bavix\Wallet\Exceptions\InsufficientFunds;
-use Bavix\Wallet\Internal\Exceptions\ExceptionInterface;
 use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
 use Bavix\Wallet\Models\Wallet;
-use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -28,7 +27,7 @@ class UserManagerController extends Controller
         search_by_cols($user, $search, [
             'name',
             'username',
-            'email'
+            'email',
         ]);
 
         query_by_cols($user, [
@@ -42,7 +41,7 @@ class UserManagerController extends Controller
             'statistics' => [
                 'total' => number_format(User::count()),
                 'totalBalance' => number_format(Wallet::where('holder_type', User::class)->sum('balance')),
-            ]
+            ],
         ]);
     }
 
@@ -61,7 +60,7 @@ class UserManagerController extends Controller
         ]);
 
         User::create(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
-            'password' => Hash::make($request->input('password'))
+            'password' => Hash::make($request->input('password')),
         ]));
 
         return back()->with('success', __('Created new user'));
@@ -70,7 +69,7 @@ class UserManagerController extends Controller
     public function edit(User $user)
     {
         return inertia('Admin/User/Edit', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -84,7 +83,7 @@ class UserManagerController extends Controller
         ]);
 
         $user->update(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
-            'password' => $request->input('password') ? Hash::make($request->input('password')) : $user->password
+            'password' => $request->input('password') ? Hash::make($request->input('password')) : $user->password,
         ]));
 
         return back()->with('success', __('Updated user #:id', ['id' => $user->id]));
@@ -105,7 +104,7 @@ class UserManagerController extends Controller
     {
         return inertia('Admin/User/Balance', [
             'user' => $user->load('wallet'),
-            'banks' => Bank::get(['name', 'id'])
+            'banks' => Bank::get(['name', 'id']),
         ]);
     }
 
@@ -138,7 +137,7 @@ class UserManagerController extends Controller
                         'before_transaction' => $balance,
                         'after_transaction' => $user->balance,
                         'amount' => $amount,
-                        'note' => 'Duyệt nạp tiền'
+                        'note' => 'Duyệt nạp tiền',
                     ]);
                 }
             });
@@ -146,8 +145,9 @@ class UserManagerController extends Controller
             return back()->with('success', 'Set balance successfully');
         } catch (InsufficientFunds $exception) {
             $user->withdraw($user->balance);
+
             return back()->with('success', 'Set balance successfully');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage())->withErrors('Error', 'globalError');
         }
     }

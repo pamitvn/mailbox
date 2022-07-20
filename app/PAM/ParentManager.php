@@ -11,17 +11,20 @@ use Psr\Http\Message\ResponseInterface;
 
 class ParentManager
 {
-    static string $getFacadeAccessor = 'core.support.parents';
-    static string $sessionFlashKey = 'core.support.parent.session';
+    public static string $getFacadeAccessor = 'core.support.parents';
+
+    public static string $sessionFlashKey = 'core.support.parent.session';
+
     protected array $requestOptions = [];
 
     private Client $_client;
+
     private ParentSetting $_setting;
 
     public function __construct()
     {
         $this->_client = new Client([
-            'http_errors' => false
+            'http_errors' => false,
         ]);
         $this->_setting = app(ParentSetting::class);
     }

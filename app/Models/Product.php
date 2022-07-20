@@ -20,11 +20,11 @@ class Product extends Model implements ProductLimitedInterface
         'mail',
         'password',
         'recovery_mail',
-        'status'
+        'status',
     ];
 
     protected $casts = [
-        'status' => 'integer'
+        'status' => 'integer',
     ];
 
 //    protected $with = [
@@ -41,7 +41,7 @@ class Product extends Model implements ProductLimitedInterface
     {
         return [
             'title' => $this->service->name,
-            'description' => 'Purchase of Product #' . $this->id,
+            'description' => 'Purchase of Product #'.$this->id,
         ];
     }
 
@@ -67,13 +67,13 @@ class Product extends Model implements ProductLimitedInterface
 
     public function scopeWithoutBought(Builder $query): Builder
     {
-        return $query->whereNot(fn(Builder $builder) => $builder->whereHas('order'));
+        return $query->whereNot(fn (Builder $builder) => $builder->whereHas('order'));
     }
 
     public function scopeRandomQuantity(Builder $query, $quantity = 1): Builder
     {
         return $query->where('status', ProductStatus::LIVE)
-            ->whereNot(fn(Builder $builder) => $builder->whereHas('order'))
+            ->whereNot(fn (Builder $builder) => $builder->whereHas('order'))
             ->inRandomOrder()
             ->take($quantity);
     }

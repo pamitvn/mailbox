@@ -7,7 +7,6 @@ use App\Models\UserBlacklisted;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class UserBlacklistedManagerController extends Controller
@@ -16,16 +15,16 @@ class UserBlacklistedManagerController extends Controller
     {
         $search = $request->get('search');
 
-        $searchByFn = fn(Builder $builder) => search_by_cols($builder, $search, [
+        $searchByFn = fn (Builder $builder) => search_by_cols($builder, $search, [
             'id',
             'name',
             'username',
-            'email'
+            'email',
         ]);
         $records = UserBlacklisted::query()
             ->with(['user', 'byUser'])
             ->orderBy('id', 'desc')
-            ->when(fn() => filled($search), fn($query) => $query->whereHas('user', $searchByFn)->orWhereHas('byUser', $searchByFn));
+            ->when(fn () => filled($search), fn ($query) => $query->whereHas('user', $searchByFn)->orWhereHas('byUser', $searchByFn));
 
         query_by_cols($records, [
             'id',
@@ -34,7 +33,7 @@ class UserBlacklistedManagerController extends Controller
         ], $request->all());
 
         return inertia('Admin/Blacklisted/User/Manager', [
-            'paginationData' => paginate_with_params($records, $request->all())
+            'paginationData' => paginate_with_params($records, $request->all()),
         ]);
     }
 
@@ -53,7 +52,7 @@ class UserBlacklistedManagerController extends Controller
 
         UserBlacklisted::create(array_merge($data, [
             'by_user_id' => auth()->user()->id,
-            'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null
+            'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null,
         ]));
 
         return back()->with('success', __('User #:id has been added to the blacklist.', ['id' => $data['user_id']]));
@@ -62,7 +61,7 @@ class UserBlacklistedManagerController extends Controller
     public function edit(UserBlacklisted $blacklisted)
     {
         return inertia('Admin/Blacklisted/User/Edit', [
-            'data' => $blacklisted->load(['user'])
+            'data' => $blacklisted->load(['user']),
         ]);
     }
 
@@ -74,10 +73,10 @@ class UserBlacklistedManagerController extends Controller
         ]);
 
         $status = $blacklisted->update(array_merge($data, [
-            'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null
+            'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null,
         ]));
 
-        if (!$status) {
+        if (! $status) {
             return back()->with('error', __('Blacklist #:id cannot be updated', ['id' => $blacklisted->id]))
                 ->withErrors('Error', 'globalError');
         }
@@ -89,7 +88,7 @@ class UserBlacklistedManagerController extends Controller
     {
         $status = $blacklisted->delete();
 
-        if (!$status) {
+        if (! $status) {
             return back()->with('error', __('Blacklist #:id cannot be deleted', ['id' => $blacklisted->id]))->withErrors('Error', 'globalError');
         }
 

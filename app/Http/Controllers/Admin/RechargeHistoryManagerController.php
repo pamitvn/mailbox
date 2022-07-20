@@ -17,14 +17,13 @@ class RechargeHistoryManagerController extends Controller
             ->orderBy('id', 'desc');
 
         search_by_cols($records, $search, [
-            'note'
+            'note',
         ]);
 
         return inertia('Admin/Recharge/HistoryManager', [
-            'paginationData' => paginate_with_params($records, $request->all())
+            'paginationData' => paginate_with_params($records, $request->all()),
         ]);
     }
-
 
     public function destroy($history)
     {

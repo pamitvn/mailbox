@@ -10,6 +10,6 @@ class Bank extends Model
         'name',
         'accountName',
         'accountId',
-        'image'
+        'image',
     ];
 }

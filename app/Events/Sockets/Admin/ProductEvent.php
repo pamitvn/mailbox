@@ -15,7 +15,9 @@ class ProductEvent implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private string|int $serviceId;
+
     private Product $product;
+
     private bool $isCreate;
 
     public function __construct(string|int $serviceId, Product $product, $isCreate = false)
@@ -44,5 +46,4 @@ class ProductEvent implements ShouldBroadcastNow
     {
         return $this->isCreate ? 'create' : 'update';
     }
-
 }

@@ -18,13 +18,13 @@ class BuyProductAction extends Action
         return [
             'service' => [
                 'required',
-                Rule::exists(table_name_of_model(Service::class), 'id')
+                Rule::exists(table_name_of_model(Service::class), 'id'),
             ],
             'quantity' => [
                 'required',
                 'integer',
-                'min:1'
-            ]
+                'min:1',
+            ],
         ];
     }
 
@@ -33,7 +33,7 @@ class BuyProductAction extends Action
         $data = $request->validated();
 
         $serviceId = Arr::get($data, 'service');
-        $quantity = (int)Arr::get($data, 'quantity', 1);
+        $quantity = (int) Arr::get($data, 'quantity', 1);
 
         $service = Service::whereVisible(true)->findOrFail($serviceId);
         $user = $request->user();
@@ -48,11 +48,10 @@ class BuyProductAction extends Action
 
     public function handle(
         ActionRequest $request,
-        User          $user,
-        Service       $service,
-        int           $quantity
-    )
-    {
+        User $user,
+        Service $service,
+        int $quantity
+    ) {
         $_service = app(ProductService::class);
 
         PurchaseProcessingJob::dispatch(

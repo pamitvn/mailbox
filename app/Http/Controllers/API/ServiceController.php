@@ -31,7 +31,7 @@ class ServiceController extends Controller
             ->whereVisible(true)
             ->orderByDesc('id');
 
-        search_by_cols($services, $search, ['name', 'slug', 'lifetime',]);
+        search_by_cols($services, $search, ['name', 'slug', 'lifetime']);
         query_by_cols($services, ['id', 'name'], $params);
 
         return ApiResponse::withSuccess()
@@ -48,7 +48,7 @@ class ServiceController extends Controller
     {
         $data = $request->validate([
             'service_id' => ['required', 'string', Rule::exists(table_name_of_model(Service::class), 'id')],
-            'quantity' => ['required', 'int', 'min:1']
+            'quantity' => ['required', 'int', 'min:1'],
         ]);
 
         $serviceId = Arr::get($data, 'service_id');

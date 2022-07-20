@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    static string $cacheKey = 'controller::order::cache::%s';
+    public static string $cacheKey = 'controller::order::cache::%s';
 
     public function __invoke(Request $request)
     {
@@ -27,7 +27,7 @@ class OrderController extends Controller
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
             'statusLabel' => ProductStatus::toLabelArray(),
             'services' => $services,
-            'paginationData' => paginate_with_params($records, $params)
+            'paginationData' => paginate_with_params($records, $params),
         ]);
     }
 }

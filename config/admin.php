@@ -9,6 +9,6 @@ return [
             \App\Settings\NotificationSetting::class,
             \App\Settings\PaymentSetting::class,
             \App\Settings\ParentSetting::class,
-        ]
-    ]
+        ],
+    ],
 ];

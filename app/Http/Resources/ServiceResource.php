@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class ServiceResource extends JsonResource
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -28,7 +28,7 @@ class ServiceResource extends JsonResource
             'extras' => $this->extras,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'in_stock_count' => $this->in_stock_count
+            'in_stock_count' => $this->in_stock_count,
         ];
     }
 }

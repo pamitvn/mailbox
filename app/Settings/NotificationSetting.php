@@ -10,10 +10,13 @@ class NotificationSetting extends Settings
     use AdminSetting;
 
     protected ?string $adminLabel = 'Notification';
+
     protected ?string $adminGroup = null;
 
     public bool $enable;
+
     public ?string $title;
+
     public ?string $content;
 
     public static function group(): string
@@ -21,7 +24,7 @@ class NotificationSetting extends Settings
         return 'notification';
     }
 
-    function adminFields(): array
+    public function adminFields(): array
     {
         return [
             'enable' => [
@@ -29,21 +32,21 @@ class NotificationSetting extends Settings
                 'rule' => ['required', 'boolean'],
                 'attribute' => [
                     'label' => 'Enable',
-                ]
+                ],
             ],
             'title' => [
                 'rule' => ['required', 'string'],
                 'attribute' => [
                     'type' => 'title',
                     'label' => 'Site Name',
-                ]
+                ],
             ],
             'content' => [
                 'is' => 'the-textarea-field',
                 'rule' => ['required', 'string'],
                 'attribute' => [
                     'label' => 'Content',
-                ]
+                ],
             ],
         ];
     }

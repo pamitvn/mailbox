@@ -13,11 +13,11 @@ class UserBlacklisted extends Model
         'user_id',
         'by_user_id',
         'reason',
-        'duration'
+        'duration',
     ];
 
     protected $casts = [
-        'duration' => 'datetime'
+        'duration' => 'datetime',
     ];
 
     public function user(): HasOne

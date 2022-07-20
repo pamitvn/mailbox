@@ -16,11 +16,11 @@ class RechargeController extends Controller
 
         $histories = RechargeHistory::with('bank')->whereUserId(auth()->id())
             ->orderByDesc('id')
-            ->when($search, fn($query) => $query->where('note', 'LIKE', "%{$search}%"));
+            ->when($search, fn ($query) => $query->where('note', 'LIKE', "%{$search}%"));
 
         return inertia('Recharge/RechargeManager', [
             'rechargeCode' => Blade::render(config('web-config.recharge_code'), array_merge(auth()->user()->toArray(), [
-                'hostname' => request()->getHttpHost()
+                'hostname' => request()->getHttpHost(),
             ])),
             'banks' => Bank::get(),
             'paginationData' => $histories->paginate($perPage),

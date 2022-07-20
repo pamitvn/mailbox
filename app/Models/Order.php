@@ -12,7 +12,7 @@ class Order extends Model
         'user_id',
         'service_id',
         'price',
-        'quantity'
+        'quantity',
     ];
 
     protected $casts = [

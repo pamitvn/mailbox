@@ -10,6 +10,7 @@ class DoActionEvent
     use Dispatchable;
 
     public Request $request;
+
     public ?string $action;
 
     public function __construct(Request $request)

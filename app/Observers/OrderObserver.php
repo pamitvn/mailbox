@@ -2,9 +2,7 @@
 
 namespace App\Observers;
 
-use App\Http\Controllers\OrderController;
 use App\Models\Order;
-use Illuminate\Support\Facades\Cache;
 
 class OrderObserver
 {
@@ -22,5 +20,4 @@ class OrderObserver
     {
         ServiceObserver::sendSocket($order->service_id);
     }
-
 }

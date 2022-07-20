@@ -16,5 +16,5 @@ trait AdminSetting
         return Str::snake($this->adminGroup ?? self::group());
     }
 
-    abstract function adminFields(): array;
+    abstract public function adminFields(): array;
 }

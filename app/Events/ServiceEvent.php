@@ -8,7 +8,6 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class ServiceEvent implements ShouldBroadcastNow
 {
@@ -18,7 +17,7 @@ class ServiceEvent implements ShouldBroadcastNow
 
     public function __construct(Service|string|int $service)
     {
-        $this->service = !$service instanceof Service ? Service::find($service) : $service;
+        $this->service = ! $service instanceof Service ? Service::find($service) : $service;
     }
 
     public function broadcastOn(): Channel
@@ -35,5 +34,4 @@ class ServiceEvent implements ShouldBroadcastNow
     {
         return $this->service?->refresh()?->toArray() ?? [];
     }
-
 }

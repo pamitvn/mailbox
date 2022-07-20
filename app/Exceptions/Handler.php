@@ -19,7 +19,7 @@ class Handler extends ExceptionHandler
      * @var array<class-string<Throwable>, \Psr\Log\LogLevel::*>
      */
     protected $levels = [
-        //
+
     ];
 
     /**
@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
-        //
+
     ];
 
     /**
@@ -47,7 +47,6 @@ class Handler extends ExceptionHandler
         return $request->is('api*') && $request->acceptsJson();
     }
 
-
     /**
      * Register the exception handling callbacks for the application.
      *
@@ -56,7 +55,7 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+
         });
     }
 
@@ -73,7 +72,7 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        $isAPI = collect($exception->guards())->contains(fn($val) => $val === 'api');
+        $isAPI = collect($exception->guards())->contains(fn ($val) => $val === 'api');
 
         if ($isAPI && $this->isApi($request)) {
             return response()

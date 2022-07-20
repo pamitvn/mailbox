@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Validation\Rule;
-use function Clue\StreamFilter\fun;
 
 class Service extends Model
 {
@@ -26,7 +25,7 @@ class Service extends Model
         'visible',
         'clean_after',
         'is_local',
-        'extras'
+        'extras',
     ];
 
     protected $casts = [
@@ -36,11 +35,11 @@ class Service extends Model
         'visible' => 'boolean',
         'is_local' => 'boolean',
         'clean_after' => 'integer',
-        'extras' => 'collection'
+        'extras' => 'collection',
     ];
 
     protected $appends = [
-//        'in_stock_count'
+        //        'in_stock_count'
     ];
 
     /**
@@ -52,8 +51,8 @@ class Service extends Model
     {
         return [
             'slug' => [
-                'source' => ['name', 'id']
-            ]
+                'source' => ['name', 'id'],
+            ],
         ];
     }
 
@@ -75,6 +74,7 @@ class Service extends Model
                     ->select(['id'])
                     ->whereStatus(ProductStatus::LIVE)
                     ->withoutBought();
+
                 return $products->count();
             }
 
@@ -82,22 +82,22 @@ class Service extends Model
         });
     }
 
-    static function extraFields(): array
+    public static function extraFields(): array
     {
         return [
             'parent_count_key' => [
-                'rule' => [Rule::requiredIf(fn() => (bool)request()->get('is_local') === false), 'string'],
+                'rule' => [Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
                     'label' => 'Parent Count Key',
-                ]
+                ],
             ],
             'parent_type' => [
-                'rule' => [Rule::requiredIf(fn() => (bool)request()->get('is_local') === false), 'string'],
+                'rule' => [Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
                     'label' => 'Parent Type',
-                ]
+                ],
             ],
         ];
     }
