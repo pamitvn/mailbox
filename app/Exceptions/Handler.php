@@ -55,7 +55,6 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-
         });
     }
 
@@ -72,7 +71,7 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        $isAPI = collect($exception->guards())->contains(fn($val) => $val === 'api');
+        $isAPI = collect($exception->guards())->contains(fn ($val) => $val === 'api');
 
         if ($isAPI && $this->isApi($request)) {
             return response()
@@ -102,7 +101,9 @@ class Handler extends ExceptionHandler
     {
         $response = parent::render($request, $e);
 
-        if (app()->environment('local')) return $response;
+        if (app()->environment('local')) {
+            return $response;
+        }
 
         if ($response->status() === 419) {
             return back()->with([
