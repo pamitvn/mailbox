@@ -27,12 +27,21 @@ export default defineConfig({
    resolve: {
       alias: {
          '~': '/resources/app',
-         'ziggy': '/vendor/tightenco/ziggy/dist/index.m.js',
+         '@UI': '/resources/app/@UI',
+         'ziggy': '/vendor/tightenco/ziggy/dist/index.es.js',
       },
    },
-   // build: {
-   //    commonjsOptions: {
-   //       transformMixedEsModules: true,
-   //    },
-   // },
+   build: {
+      rollupOptions: {
+         output: {
+            entryFileNames: 'assets/js/[name]-[hash].js',
+            chunkFileNames: 'assets/chunks/[name]-[hash].js',
+            assetFileNames: 'assets/css/[name]-[hash][extname]',
+         },
+
+      },
+      commonjsOptions: {
+         transformMixedEsModules: true,
+      },
+   },
 });

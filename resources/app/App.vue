@@ -2,7 +2,7 @@
    <slot />
 </template>
 
-<script setup>
+<script setup lang='ts'>
    // import _ from 'lodash';
    // import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
    // import { usePage } from '@inertiajs/inertia-vue3';
@@ -57,4 +57,11 @@
    //          });
    //       });
    // });
+
+   import { provide } from 'vue';
+   import { useAuth } from '~/uses';
+   import { Models } from '~/types/Models';
+
+   provide('user', useAuth<Models.User>('user', {}));
+   provide('isLoggedIn', useAuth<boolean>('isLoggedIn', false));
 </script>

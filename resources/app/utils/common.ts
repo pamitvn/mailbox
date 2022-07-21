@@ -1,12 +1,11 @@
 import _ from 'lodash';
-import resolveConfig from 'tailwindcss/resolveConfig';
 
 import route from 'ziggy';
 import { Ziggy } from './ziggy';
-import { Utils } from '~/types';
+import { Utils } from '~/types/Utils';
 
 export function reactiveToJson<T = Object>(payload: any): T {
-    return JSON.parse(JSON.stringify(payload));
+    return _.clone(payload);
 };
 
 export const resolveURI = (path: string = '') => {
@@ -58,36 +57,3 @@ export const randomString = (length: number = 5): string => {
         return ((Math.random() * 36) | 0).toString(36)[Math.random() < .5 ? 'toString' : 'toUpperCase']();
     });
 };
-
-export const tailwindConfig = () => {
-    // Tailwind config
-    return resolveConfig('./tailwind.config.js');
-};
-
-export const hexToRGB = (h: string) => {
-    let r: string = '0';
-    let g: string = '0';
-    let b: string = '0';
-
-    if (h.length === 4) {
-        r = `0x${h[1]}${h[1]}`;
-        g = `0x${h[2]}${h[2]}`;
-        b = `0x${h[3]}${h[3]}`;
-    } else if (h.length === 7) {
-        r = `0x${h[1]}${h[2]}`;
-        g = `0x${h[3]}${h[4]}`;
-        b = `0x${h[5]}${h[6]}`;
-    }
-
-    return `${+r},${+g},${+b}`;
-};
-
-export const formatValue = (value) => Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumSignificantDigits: 3,
-}).format(value);
-
-export const formatThousands = (value) => Intl.NumberFormat('en-US', {
-    maximumSignificantDigits: 3,
-}).format(value);

@@ -1,7 +1,10 @@
-import { DefineComponent, h as hType } from 'vue';
+import { DefineComponent } from 'vue';
 import { InertiaHead, InertiaLink } from '@inertiajs/inertia-vue3';
 import { VueSelectProps } from 'vue-select';
-import { Utils, Components } from '~/types';
+
+import Components from '~/types/Components';
+import { Utils } from '~/types/Utils';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 declare module '@vue/runtime-core' {
     export interface ComponentCustomProperties {
@@ -23,6 +26,7 @@ declare module '@vue/runtime-core' {
         TheTable: Components.Table.Type;
         TheSelect: DefineComponent<VueSelectProps>;
         VueGravatar: Components.VueGravatar.Type;
+        FontAwesomeIcon: typeof FontAwesomeIcon;
     }
 }
 

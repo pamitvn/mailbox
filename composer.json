@@ -66,7 +66,7 @@
             "@php artisan key:generate --ansi"
         ],
         "ziggy-generate": [
-            "@php artisan ziggy:generate ./resources/js/utils/ziggy.js"
+            "@php artisan ziggy:generate ./resources/app/utils/ziggy.js"
         ],
         "pint": [
             "./vendor/bin/pint"

@@ -4,14 +4,18 @@
         "module": "ESNext",
         "moduleResolution": "Node",
         "allowSyntheticDefaultImports": true,
+        "allowJs": true,
         "disableSizeLimit": true,
         "baseUrl": ".",
         "paths": {
             "~/*": [
                 "./resources/app/*"
             ],
+            "@UI/*": [
+                "./resources/app/@UI/*"
+            ],
             "ziggy": [
-                "vendor/tightenco/ziggy/dist"
+                "vendor/tightenco/ziggy/dist/index.es.js"
             ]
         },
         "typeRoots": [
