@@ -1,5 +1,5 @@
 <template>
-   <div class='relative inline-flex w-8 md:w-auto'>
+   <div class='relative inline-flex'>
       <button
          ref='trigger'
          class='inline-flex justify-center items-center group'
@@ -7,7 +7,7 @@
          @click.prevent='dropdownOpen = !dropdownOpen'
          :aria-expanded='dropdownOpen'
       >
-         <div class='flex items-center truncate hidden md:flex'>
+         <div class='flex items-center truncate md:flex'>
             <span class='btn bg-emerald-500 hover:bg-emerald-600 text-white'>
               <font-awesome-icon icon='fa-regular fa-circle-user' />
                <span class='ml-2'>{{ user?.name ?? 'Account' }}</span>

@@ -1,6 +1,7 @@
 /**
  * Import Libraries
  */
+import _ from 'lodash';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { createPinia } from 'pinia';
@@ -13,12 +14,12 @@ import moshaToast from 'mosha-vue-toastify';
  */
 import { author, useRoute } from '~/utils';
 import globalComponents from '~/globalComponents';
+import RegisterPageLayout from '~/RegisterPageLayout';
 
 /**
  * Import Local Components
  */
 import globalApp from '~/App.vue';
-import DefaultLayout from '~/layouts/DefaultLayout.vue';
 
 /**
  * Import Library Styles
@@ -41,8 +42,10 @@ createInertiaApp({
     resolve: async name => {
         const page = (await resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue')))?.default;
 
-        if (page.layout === undefined && !name.startsWith('Public/')) {
-            page.layout = DefaultLayout;
+        const layout = _.get(RegisterPageLayout, name, null);
+
+        if (layout !== null) {
+            page.layout = layout;
         }
 
         return page as any;

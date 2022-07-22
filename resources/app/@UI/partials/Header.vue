@@ -4,7 +4,7 @@
          <div class='flex items-center justify-between h-16 -mb-px'>
 
             <!-- Header: Left side -->
-            <div class='flex'>
+            <div class='flex items-center'>
 
                <!-- Hamburger button -->
                <button class='text-slate-500 hover:text-slate-600 lg:hidden'
@@ -19,17 +19,14 @@
                </button>
                <div>
                   <the-link href='/'>
-                     <img class='ml-2 md:ml-4 lg:ml-0 md:w-60 h-full' :src='Logo' alt='MailBox'>
+                     <img class='ml-2 md:ml-4 lg:ml-0 w-52 md:w-60 h-full' :src='Logo' alt='MailBox'>
                   </the-link>
                </div>
             </div>
 
             <!-- Header: Right side -->
-            <div class='flex items-center space-x-3'>
-               <!-- Divider -->
-               <hr class='w-px h-6 bg-slate-200' />
-               <UserMenu align='right' />
-
+            <div class="flex items-center space-x-3">
+               <UserMenu align="right" />
             </div>
          </div>
       </div>
