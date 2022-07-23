@@ -27,6 +27,8 @@ class ResetPasswordController extends Controller
             'password' => Hash::make($password),
         ]);
 
-        return back()->with('success', __('Updated password'));
+        send_current_user_message('success', __('Updated password'));
+
+        return back();
     }
 }

@@ -29,6 +29,8 @@ class ProfileController extends Controller
             'email' => $request->input('email'),
         ]);
 
-        return back()->with('status', __('Updated user profile'));
+        send_current_user_message('success', __('Updated user profile'));
+
+        return back();
     }
 }

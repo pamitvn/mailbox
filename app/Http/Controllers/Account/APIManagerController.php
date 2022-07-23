@@ -21,6 +21,8 @@ class APIManagerController extends Controller
             'api_key' => Str::uuid()->toString(),
         ]);
 
-        return back()->with('success', 'Created new API token');
+        send_current_user_message('success', __('Created new API token'));
+
+        return back();
     }
 }

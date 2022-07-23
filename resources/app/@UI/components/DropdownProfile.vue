@@ -8,9 +8,9 @@
          :aria-expanded='dropdownOpen'
       >
          <div class='flex items-center truncate md:flex'>
-            <span class='btn bg-emerald-500 hover:bg-emerald-600 text-white'>
-              <font-awesome-icon icon='fa-regular fa-circle-user' />
-               <span class='ml-2'>{{ user?.name ?? 'Account' }}</span>
+            <span class='btn bg-emerald-500 hover:bg-emerald-600 text-white rounded-full p-2 sm:px-4 sm:rounded-lg'>
+              <font-awesome-icon icon='fa-regular fa-circle-user' class='w-6 h-6' />
+               <span class='ml-2 hidden sm:block'>{{ user?.name ?? 'Account' }}</span>
             </span>
          </div>
       </button>
@@ -28,7 +28,7 @@
               :class="align === 'right' ? 'right-0' : 'left-0'">
             <div v-if='isLoggedIn' class='pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200'>
                <div class='font-medium text-slate-800'>{{ user?.name }}</div>
-               <div class='text-xs text-slate-500 italic'>{{ user?.is_admin }}</div>
+               <div class='text-xs text-slate-500 italic'>{{ user?.is_admin ? 'Admin' : 'User' }}</div>
             </div>
             <ul
                ref='dropdown'
@@ -39,7 +39,7 @@
                   <li>
                      <the-link
                         class='font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3'
-                        href='/settings/account' @click='dropdownOpen = false'
+                        :href='$route("account.profile")' @click='dropdownOpen = false'
                      >
                         Account
                      </the-link>
@@ -80,15 +80,17 @@
 </template>
 
 <script setup lang='ts'>
-   import { inject, onMounted, onUnmounted, ref } from 'vue';
-   import { Models } from '~/types/Models';
+   import { onMounted, onUnmounted, ref } from 'vue';
+   import useAuthStore from '~/stores/useAuthStore';
+   import { storeToRefs } from 'pinia/dist/pinia';
 
    const props = defineProps<{
       align: string
    }>();
 
-   const isLoggedIn = inject('isLoggedIn', false);
-   const user = inject<Models.User>('user', null);
+   const authStore = useAuthStore();
+
+   const { isLoggedIn, user } = storeToRefs(authStore);
 
    const dropdownOpen = ref(false);
    const wrapper = ref(null);

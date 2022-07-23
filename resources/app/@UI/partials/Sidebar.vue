@@ -2,7 +2,9 @@
    <div>
       <!-- Sidebar backdrop (mobile only) -->
       <div class='fixed inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200'
-           :class="sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'" aria-hidden='true'></div>
+           :class="sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+           aria-hidden='true'
+           @click.stop='() => hideSidebar()'></div>
 
       <!-- Sidebar -->
       <div
@@ -18,7 +20,7 @@
             <button
                ref='trigger'
                class='lg:hidden text-slate-500 hover:text-slate-400'
-               @click.stop='() => useStore.$patch({sidebarOpen: false})'
+               @click.stop='() => hideSidebar()'
                aria-controls='sidebar'
                :aria-expanded='sidebarOpen'
             >
@@ -41,7 +43,7 @@
          <!-- Expand / collapse button -->
          <div class='pt-3 hidden lg:inline-flex 2xl:hidden justify-end mt-auto'>
             <div class='px-3 py-2'>
-               <button @click.prevent='() => useStore.$patch({sidebarExpanded: !sidebarExpanded})'>
+               <button @click.prevent='() => toggleOpenSidebar()'>
                   <span class='sr-only'>Expand / collapse sidebar</span>
                   <svg class='w-6 h-6 fill-current sidebar-expanded:rotate-180' viewBox='0 0 24 24'>
                      <path class='text-slate-400'
@@ -90,6 +92,9 @@
       if (!sidebarOpen.value || keyCode !== 27) return;
       emit('close-sidebar');
    };
+
+   const toggleOpenSidebar = () => useStore.$patch({ sidebarExpanded: !sidebarExpanded.value });
+   const hideSidebar = () => useStore.$patch({ sidebarOpen: false });
 
    onMounted(() => {
       document.addEventListener('click', clickHandler);

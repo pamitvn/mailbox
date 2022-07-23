@@ -5,7 +5,7 @@
 </template>
 
 <script>
-   import { ref } from 'vue';
+   import { ref, watch } from 'vue';
    import { useThemeStore } from '~/stores/useThemeStore';
    import { storeToRefs } from 'pinia/dist/pinia';
 
@@ -28,6 +28,10 @@
                expanded.value = !expanded.value;
             }
          };
+
+         watch(() => props.activeCondition, val => {
+            expanded.value = val;
+         });
 
          return {
             expanded,

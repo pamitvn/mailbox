@@ -57,3 +57,36 @@ export const randomString = (length: number = 5): string => {
         return ((Math.random() * 36) | 0).toString(36)[Math.random() < .5 ? 'toString' : 'toUpperCase']();
     });
 };
+
+export const defineLayoutFor = (layout, pages: any[], namespaces: string[] = []) => {
+    const results = {};
+
+    const toPath = (namespace: string | string[], path: string | string[]): string => {
+        if (_.isString(namespace)) namespace = [namespace];
+        if (_.isString(path)) path = [path];
+
+        return _.join([...namespace, ...path], '/');
+    };
+
+    _.forEach(_.compact(pages), page => {
+
+        if (_.isArray(page)) {
+            const findNamespaceIndex = _.findIndex(page, i => _.isArray(i));
+
+            if (findNamespaceIndex === -1) {
+                _.set(results, [...namespaces, ...page].join('/'), layout);
+                return;
+            }
+
+            const newNamespace = [...namespaces, ..._.filter(page, (__, i) => i < findNamespaceIndex)];
+            const subItem = _.get(page, findNamespaceIndex, []);
+
+            _.merge(results, defineLayoutFor(layout, subItem, newNamespace));
+            return;
+        }
+
+        _.set(results, toPath(namespaces, page as string), layout);
+    });
+
+    return results;
+};

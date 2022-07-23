@@ -1,22 +1,25 @@
 <template>
    <the-head>
       <title>
-         Sign In
+         Reset your Password
       </title>
    </the-head>
    <div class='card w-full'>
-      <h1 class='text-3xl md:text-slate-800 font-bold mb-6'>Login Account! ✨</h1>
+      <h1 class='text-3xl md:text-slate-800 font-bold mb-6'>Reset your Password! ✨</h1>
+
+      <banner type='success' :open='$page.props?.flash?.status' class='mb-4'>
+         {{ $page.props?.flash?.status }}
+      </banner>
 
       <form @submit.prevent='() => onSubmitForm()'>
          <div class='space-y-4'>
             <div>
-               <v-input v-model='form.username'
-                        :error='form.errors.username'
+               <v-input v-model='form.email'
+                        :error='form.errors.email'
                         :required='true'
-                        type='text'
-                        label='Username'
-                        placeholder='Enter username'
-                        helper='Can using username or email'
+                        type='email'
+                        label='Email'
+                        disabled
                />
             </div>
             <div>
@@ -28,30 +31,27 @@
                         placeholder='Enter password'
                />
             </div>
-         </div>
-         <div class='flex items-center justify-between mt-6'>
-            <div class='mr-1'>
-               <the-link class='text-sm underline hover:no-underline' :href='$route("password.request")'>Forgot
-                  Password?
-               </the-link>
+
+            <div>
+               <v-input v-model='form.password_confirmation'
+                        :error='form.errors.password_confirmation'
+                        :required='true'
+                        type='password'
+                        label='Confirm Password'
+                        placeholder='Enter confirm password'
+               />
             </div>
+         </div>
+         <div class='flex items-center justify-end mt-6'>
             <v-button type='submit'
                       variant='primary'
                       outline
                       :disabled='form.processing'
             >
-               Login
+               Send Reset Link
             </v-button>
          </div>
       </form>
-      <!-- Footer -->
-      <div class='pt-5 mt-6 border-t border-slate-200'>
-         <div class='text-sm'>
-            Don’t you have an account?
-            <the-link class='font-medium text-indigo-500 hover:text-indigo-600' :href='$route("register")'>Sign Up
-            </the-link>
-         </div>
-      </div>
    </div>
 </template>
 
@@ -60,16 +60,26 @@
    import { useRoute } from '~/utils';
    import VInput from '~/components/Form/VInput.vue';
    import VButton from '~/components/VButton.vue';
+   import Banner from '@UI/components/Banner.vue';
+
+   const props = defineProps<{
+      token: string
+      email: string
+   }>();
 
    const form = useForm({
-      username: '',
-      password: '',
+      token: props.token,
+      email: props.email,
+      password: null,
+      password_confirmation: null,
    });
 
    const onSubmitForm = () => {
-      return form.post(useRoute('login'), {
-         preserveScroll: false,
-      });
+      return form.transform((data) => ({
+         ...data,
+         token: props.token,
+         email: props.email,
+      })).post(useRoute('password.update'));
    };
 </script>
 

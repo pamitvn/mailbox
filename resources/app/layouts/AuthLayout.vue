@@ -18,7 +18,11 @@
                </div>
 
                <div class='max-w-md mx-auto px-4 py-8'>
-                  <slot></slot>
+                  <transition name='fade' mode='out-in' appear>
+                     <main :key='$page.url'>
+                        <slot />
+                     </main>
+                  </transition>
                </div>
             </div>
          </div>
@@ -57,5 +61,4 @@
 </template>
 
 <script setup lang='ts'>
-   import { Logo, AuthDecoration } from '~/images';
-</script>
+   import { AuthDecoration, Logo } from '~/images';</script>

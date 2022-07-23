@@ -1,5 +1,5 @@
 import { createToast } from 'mosha-vue-toastify';
-import { Uses } from '~/types';
+import { Uses } from '~/types/Uses';
 
 /**
  * Use custom toast

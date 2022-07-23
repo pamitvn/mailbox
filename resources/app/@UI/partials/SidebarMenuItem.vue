@@ -1,7 +1,9 @@
 <template>
    <template v-if='checkAuth'>
-      <li v-if='!hasSubItem' class='px-3 py-2 rounded-sm mb-0.5 last:mb-0' :class="active && 'bg-slate-900'">
-         <a class='block text-slate-200 hover:text-white truncate transition duration-150 cursor-pointer'
+      <li v-if='!hasSubItem' class='rounded-sm'
+          :class="{'bg-slate-900': active, 'px-3 py-2 mb-0.5 last:mb-0': hasIcon, 'mb-2 last:mb-0': !hasIcon}">
+         <a
+            :class='{"block truncate transition duration-150 cursor-pointer": true,"text-slate-200 hover:text-white": hasIcon, "text-slate-400 hover:text-slate-200": !hasIcon, "!text-indigo-500": active}'
             :href='href'
             @click='() => onClick()'>
             <div class='flex items-center justify-between'>
@@ -49,7 +51,7 @@
             </div>
          </a>
          <div class='lg:hidden lg:sidebar-expanded:block 2xl:block'>
-            <ul class='pl-9 mt-1' :class="!parentLink.expanded && 'hidden'">
+            <ul class='pl-6 mt-1' :class="!parentLink.expanded && 'hidden'">
                <sidebar-menu-item
                   v-for='(item, index) in getSubItem'
                   :key='index'

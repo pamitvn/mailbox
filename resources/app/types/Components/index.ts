@@ -2,7 +2,6 @@ import { DefineComponent } from 'vue';
 
 import form from './Form';
 import table from './Table';
-import modal from './Modal';
 
 export namespace Components {
     export import Form = form;
