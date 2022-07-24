@@ -23,7 +23,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/asset-versioning
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return string|null
      */
     public function version(Request $request): ?string
@@ -36,7 +36,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/shared-data
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function share(Request $request): array
@@ -45,23 +45,25 @@ class HandleInertiaRequests extends Middleware
             'site' => [
                 'name' => settings('site_name'),
             ],
-            'urlPrev' => fn () => url()->previous(),
+            'urlPrev' => fn() => url()->previous(),
             'auth' => [
-                'isLoggedIn' => fn () => auth()->check(),
-                'user' => fn () => auth()->user(),
+                'isLoggedIn' => fn() => auth()->check(),
+                'user' => fn() => auth()->user(),
             ],
-            'flash' => [
-                'message' => fn () => $request->session()->get('message'),
-                'status' => fn () => $request->session()->get('status'),
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
-            ],
-            'layouts' => fn () => array_merge(Layout::make()->all(), [
+//            'flash' => [
+//                'message' => fn () => $request->session()->get('message'),
+//                'status' => fn () => $request->session()->get('status'),
+//                'success' => fn () => $request->session()->get('success'),
+//                'error' => fn () => $request->session()->get('error'),
+//            ],
+            'layouts' => fn() => array_merge(Layout::make()->all(), [
                 'menu' => array_merge(Layout::make()->all('menu'), [
-                    'main' => Gate::allows('admin') ? array_merge(Layout::make()->all('menu.main'), Layout::make()->all('menu.admin')) : Layout::make()->all('menu.main'),
+                    'main' => Gate::allows('admin')
+                        ? array_merge(Layout::make()->all('menu.main'), Layout::make()->all('menu.admin'))
+                        : Layout::make()->all('menu.main'),
                 ]),
             ]),
-            'notification' => fn () => settings(group: 'notification'),
+            'notification' => fn() => settings(group: 'notification'),
         ]);
     }
 }
