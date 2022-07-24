@@ -50,6 +50,7 @@
         "mosha-vue-toastify": "^1.0.23",
         "pinia": "^2.0.16",
         "pusher-js": "^7.1.1-beta",
+        "query-string": "^7.1.1",
         "slugify": "^1.6.5",
         "vue": "^3.2.37",
         "vue-flatpickr-component": "^9.0.6",

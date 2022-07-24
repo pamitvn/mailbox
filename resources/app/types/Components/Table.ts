@@ -37,7 +37,7 @@ export namespace Table {
 
         export interface Field {
             name: string;
-            is?: string;
+            is?: any;
             label?: string;
             placeholder?: string;
             options?: any;

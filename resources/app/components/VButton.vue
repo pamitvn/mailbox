@@ -38,7 +38,7 @@
       events?: {
          [event: string]: Function
       }
-      type: ButtonType
+      type?: ButtonType
       variant?: VariantType
       size?: ButtonSize
       outline?: boolean
@@ -148,23 +148,23 @@
       }
 
       &secondary {
-         @apply border-gray-400 hover:bg-gray-600 text-gray-500;
+         @apply border-gray-400 hover:bg-gray-600 text-gray-500 hover:text-white;
       }
 
       &success {
-         @apply border-green-400 hover:bg-green-600 text-green-500;
+         @apply border-green-400 hover:bg-green-600 text-green-500 hover:text-white;
       }
 
       &danger {
-         @apply border-red-400 hover:bg-red-600 text-red-500;
+         @apply border-red-400 hover:bg-red-600 text-red-500 hover:text-white;
       }
 
       &warning {
-         @apply border-yellow-400 hover:bg-yellow-600 text-yellow-500;
+         @apply border-yellow-400 hover:bg-yellow-600 text-yellow-500 hover:text-black;
       }
 
       &info {
-         @apply border-cyan-400 hover:bg-cyan-600 text-cyan-500;
+         @apply border-cyan-400 hover:bg-cyan-600 text-cyan-500 hover:text-white;
       }
 
       &light {

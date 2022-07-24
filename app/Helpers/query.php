@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -78,10 +79,28 @@ if (! function_exists('paginate_with_params')) {
     {
         $perPage = config('app.pagination');
 
-        if (! empty($params['perPage'])) {
+        if (filled(Illuminate\Support\Arr::get($params, 'perPage'))) {
             $perPage = (int) $params['perPage'];
         }
 
         return $query->paginate($perPage);
+    }
+}
+
+if (! function_exists('cursor_paginate_with_params')) {
+    /**
+     * @param  Builder  $query
+     * @param  array  $params
+     * @return CursorPaginator
+     */
+    function cursor_paginate_with_params($query, array $params = []): CursorPaginator
+    {
+        $perPage = config('app.pagination');
+
+        if (filled(Illuminate\Support\Arr::get($params, 'perPage'))) {
+            $perPage = (int) $params['perPage'];
+        }
+
+        return $query->cursorPaginate($perPage);
     }
 }

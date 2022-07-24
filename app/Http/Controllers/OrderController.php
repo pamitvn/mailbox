@@ -23,11 +23,11 @@ class OrderController extends Controller
 
         query_by_cols($records, ['id', 'service_id'], $params);
 
-        return inertia('Orders/Manager', [
+        return inertia('OrderManager', [
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
             'statusLabel' => ProductStatus::toLabelArray(),
             'services' => $services,
-            'paginationData' => paginate_with_params($records, $params),
+            'paginationData' => cursor_paginate_with_params($records, $params),
         ]);
     }
 }

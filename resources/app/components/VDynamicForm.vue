@@ -109,7 +109,3 @@
 
    defineExpose({ values, form });
 </script>
-
-<style scoped>
-
-</style>

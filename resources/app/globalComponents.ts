@@ -10,6 +10,7 @@ import {
     faBagShopping,
     faDollarSign,
     faMoneyCheckDollar,
+    faListOl,
 } from '@fortawesome/free-solid-svg-icons';
 
 // import TheTextareaField from '~/components/Form/TheTextareaField.vue';
@@ -53,7 +54,7 @@ export default (app: VueApp): VueApp => {
     /**
      * Register FontAwesomeIcon
      */
-    library.add(faCircleUser, faThumbsUp, faArrowRightToBracket, faDollarSign, faMoneyCheckDollar, faBagShopping);
+    library.add(faCircleUser, faThumbsUp, faArrowRightToBracket, faDollarSign, faMoneyCheckDollar, faBagShopping, faListOl);
     app.component('font-awesome-icon', FontAwesomeIcon);
 
     return app;

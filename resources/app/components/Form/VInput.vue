@@ -7,7 +7,7 @@
          <span v-if='required' class='text-rose-500'>*</span>
       </label>
    </slot>
-   <slot :event='onInput'>
+   <slot v-bind='{event: onInput, attrs, classname }'>
       <input
          v-bind='attrs'
          ref='inputRef'
@@ -29,7 +29,7 @@
    import { Form } from '~/types/Components/Form';
 
    interface Props {
-      label: string;
+      label?: string;
       modelValue?: string | number;
       helper?: string;
       error?: string;

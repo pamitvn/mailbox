@@ -9,7 +9,9 @@
 
          <main>
             <div class='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-               <transition v-if='props.withTransition' name='fade' mode='out-in' appear>
+               <transition v-if='props.withTransition'
+                           name='fade' mode='out-in' appear
+               >
                   <main :key='$page.url'>
                      <slot />
                   </main>
@@ -34,7 +36,7 @@
    const props = withDefaults(defineProps<{
       withTransition?: boolean
    }>(), {
-      withTransition: false,
+      withTransition: true,
    });
 
 

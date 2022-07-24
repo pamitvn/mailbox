@@ -1,5 +1,5 @@
 <template>
-   <default-layout>
+   <default-layout :with-transition='false'>
       <!-- Page header -->
       <div class='mb-8'>
          <!-- Title -->
@@ -11,7 +11,7 @@
          <div class='flex flex-col md:flex-row md:-mr-px'>
             <account-sidebar :menu='menu' />
             <transition name='fade' mode='out-in' appear>
-                  <slot />
+               <slot />
             </transition>
          </div>
       </div>
