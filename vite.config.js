@@ -38,7 +38,15 @@ export default defineConfig({
          output: {
             entryFileNames: 'assets/js/[name]-[hash].js',
             chunkFileNames: 'assets/chunks/[name]-[hash].js',
-            assetFileNames: 'assets/css/[name]-[hash][extname]',
+            assetFileNames: (asset) => {
+               let type = 'css';
+
+               if (!/.\.css$/.test(asset.name)) {
+                  type = 'images';
+               }
+
+               return `assets/${type}/[name]-[hash][extname]`;
+            },
          },
 
       },
