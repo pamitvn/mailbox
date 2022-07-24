@@ -85,7 +85,7 @@
 
 <style lang='scss' scoped>
    .card {
-      @apply m-2 py-6 px-6 rounded-lg bg-white text-black;
+      @apply py-6 px-6 rounded-lg bg-white text-black;
    }
 
    @screen md {
