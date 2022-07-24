@@ -5,7 +5,7 @@
       </title>
    </the-head>
    <div class='card w-full'>
-      <h1 class='text-3xl md:text-slate-800 font-bold mb-6'>Forgot Password! ✨</h1>
+      <h1 class='text-xl md:text-3xl md:text-slate-800 font-bold mb-6'>Forgot Password! ✨</h1>
 
       <banner type='success' :open='$page.props?.flash?.status' class='mb-4'>
          {{ $page.props?.flash?.status }}

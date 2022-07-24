@@ -5,7 +5,7 @@
       </title>
    </the-head>
    <div class='card w-full'>
-      <h1 class='text-3xl md:text-slate-800 font-bold mb-6'>Create your Account! ✨</h1>
+      <h1 class='text-xl md:text-3xl md:text-slate-800 font-bold mb-6'>Create your Account! ✨</h1>
 
       <form @submit.prevent='() => onSubmitForm()'>
          <div class='space-y-4'>
