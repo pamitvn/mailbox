@@ -1,5 +1,5 @@
 <template>
-   <div>
+   <div v-if='showSidebar'>
       <!-- Sidebar backdrop (mobile only) -->
       <div class='fixed inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200'
            :class="sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'"
@@ -64,6 +64,7 @@
    import { useLayout } from '~/uses';
    import { useThemeStore } from '~/stores/useThemeStore';
    import { storeToRefs } from 'pinia';
+   import useAuthStore from '~/stores/useAuthStore';
 
    const useStore = useThemeStore();
 
@@ -73,6 +74,7 @@
    const sidebar = ref(null);
 
    const { sidebarExpanded, sidebarOpen } = storeToRefs(useStore);
+   const { isLoggedIn: showSidebar } = storeToRefs(useAuthStore());
 
    const mainMenu = computed(() => useLayout('menu.main', []));
 
