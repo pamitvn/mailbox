@@ -100,6 +100,9 @@
    const onSubmitForm = () => {
       return form.post(useRoute('register'), {
          preserveScroll: false,
+         onSuccess() {
+            location.reload();
+         },
       });
    };
 </script>

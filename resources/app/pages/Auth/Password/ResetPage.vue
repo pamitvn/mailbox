@@ -79,7 +79,11 @@
          ...data,
          token: props.token,
          email: props.email,
-      })).post(useRoute('password.update'));
+      })).post(useRoute('password.update'), {
+         onSuccess() {
+            location.reload();
+         },
+      });
    };
 </script>
 

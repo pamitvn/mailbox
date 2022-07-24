@@ -69,6 +69,9 @@
    const onSubmitForm = () => {
       return form.post(useRoute('login'), {
          preserveScroll: false,
+         onSuccess() {
+            location.reload();
+         },
       });
    };
 </script>

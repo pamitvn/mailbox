@@ -1,13 +1,13 @@
 <template>
    <header class='sticky top-0 bg-white border-b border-slate-200 z-30'>
-      <div class='px-4 sm:px-6 lg:px-8'>
+      <div class='px-4 sm:px-6 lg:px-8 w-full max-w-9xl mx-auto'>
          <div class='flex items-center justify-between h-16 -mb-px'>
 
             <!-- Header: Left side -->
             <div class='flex items-center'>
 
                <!-- Hamburger button -->
-               <button class='text-slate-500 hover:text-slate-600 lg:hidden'
+               <button v-if='showSidebar' class='text-slate-500 hover:text-slate-600 lg:hidden'
                        @click.stop='() => useStore.$patch({sidebarOpen: true})'
                        aria-controls='sidebar' :aria-expanded='sidebarOpen'>
                   <span class='sr-only'>Open sidebar</span>
@@ -25,8 +25,8 @@
             </div>
 
             <!-- Header: Right side -->
-            <div class="flex items-center space-x-3">
-               <UserMenu align="right" />
+            <div class='flex items-center space-x-3'>
+               <UserMenu align='right' />
             </div>
          </div>
       </div>
@@ -38,8 +38,10 @@
    import { Logo } from '~/images';
    import { useThemeStore } from '~/stores/useThemeStore';
    import UserMenu from '../components/DropdownProfile.vue';
+   import useAuthStore from '~/stores/useAuthStore';
 
    const useStore = useThemeStore();
    const { sidebarOpen } = storeToRefs(useStore);
+   const { isLoggedIn: showSidebar } = storeToRefs(useAuthStore());
 
 </script>
