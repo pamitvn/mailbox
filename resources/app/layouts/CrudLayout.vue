@@ -29,7 +29,8 @@
                </button>
             </form>
             <template v-if='!hasMoreAction && (hasPerPage && !hasSearch)'>
-               <v-select-dropdown v-model='perPage'
+               <v-select-dropdown v-if='hasPerPage'
+                                  v-model='perPage'
                                   :options='perPageSelectOptions'
                                   label='Entries per page'
                >
@@ -58,7 +59,8 @@
          <div class='grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2'>
             <template v-if='hasMoreAction && hasPerPage || hasSearch'>
                <slot name='selected-action'></slot>
-               <v-select-dropdown v-model='perPage'
+               <v-select-dropdown v-if='hasPerPage'
+                                  v-model='perPage'
                                   :options='perPageSelectOptions'
                                   label='Entries per page'
                >

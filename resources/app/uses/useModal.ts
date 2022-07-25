@@ -1,4 +1,5 @@
 import { ref, watch } from 'vue';
+import _ from 'lodash';
 
 interface Options {
     open?: boolean;
@@ -6,7 +7,7 @@ interface Options {
     onClose?: Function;
 }
 
-const useModal = (options: Options = {}) => {
+const useModal = (options?: Options) => {
     const open = ref(options?.open || false);
 
     const close = () => open.value = false;
@@ -14,11 +15,9 @@ const useModal = (options: Options = {}) => {
     const toggle = () => open.value = !open.value;
 
     watch(open, (val) => {
-        if (val === open.value) return;
-
         val
-            ? options?.onShow()
-            : options?.onClose();
+            ? _.isFunction(options?.onShow) && options?.onShow()
+            : _.isFunction(options?.onClose) && options?.onClose();
     });
 
     return {

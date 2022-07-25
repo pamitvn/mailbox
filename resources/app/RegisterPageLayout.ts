@@ -5,7 +5,6 @@ import AuthLayout from '~/layouts/AuthLayout.vue';
 import AccountLayout from '~/layouts/AccountLayout.vue';
 
 const defineDefaultLayout = defineLayoutFor(DefaultLayout, [
-    'Home',
     'Statistics',
 ]);
 

@@ -4,13 +4,14 @@ import vSelect from 'vue-select';
 import VueGravatar from 'vue3-gravatar';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faCircleUser, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
+import { faCircleUser, faThumbsUp, faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import {
     faArrowRightToBracket,
     faBagShopping,
     faDollarSign,
     faMoneyCheckDollar,
     faListOl,
+    faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 
 // import TheTextareaField from '~/components/Form/TheTextareaField.vue';
@@ -54,7 +55,12 @@ export default (app: VueApp): VueApp => {
     /**
      * Register FontAwesomeIcon
      */
-    library.add(faCircleUser, faThumbsUp, faArrowRightToBracket, faDollarSign, faMoneyCheckDollar, faBagShopping, faListOl);
+    library.add(
+        faCircleUser, faThumbsUp, faCircleCheck,
+        faCircleXmark, faArrowRightToBracket, faDollarSign,
+        faMoneyCheckDollar, faBagShopping, faListOl,
+        faCartShopping,
+    );
     app.component('font-awesome-icon', FontAwesomeIcon);
 
     return app;

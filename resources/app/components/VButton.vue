@@ -5,20 +5,21 @@
       v-on='events'
       :disabled='loading'
    >
-      <span v-if='loading' class='mr-2'>
+      <span v-if='loading' :class='{"mr-2": showContent}'>
          <svg class='animate-spin w-4 h-4 fill-current shrink-0' viewBox='0 0 16 16'><path
             d='M8 16a7.928 7.928 0 01-3.428-.77l.857-1.807A6.006 6.006 0 0014 8c0-3.309-2.691-6-6-6a6.006 6.006 0 00-5.422 8.572l-1.806.859A7.929 7.929 0 010 8c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z'></path></svg>
       </span>
       <span v-else-if='onlyIcon || icon' class='w-4 h-4 fill-current shrink-0'
-            :class='{"mr-2": !onlyIcon}'>
+            :class='{"mr-2": showContent}'>
          <slot name='icon'></slot>
       </span>
-      <slot v-if='!onlyIcon'></slot>
+      <slot v-if='showContent'></slot>
    </button>
 </template>
 
 <script setup lang='ts'>
    import { computed, useAttrs } from 'vue';
+   import { useMobile } from '~/uses';
 
    type ButtonType = 'button' | 'submit' | 'reset';
    type VariantType =
@@ -47,6 +48,7 @@
       squared?: boolean
       icon?: boolean
       onlyIcon?: boolean
+      justMobileIcon?: boolean
       loading?: boolean
    }>(), {
       events: {} as any,
@@ -63,6 +65,8 @@
    });
    const attrs = useAttrs();
 
+   const { isMobile } = useMobile();
+
    const classname = computed(() => {
       const isNotNone = props.variant !== 'none';
       const buttonSize = props.size === 'md' ? 'btn' : `btn-${props.size}`;
@@ -76,6 +80,11 @@
          [`variant__outline--${props.variant}`]: isNotNone && props.outline,
          'btn__disabled': props.loading,
       };
+   });
+   const showContent = computed(() => {
+      return props.justMobileIcon
+         ? !isMobile.value
+         : !props.onlyIcon;
    });
 </script>
 

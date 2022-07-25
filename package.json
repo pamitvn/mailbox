@@ -39,6 +39,7 @@
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/progress": "^0.2.7",
         "@tailwindcss/forms": "^0.5.2",
+        "@tailwindcss/typography": "^0.5.4",
         "@vueuse/core": "^8.6.0",
         "chart.js": "^2.9.3",
         "chartjs-adapter-moment": "^1.0.0",

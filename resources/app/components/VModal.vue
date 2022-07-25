@@ -25,10 +25,13 @@
            aria-modal='true'
            v-bind='attrs'
       >
-         <div ref='modalWrapper' class='bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full'>
+         <div ref='modalWrapper'
+              class='bg-white rounded shadow-lg'
+              :class='getWrapperClass'
+         >
             <!-- Modal header -->
-            <slot name='header' v-bind='{onClose}'>
-               <div v-if='hasHeader' class='px-5 py-3 border-b border-slate-200'>
+            <slot v-if='hasHeader' name='header' v-bind='{onClose}'>
+               <div class='px-5 py-3 border-b border-slate-200'>
                   <div class='flex justify-between items-center'>
                      <slot name='header-title' v-bind='{title}'>
                         <div class='font-semibold text-slate-800'>{{ title }}</div>
@@ -52,24 +55,57 @@
 </template>
 
 <script setup lang='ts'>
-   import { ref, useAttrs, watch, watchEffect } from 'vue';
+   import _ from 'lodash';
+   import { computed, ref, useAttrs, watch } from 'vue';
    import { onClickOutside, onKeyStroke } from '@vueuse/core';
+
+   type ScreenSizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+   type MaxHeightType = 'full' | 'screen' | 'min' | string | number;
 
    const props = withDefaults(defineProps<{
       title?: string
+      wrapperClass?: string | object
+
+      maxWidth?: ScreenSizeType
+      maxHeight?: MaxHeightType
+
+      fullHeight?: boolean
+      fullWidth?: boolean
+
       open?: boolean
       hasHeader?: boolean
       hasHeaderClose?: boolean
+      hasScrollBar?: boolean
    }>(), {
+      maxWidth: 'lg',
+      maxHeight: 'full',
+      fullHeight: false,
+      fullWidth: true,
       open: false,
       hasHeader: true,
       hasHeaderClose: true,
+      hasScrollBar: false,
    });
    const emit = defineEmits(['update:open', 'close-modal']);
    const attrs = useAttrs();
 
    const open = ref<boolean>(props.open || false);
    const modalWrapper = ref<HTMLElement | null>(null);
+
+   const getWrapperClass = computed(() => {
+      const classname = _.isString(props.wrapperClass)
+         ? { [props.wrapperClass]: true }
+         : props.wrapperClass;
+
+      return {
+         'overflow-auto': props.hasScrollBar,
+         [`max-w-${props.maxWidth}`]: true,
+         [`max-h-${props.maxHeight}`]: true,
+         'w-full': props.fullWidth,
+         'h-full': props.fullHeight,
+         ...classname,
+      };
+   });
 
    const onClose = () => {
       open.value = false;

@@ -90,3 +90,5 @@ export const defineLayoutFor = (layout, pages: any[], namespaces: string[] = [])
 
     return results;
 };
+
+export const numberFormat = (value) => Intl.NumberFormat('vi-VN').format(value);
