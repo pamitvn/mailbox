@@ -16,14 +16,14 @@
          <template #row-before_transaction='{value}'>
             <td class='table--col'>
                <div class='font-medium text-emerald-500'>
-                  {{ value }}
+                  {{ numberFormat(value) }}
                </div>
             </td>
          </template>
          <template #row-after_transaction='{value}'>
             <td class='table--col'>
                <div class='font-medium text-rose-500'>
-                  {{ value }}
+                  {{ numberFormat(value) }}
                </div>
             </td>
          </template>
@@ -43,6 +43,7 @@
    import dateFormat from 'dateformat';
 
    import { useModal, usePagination } from '~/uses';
+   import {numberFormat} from '~/utils';
 
    import type { Utils } from '~/types/Utils';
    import type { Models } from '~/types/Models';
