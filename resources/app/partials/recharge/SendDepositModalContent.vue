@@ -14,10 +14,10 @@
          </div>
 
          <transition
-            enter-active-class='transition ease-out duration-200 transform'
+            enter-active-class='transition ease-out duration-300 transform'
             enter-from-class='opacity-0 -translate-y-2'
             enter-to-class='opacity-100 translate-y-0'
-            leave-active-class='transition ease-out duration-200'
+            leave-active-class='transition ease-out duration-300'
             leave-from-class='opacity-100'
             leave-to-class='opacity-0'
          >
