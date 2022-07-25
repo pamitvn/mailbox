@@ -2,7 +2,7 @@
    <the-head>
       <title>Deposit</title>
    </the-head>
-   <crud-layout title='Deposit'>
+   <crud-layout title='Deposit' has-search>
       <template #header-action>
          <v-button outline @click='show'>
             Send Deposit
