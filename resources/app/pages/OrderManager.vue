@@ -10,9 +10,11 @@
             </v-button>
          </div>
       </template>
+
       <v-crud-table
          :columns='columns'
          :data='paginationData'
+         :loading='!!orderViewProduct?.loading'
          has-checkbox
          title='All orders'
          @selected-rows='onSelectedRows'
@@ -48,7 +50,7 @@
       </v-crud-table>
    </crud-layout>
 
-   <order-view-product v-model:order='order' />
+   <order-view-product ref='orderViewProduct' v-model:order='order' />
 </template>
 
 <script setup lang='ts'>
@@ -77,6 +79,7 @@
    }>();
 
    const order = ref<Models.Order | null>(null);
+   const orderViewProduct = ref(null);
    const filterFields = reactive<Components.Table.FilterCard.Fields>([
       {
          name: 'service_id',

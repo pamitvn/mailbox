@@ -1,7 +1,7 @@
 <template>
    <v-input v-bind='attrs' type='text' v-slot='{attrs: inputAttrs, event}'>
       <select v-model='selected' v-bind='inputAttrs' class='form-select w-full'>
-         <option value=''>{{ attrs.label }}</option>
+         <option :value='null'>{{ attrs.label }}</option>
          <option v-for='(item, i) in getOptions' :key='i' :value='i'>{{ item }}</option>
       </select>
    </v-input>
@@ -14,7 +14,7 @@
    import VInput from '~/components/Form/VInput.vue';
 
    const props = defineProps<{
-      modelValue?: string | number
+      modelValue?: string | number | null
       pathToKey?: string
       pathToLabel?: string
       options: object | object[]
@@ -22,7 +22,7 @@
    const emit = defineEmits(['update:modelValue']);
    const attrs = useAttrs();
 
-   const selected = ref(props.modelValue || '');
+   const selected = ref(props.modelValue || null);
 
    const getOptions = computed(() => {
       let options = _.clone(props.options);

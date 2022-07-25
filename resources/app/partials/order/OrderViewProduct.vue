@@ -25,6 +25,7 @@
    }>();
    const emit = defineEmits(['update:order']);
 
+   const loading = ref(false);
    const openModal = ref(false);
    const payload = ref('');
 
@@ -35,6 +36,8 @@
    };
 
    const fetchPayload = async () => {
+      loading.value = true;
+
       const id = props.order?.id;
 
       if (!id) return;
@@ -56,6 +59,8 @@
          useToast(`There was a problem getting the product.`, {
             type: 'danger',
          });
+      } finally {
+         loading.value = false;
       }
    };
 
@@ -67,5 +72,7 @@
          openModal.value = true;
       }
    });
+
+   defineExpose({ loading });
 
 </script>

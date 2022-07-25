@@ -5,7 +5,7 @@
       </header>
       <div>
          <!-- Table -->
-         <div class='overflow-x-auto'>
+         <div class='relative overflow-x-auto'>
             <table class='table-auto w-full divide-y divide-slate-200'>
                <!-- Table header -->
                <thead class='text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-slate-200'>
@@ -70,6 +70,17 @@
                </tbody>
             </table>
 
+            <template v-if='loading'>
+               <div class='absolute top-0 w-full h-full bg-gray-300 opacity-50'></div>
+               <div class='absolute top-0 w-full h-full'>
+                  <div
+                     class='w-full h-full flex justify-center items-center text-red-500 text-2xl whitespace-nowrap font-mono antialiased font-serif'>
+                  <span class='mr-2'><svg class='animate-spin w-5 h-5 fill-current shrink-0' viewBox='0 0 16 16'><path
+                     d='M8 16a7.928 7.928 0 01-3.428-.77l.857-1.807A6.006 6.006 0 0014 8c0-3.309-2.691-6-6-6a6.006 6.006 0 00-5.422 8.572l-1.806.859A7.929 7.929 0 010 8c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z'></path></svg></span>
+                     <span>Loading</span>
+                  </div>
+               </div>
+            </template>
          </div>
       </div>
    </div>
@@ -123,6 +134,7 @@
 
       checkboxByField?: string;
 
+      loading?: boolean;
       hasPagination?: boolean;
       hasCheckbox?: boolean;
       hasHideMobile?: boolean;
@@ -131,6 +143,7 @@
       data: any;
    }>(), {
       checkboxByField: 'id',
+      loading: false,
       hasPagination: true,
       hasCheckbox: false,
       hasHideMobile: false,
