@@ -38,24 +38,24 @@ Route::group([
                 'prefix' => 'profile',
                 'controller' => Account\ProfileController::class,
             ], function () {
-                Route::get('', 'index')->name('profile');
-                Route::put('', 'update');
+                Route::get('/', 'index')->name('profile');
+                Route::put('/', 'update');
             });
 
             Route::group([
                 'prefix' => 'api',
                 'controller' => Account\APIManagerController::class,
             ], function () {
-                Route::get('', 'index')->name('api');
-                Route::post('', 'store');
+                Route::get('/', 'index')->name('api');
+                Route::post('/', 'store');
             });
 
             Route::group([
                 'prefix' => 'reset-password',
                 'controller' => Account\ResetPasswordController::class,
             ], function () {
-                Route::get('reset-password', 'index')->name('reset-password');
-                Route::put('reset-password', 'update');
+                Route::get('/', 'index')->name('reset-password');
+                Route::put('/', 'update');
             });
         });
 
