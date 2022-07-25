@@ -11,6 +11,7 @@ class RechargeController extends Controller
 {
     public function index(Request $request)
     {
+        $params = $request->except('search');
         $search = $request->get('search');
 
         $histories = RechargeHistory::query()
@@ -27,7 +28,7 @@ class RechargeController extends Controller
                 'hostname' => request()->getHttpHost(),
             ])),
             'banks' => Bank::get(),
-            'paginationData' => cursor_paginate_with_params($histories),
+            'paginationData' => cursor_paginate_with_params($histories, $params),
         ]);
     }
 }
