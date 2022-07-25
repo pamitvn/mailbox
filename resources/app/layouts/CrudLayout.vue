@@ -39,7 +39,7 @@
                </span>
                   </template>
                </v-select-dropdown>
-               <v-crud-table-filter :fields='filterFields' />
+               <v-crud-table-filter v-if='filterFields?.length' :fields='filterFields' />
             </template>
             <!-- Add order button -->
             <slot name='header-action'></slot>
@@ -68,7 +68,7 @@
                </span>
                   </template>
                </v-select-dropdown>
-               <v-crud-table-filter :fields='filterFields' />
+               <v-crud-table-filter v-if='filterFields?.length' :fields='filterFields' />
             </template>
             <slot name='more-action-right'></slot>
          </div>

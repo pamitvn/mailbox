@@ -1,4 +1,7 @@
 <template>
+   <the-head>
+      <title>Order Managers</title>
+   </the-head>
    <crud-layout title='Orders' :filter-fields='filterFields'>
       <template v-if='!!selected.length' #selected-action>
          <div class='flex items-center'>

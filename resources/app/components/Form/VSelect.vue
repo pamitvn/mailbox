@@ -1,7 +1,7 @@
 <template>
    <v-input v-bind='attrs' type='text' v-slot='{attrs: inputAttrs, event}'>
       <select v-model='selected' v-bind='inputAttrs' class='form-select w-full'>
-         <option :value='null'>{{ attrs.label }}</option>
+         <option :value='null'>{{ attrs.placeholder || attrs.label }}</option>
          <option v-for='(item, i) in getOptions' :key='i' :value='i'>{{ item }}</option>
       </select>
    </v-input>
@@ -28,14 +28,18 @@
       let options = _.clone(props.options);
 
       if (_.isArray(props.options)) {
+         const values = {};
+
          _.forEach(options, item => {
             const key = _.get(item, props.pathToKey);
             const label = _.get(item, props.pathToLabel);
 
             if (key === undefined) return;
 
-            _.set(options, key, label);
+            _.set(values, key, label);
          });
+
+         options = values;
       }
 
       return options;

@@ -12,18 +12,22 @@ class RechargeController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $perPage = $request->get('perPage', 10);
 
-        $histories = RechargeHistory::with('bank')->whereUserId(auth()->id())
-            ->orderByDesc('id')
-            ->when($search, fn ($query) => $query->where('note', 'LIKE', "%{$search}%"));
+        $histories = RechargeHistory::query()
+            ->with('bank')
+            ->whereUserId(auth()->id())
+            ->orderByDesc('id');
 
-        return inertia('Recharge/RechargeManager', [
-            'rechargeCode' => Blade::render(config('web-config.recharge_code'), array_merge(auth()->user()->toArray(), [
+        search_by_cols($histories, $search, [
+            'note',
+        ]);
+
+        return inertia('RechargeManager', [
+            'transferContent' => Blade::render(config('web-config.recharge_code'), array_merge(auth()->user()->toArray(), [
                 'hostname' => request()->getHttpHost(),
             ])),
             'banks' => Bank::get(),
-            'paginationData' => $histories->paginate($perPage),
+            'paginationData' => cursor_paginate_with_params($histories),
         ]);
     }
 }
