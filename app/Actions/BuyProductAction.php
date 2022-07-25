@@ -39,8 +39,9 @@ class BuyProductAction extends Action
         $user = $request->user();
 
         if ($quantity && $user->balanceInt < ($service->price * $quantity)) {
-            return back()->with('error', __('The balance in the account is not enough to make the request'))
-                ->withErrors('Error', 'globalError');
+            send_current_user_message('info', __('The balance in the account is not enough to make the request'), $user->id);
+
+            return back()->withErrors('Error', 'globalError');
         }
 
         return $this->handle($request, $user, $service, $quantity);
@@ -61,7 +62,7 @@ class BuyProductAction extends Action
             $quantity
         );
 
-        send_current_user_message('info', 'Your order has been added to the list of pending orders.', $user->id);
+        send_current_user_message('info', __('Your order has been added to the list of pending orders.'), $user->id);
 
         return back();
     }

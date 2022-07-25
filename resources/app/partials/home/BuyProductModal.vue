@@ -116,7 +116,7 @@
             _.forEach(_.keys(errors), key => {
                const message = _.get(errors, key as string);
 
-               if (!message) return;
+               if (!message || !_.isString(message)) return;
 
                useToast(message, {
                   type: 'danger',
