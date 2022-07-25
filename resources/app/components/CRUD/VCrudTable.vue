@@ -87,7 +87,7 @@
 
    <!-- Pagination -->
    <div v-if='hasPagination && (data.prev_cursor || data.next_cursor)' class='mt-8'>
-      <div class='flex flex-col sm:flex-row sm:items-center sm:justify-between lg:justify-end'>
+      <div class='flex flex-col sm:flex-row sm:items-center sm:justify-between md:justify-end'>
          <nav class='mb-4 sm:mb-0 sm:order-1' role='navigation' aria-label='Navigation'>
             <ul class='flex justify-between'>
                <li class='ml-3 first:ml-0'>
