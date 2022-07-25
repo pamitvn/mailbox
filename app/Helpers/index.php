@@ -2,7 +2,10 @@
 
 use App\Events\Sockets\UserMessageEvent;
 use App\PAM\Facades\AdminSetting;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 if (! function_exists('table_name_of_model')) {
     function table_name_of_model(string $model)
@@ -59,6 +62,43 @@ if (! function_exists('send_message_if')) {
             $boolean ? $message : $unlessMessage,
             $userId
         );
+    }
+}
+
+if (! function_exists('day_of_month_to_array')) {
+    function day_of_month_to_array($start = null, $end = null): array
+    {
+        $start ??= Carbon::now()->startOfMonth();
+        $end ??= Carbon::now()->day;
+
+        $period = CarbonPeriod::create($start, $end);
+        $dates = [];
+
+        foreach ($period as $date) {
+            $dates[] = $date->format('d-m-Y');
+        }
+
+        return $dates;
+    }
+}
+
+if (! function_exists('group_date_chart_by_day')) {
+    function group_chart_by_day(Collection $collect, array $dates)
+    {
+        $values = [];
+
+        foreach ($dates as $day) {
+            $date = \Illuminate\Support\Carbon::parse($day);
+            $payload = $collect->get($date->day, 0);
+
+            $values['month'][] = $payload;
+            $values['week'][] = $date >= Carbon::parse($day)->startOfWeek() && $date <= Carbon::parse($day)->endOfWeek()
+                ? $payload
+                : 0;
+            $values['today'][] = $date->day === now()->day ? $payload : 0;
+        }
+
+        return $values;
     }
 }
 

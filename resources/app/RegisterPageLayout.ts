@@ -6,6 +6,12 @@ import AccountLayout from '~/layouts/AccountLayout.vue';
 
 const defineDefaultLayout = defineLayoutFor(DefaultLayout, [
     'Statistics',
+    [
+        'Admin',
+        [
+            'Statistics',
+        ],
+    ],
 ]);
 
 const defineAuthLayouts = defineLayoutFor(AuthLayout, [
