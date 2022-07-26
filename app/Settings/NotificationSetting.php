@@ -28,23 +28,23 @@ class NotificationSetting extends Settings
     {
         return [
             'enable' => [
-                'is' => 'the-switch-field',
+                'is' => 'v-switch',
                 'rule' => ['required', 'boolean'],
-                'attribute' => [
+                'attrs' => [
                     'label' => 'Enable',
                 ],
             ],
             'title' => [
                 'rule' => ['required', 'string'],
-                'attribute' => [
+                'attrs' => [
                     'type' => 'title',
                     'label' => 'Site Name',
                 ],
             ],
             'content' => [
-                'is' => 'the-textarea-field',
+                'is' => 'v-tiny-rich-text',
                 'rule' => ['required', 'string'],
-                'attribute' => [
+                'attrs' => [
                     'label' => 'Content',
                 ],
             ],

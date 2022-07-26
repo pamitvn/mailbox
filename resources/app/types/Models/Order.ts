@@ -8,6 +8,7 @@ interface Order {
     product_id: number;
     price: number;
     quantity: number;
+    expired: boolean;
     created_at: string;
     updated_at: string;
 

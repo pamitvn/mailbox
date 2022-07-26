@@ -97,24 +97,24 @@ class Handler extends ExceptionHandler
         return parent::convertValidationExceptionToResponse($e, $request);
     }
 
-    public function render($request, Throwable $e)
-    {
-        $response = parent::render($request, $e);
-
-        if (app()->environment('local')) {
-            return $response;
-        }
-
-        if (in_array($response->status(), [500, 503, 404, 403])) {
-            return Inertia::render('Errors/Error', ['status' => $response->status()])
-                ->toResponse($request)
-                ->setStatusCode($response->status());
-        } elseif ($response->status() === 419) {
-            return back()->with([
-                'message' => __('The page expired, please try again.'),
-            ]);
-        }
-
-        return $response;
-    }
+//    public function render($request, Throwable $e)
+//    {
+//        $response = parent::render($request, $e);
+//
+//        if (app()->environment('local')) {
+//            return $response;
+//        }
+//
+//        if (in_array($response->status(), [500, 503, 404, 403])) {
+//            return Inertia::render('Errors/Error', ['status' => $response->status()])
+//                ->toResponse($request)
+//                ->setStatusCode($response->status());
+//        } elseif ($response->status() === 419) {
+//            return back()->with([
+//                'message' => __('The page expired, please try again.'),
+//            ]);
+//        }
+//
+//        return $response;
+//    }
 }

@@ -22,7 +22,7 @@ class UserManagerController extends Controller
 
         $user = User::query()
             ->with('wallet')
-            ->orderBy('id', 'desc');
+            ->orderByDesc('id');
 
         search_by_cols($user, $search, [
             'name',
@@ -36,8 +36,8 @@ class UserManagerController extends Controller
             'email',
         ], $request->all());
 
-        return inertia('Admin/User/UserManager', [
-            'paginationData' => paginate_with_params($user, $request->all()),
+        return inertia('Admin/User/Manager', [
+            'paginationData' => cursor_paginate_with_params($user, $request->all()),
             'statistics' => [
                 'total' => number_format(User::count()),
                 'totalBalance' => number_format(Wallet::where('holder_type', User::class)->sum('balance')),
@@ -59,11 +59,16 @@ class UserManagerController extends Controller
             'password' => ['required', 'string', 'min:8'],
         ]);
 
-        User::create(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
+        $user = User::create(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
             'password' => Hash::make($request->input('password')),
         ]));
 
-        return back()->with('success', __('Created new user'));
+        return send_message_if(
+            boolean: ! is_null($user),
+            message: __('Created new user'),
+            unlessMessage: __('User cannot be created'),
+            allowBack: true
+        );
     }
 
     public function edit(User $user)
@@ -82,11 +87,16 @@ class UserManagerController extends Controller
             'password' => ['nullable', 'string', 'min:8'],
         ]);
 
-        $user->update(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
+        $status = $user->update(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
             'password' => $request->input('password') ? Hash::make($request->input('password')) : $user->password,
         ]));
 
-        return back()->with('success', __('Updated user #:id', ['id' => $user->id]));
+        return send_message_if(
+            boolean: $status,
+            message: __('Updated user #:id', ['id' => $user->id]),
+            unlessMessage: __('User #:id cannot be updated', ['id' => $user->id]),
+            allowBack: true
+        );
     }
 
     public function destroy(User $user)
@@ -95,9 +105,12 @@ class UserManagerController extends Controller
             return back()->with('error', "You can't erase yourself");
         }
 
-        $user->delete();
-
-        return back()->with('success', __('Deleted user #:id', ['id' => $user->id]));
+        return send_message_if(
+            boolean: $user->delete(),
+            message: __('Deleted user #:id', ['id' => $user->id]),
+            unlessMessage: __('User #:id cannot be deleted', ['id' => $user->id]),
+            allowBack: true
+        );
     }
 
     public function balance(User $user)
@@ -142,12 +155,18 @@ class UserManagerController extends Controller
                 }
             });
 
-            return back()->with('success', 'Set balance successfully');
+            send_current_user_message('success', __('Set balance successfully'));
+
+            return back();
         } catch (InsufficientFunds $exception) {
             $user->withdraw($user->balance);
 
-            return back()->with('success', 'Set balance successfully');
+            send_current_user_message('success', __('Set balance successfully'));
+
+            return back();
         } catch (Exception $exception) {
+            send_current_user_message('danger', $exception->getMessage());
+
             return back()->with('error', $exception->getMessage())->withErrors('Error', 'globalError');
         }
     }

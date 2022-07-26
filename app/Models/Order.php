@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -20,6 +21,10 @@ class Order extends Model
         'quantity' => 'integer',
     ];
 
+    protected $appends = [
+        'expired',
+    ];
+
     public function service(): HasOne
     {
         return $this->hasOne(Service::class, 'id', 'service_id');
@@ -33,5 +38,12 @@ class Order extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function expired(): Attribute
+    {
+        return Attribute::get(function () {
+            return $this->created_at <= now()->subDay();
+        });
     }
 }

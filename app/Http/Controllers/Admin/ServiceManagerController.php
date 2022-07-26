@@ -59,7 +59,7 @@ class ServiceManagerController extends Controller
         ]);
 
         return inertia('Admin/Services/Manager', [
-            'paginationData' => paginate_with_params($records, $params),
+            'paginationData' => cursor_paginate_with_params($records, $params),
         ]);
     }
 
@@ -78,9 +78,12 @@ class ServiceManagerController extends Controller
             $data['feature_image'] = $this->_service->uploadFeatureImage($data['feature_image']);
         }
 
-        return $this->_service->create($data)
-            ? back()->with('success', __('Created new service'))
-            : back()->with('error', __('Service cannot be created'))->withErrors('Error', 'globalError');
+        return send_message_if(
+            boolean: $this->_service->create($data),
+            message: __('Created new service'),
+            unlessMessage: __('Service cannot be created'),
+            allowBack: true
+        );
     }
 
     public function show(Request $request, Service $service)
@@ -136,16 +139,22 @@ class ServiceManagerController extends Controller
             unset($data['feature_image']);
         }
 
-        return $this->_service->update($service, $data)
-            ? back()->with('success', __('Updated service #:id', ['id' => $service->id]))
-            : back()->with('error', __('Service #:id cannot be updated', ['id' => $service->id]))->withErrors('Error', 'globalError');
+        return send_message_if(
+            boolean: $this->_service->update($service, $data),
+            message: __('Updated service #:id', ['id' => $service->id]),
+            unlessMessage: __('Service #:id cannot be updated', ['id' => $service->id]),
+            allowBack: true
+        );
     }
 
     public function destroy(Service $service)
     {
-        return $this->_service->delete($service)
-            ? back()->with('success', __('Deleted service #:id', ['id' => $service->id]))
-            : back()->with('error', __('Service #:id cannot be deleted', ['id' => $service->id]))->withErrors('Error', 'globalError');
+        return send_message_if(
+            boolean: $this->_service->delete($service),
+            message: __('Deleted service #:id', ['id' => $service->id]),
+            unlessMessage: __('Service #:id cannot be deleted', ['id' => $service->id]),
+            allowBack: true
+        );
     }
 
     public function bulkDestroy(Request $request, Service $service)

@@ -14,22 +14,34 @@ class RechargeHistoryManagerController extends Controller
 
         $records = RechargeHistory::query()
             ->with(['bank', 'user'])
-            ->orderBy('id', 'desc');
+            ->orderByDesc('id');
 
         search_by_cols($records, $search, [
             'note',
         ]);
 
+        search_relation_by_cols($records, $search, [
+            'user' => [
+                'name',
+                'email',
+                'username',
+            ],
+        ]);
+
         return inertia('Admin/Recharge/HistoryManager', [
-            'paginationData' => paginate_with_params($records, $request->all()),
+            'paginationData' => cursor_paginate_with_params($records, $request->all()),
         ]);
     }
 
     public function destroy($history)
     {
         $history = RechargeHistory::findOrFail($history);
-        $history->delete();
 
-        return back()->with('success', __('Deleted history #:id', ['id' => $history->id]));
+        return send_message_if(
+            boolean: $history->delete(),
+            message: __('Deleted history #:id', ['id' => $history->id]),
+            unlessMessage: __('History #:id cannot be deleted', ['id' => $history->id]),
+            allowBack: true
+        );
     }
 }

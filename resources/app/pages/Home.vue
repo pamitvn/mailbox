@@ -84,7 +84,7 @@
             <td class='table--col text-left' style='min-width: 20%'>
                <div class='flex space-x-2 justify-center align-items-center'>
                   <div class='shrink'>
-                     <img class='rounded-full'
+                     <img v-if='row.feature_image' class='rounded-full'
                           :src='`/storage/${row.feature_image}`'
                           :alt='row.name'
                           width='32'

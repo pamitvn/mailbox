@@ -33,25 +33,25 @@ class ParentSetting extends Settings
         return [
             'auth_user' => [
                 'rule' => ['required', 'string'],
-                'attribute' => [
+                'attrs' => [
                     'label' => 'Auth User',
                 ],
             ],
             'auth_password' => [
                 'rule' => ['required', 'string'],
-                'attribute' => [
+                'attrs' => [
                     'label' => 'Auth Password',
                 ],
             ],
             'api_create' => [
                 'rule' => ['nullable', 'url'],
-                'attribute' => [
+                'attrs' => [
                     'label' => 'Create API Endpoint',
                 ],
             ],
             'api_count' => [
                 'rule' => ['nullable', 'url'],
-                'attribute' => [
+                'attrs' => [
                     'label' => 'Get Count API Endpoint',
                 ],
             ],

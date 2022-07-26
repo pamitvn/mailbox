@@ -92,7 +92,7 @@
             <ul class='flex justify-between'>
                <li class='ml-3 first:ml-0'>
                   <the-link
-                     :data='{cursor: data.prev_cursor}'
+                     :data='{...currentQueryParams, cursor: data.prev_cursor}'
                      :disabled='!data.prev_cursor'
                      replace
                      preserve-state
@@ -103,7 +103,7 @@
                   </the-link>
                </li>
                <li class='ml-3 first:ml-0'>
-                  <the-link :data='{cursor: data.next_cursor}'
+                  <the-link :data='{...currentQueryParams, cursor: data.next_cursor}'
                             :disabled='!data.next_cursor'
                             replace
                             preserve-state>
@@ -164,6 +164,15 @@
          : columns;
    });
    const getTableData = computed(() => props.hasPagination ? _.get(props.data, 'data', []) : props.data);
+   const currentQueryParams = computed(() => {
+      const [___, $queryString] = _.split(useUrl.value, '?');
+
+      try {
+         return qs.parse($queryString);
+      } catch (e) {
+         return {};
+      }
+   });
 
    const getColLabel = (col) => _.get(col, 'label');
    const getRowDisplay = (row, col) => {
@@ -177,7 +186,6 @@
    const onSelected = (row, val) => {
       selected.value[getCheckboxField(row)] = _.get(val, 'target.checked', false);
    };
-
 
    watch(selectAll, () => {
       _.forEach(getTableData.value, item => {

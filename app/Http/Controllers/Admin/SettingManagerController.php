@@ -28,9 +28,12 @@ class SettingManagerController extends Controller
 
         $data = $request->validate(AdminSetting::getValidationRules($group));
 
-        return AdminSetting::fillAndSave($group, $data)
-            ? back()->with('success', __('Updated :group settings', ['group' => $groupName]))
-            : back()->with('error', __(':group settings cannot be updated', ['group' => ucfirst($groupName)]))->withErrors('Error', 'globalError');
+        return send_message_if(
+            boolean: AdminSetting::fillAndSave($group, $data),
+            message: __('Updated :group settings', ['group' => $groupName]),
+            unlessMessage: __(':group settings cannot be updated', ['group' => ucfirst($groupName)]),
+            allowBack: true
+        );
     }
 
     protected function group($group)

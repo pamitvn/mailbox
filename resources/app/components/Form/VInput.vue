@@ -1,5 +1,5 @@
 <template>
-   <slot name='label' :event='onLabel'>
+   <slot v-if='label' name='label' :event='onLabel'>
       <label class='block text-sm font-medium mb-1'
              v-on='onLabel'
       >

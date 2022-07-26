@@ -90,6 +90,8 @@ export namespace Form {
             is?: any;
             allowChange?: boolean;
             attrs: Attrs;
+
+            [key: string]: any;
         }
 
         export interface DefaultValues {
@@ -102,7 +104,7 @@ export namespace Form {
         }
 
 
-        export type HandleSubmitForm = (form: InertiaFormProps<any>, values: DefaultValues) => any
+        export type HandleSubmitForm = (form: InertiaFormProps<any>, values: DefaultValues, resetForm: Function) => any
         export type Fields<Attrs = object> = Record<string, Field<Attrs>>
         export type Type = DefineComponent<Props>
     }

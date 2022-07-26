@@ -1,24 +1,20 @@
 import { App } from 'vue';
 import { Head, Link } from '@inertiajs/inertia-vue3';
-import vSelect from 'vue-select';
+import VueSelect from 'vue-select';
+// @ts-ignore
 import VueGravatar from 'vue3-gravatar';
-import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faCircleUser, faThumbsUp, faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons';
-import {
-    faArrowRightToBracket,
-    faBagShopping,
-    faDollarSign,
-    faMoneyCheckDollar,
-    faListOl,
-    faCartShopping,
-    faUserPlus,
-} from '@fortawesome/free-solid-svg-icons';
 
-// import TheTextareaField from '~/components/Form/TheTextareaField.vue';
+import '~/libs/fontawesome';
+
+import VInput from '~/components/Form/VInput.vue';
+import VSelect from '~/components/Form/VSelect.vue';
+import VSelectDropdown from '~/components/Form/VSelectDropdown.vue';
+import VTextarea from '~/components/Form/VTextarea.vue';
 // import TheCheckBoxField from '~/components/Form/TheCheckBoxField.vue';
-// import TheSwitchField from '~/components/Form/TheSwitchField.vue';
-// import TheTable from '~/components/Table/TheTable.vue';
+import VSwitch from '~/components/Form/VSwitch.vue';
+import VTinyRichText from '~/components/Form/VTinyRichText.vue';
+
 import 'vue-select/dist/vue-select.css';
 
 type VueApp = App<Element>;
@@ -37,16 +33,14 @@ export default (app: VueApp): VueApp => {
     /**
      * Register Form Components
      */
-    // app.component('VInput', VInput);
-    // app.component('TheTextareaField', TheTextareaField);
+    app.component('VInput', VInput);
+    app.component('VSelect', VSelect);
+    app.component('VSelectDropdown', VSelectDropdown);
+    app.component('VTextarea', VTextarea);
     // app.component('TheCheckboxField', TheCheckBoxField);
-    // app.component('TheSwitchField', TheSwitchField);
-    app.component('TheSelect', vSelect);
-
-    /**
-     * Register Table Components
-     */
-    // app.component('TheTable', TheTable);
+    app.component('VSwitch', VSwitch);
+    app.component('VTinyRichText', VTinyRichText);
+    app.component('VueSelect', VueSelect);
 
     /**
      * Register Vue Gravatar
@@ -56,12 +50,6 @@ export default (app: VueApp): VueApp => {
     /**
      * Register FontAwesomeIcon
      */
-    library.add(
-        faCircleUser, faThumbsUp, faCircleCheck,
-        faCircleXmark, faArrowRightToBracket, faDollarSign,
-        faMoneyCheckDollar, faBagShopping, faListOl,
-        faCartShopping, faUserPlus,
-    );
     app.component('font-awesome-icon', FontAwesomeIcon);
 
     return app;

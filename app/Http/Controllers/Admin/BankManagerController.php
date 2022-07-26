@@ -14,15 +14,14 @@ class BankManagerController extends Controller
         $params = $request->all();
         $search = $request->get('search');
 
-        $banks = Bank::query()
-            ->orderBy('id', 'desc');
+        $banks = Bank::query()->orderByDesc('id');
 
         search_by_cols($banks, $search, [
             'name',
         ]);
 
-        return inertia('Admin/Bank/BankManager', [
-            'paginationData' => paginate_with_params($banks, $params),
+        return inertia('Admin/Bank/Manager', [
+            'paginationData' => cursor_paginate_with_params($banks, $params),
         ]);
     }
 
@@ -37,27 +36,16 @@ class BankManagerController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'accountId' => ['required', 'string', 'max:150'],
             'accountName' => ['required', 'string', 'max:150'],
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpeg,png',
-                'mimetypes:image/jpeg,image/png',
-                'max:2048',
-            ],
         ]);
 
-        if ($request->file('image')) {
-            File::ensureDirectoryExists(storage_path('app/public/banks'));
+        $bank = Bank::create($data);
 
-            $file = $request->file('image');
-            $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(storage_path('app/public/banks'), $filename);
-            $data['image'] = 'banks/'.$filename;
-        }
-
-        Bank::create($data);
-
-        return back()->with('success', __('Created new bank'));
+        return send_message_if(
+            boolean: filled($bank),
+            message: __('Created new bank'),
+            unlessMessage: __('Bank cannot be created'),
+            allowBack: true
+        );
     }
 
     public function edit(Bank $bank)
@@ -73,38 +61,26 @@ class BankManagerController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'accountId' => ['required', 'string', 'max:150'],
             'accountName' => ['required', 'string', 'max:150'],
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpeg,png',
-                'mimetypes:image/jpeg,image/png',
-                'max:2048',
-            ],
         ]);
 
-        if ($request->file('image')) {
-            $this->removeImage($bank->image);
-            File::ensureDirectoryExists(storage_path('app/public/banks'));
-
-            $file = $request->file('image');
-            $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(storage_path('app/public/banks'), $filename);
-            $data['image'] = 'banks/'.$filename;
-        } else {
-            unset($data['image']);
-        }
-
-        $bank->update($data);
-
-        return back()->with('success', __('Updated bank #:id', ['id' => $bank->id]));
+        return send_message_if(
+            boolean: $bank->update($data),
+            message: __('Updated bank #:id', ['id' => $bank->id]),
+            unlessMessage: __('Updated #:id cannot be updated', ['id' => $bank->id]),
+            allowBack: true
+        );
     }
 
     public function destroy(Bank $bank)
     {
-        $bank->delete();
         $this->removeImage($bank->image);
 
-        return back()->with('success', __('Deleted bank #:id', ['id' => $bank->id]));
+        return send_message_if(
+            boolean: $bank->delete(),
+            message: __('Deleted bank #:id', ['id' => $bank->id]),
+            unlessMessage: __('Bank #:id cannot be deleted', ['id' => $bank->id]),
+            allowBack: true
+        );
     }
 
     protected function removeImage($path)

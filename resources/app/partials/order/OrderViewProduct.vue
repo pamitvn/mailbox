@@ -46,6 +46,13 @@
       const data = { includes: [id] };
 
       try {
+
+         if (props.order?.expired) {
+            payload.value = 'This transaction has expired (24 hours) for data query';
+            loading.value = false;
+            return;
+         }
+
          const { data: responseData } = await axios.post(url, data);
 
          let output = '';

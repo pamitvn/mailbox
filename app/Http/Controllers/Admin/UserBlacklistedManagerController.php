@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\UserBlacklisted;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -13,27 +12,34 @@ class UserBlacklistedManagerController extends Controller
 {
     public function index(Request $request)
     {
+        $params = $request->except('search');
         $search = $request->get('search');
 
-        $searchByFn = fn (Builder $builder) => search_by_cols($builder, $search, [
-            'id',
-            'name',
-            'username',
-            'email',
-        ]);
         $records = UserBlacklisted::query()
             ->with(['user', 'byUser'])
-            ->orderBy('id', 'desc')
-            ->when(fn () => filled($search), fn ($query) => $query->whereHas('user', $searchByFn)->orWhereHas('byUser', $searchByFn));
+            ->orderByDesc('id');
+
+        search_relation_by_cols($records, $search, [
+            'user' => [
+                'username',
+                'name',
+                'email',
+            ],
+            'byUser' => [
+                'username',
+                'name',
+                'email',
+            ],
+        ]);
 
         query_by_cols($records, [
             'id',
             'user_id',
             'by_user_id',
-        ], $request->all());
+        ], $params);
 
         return inertia('Admin/Blacklisted/User/Manager', [
-            'paginationData' => paginate_with_params($records, $request->all()),
+            'paginationData' => cursor_paginate_with_params($records, $params),
         ]);
     }
 
@@ -50,18 +56,23 @@ class UserBlacklistedManagerController extends Controller
             'duration' => ['nullable', 'date'],
         ]);
 
-        UserBlacklisted::create(array_merge($data, [
+        $blacklist = UserBlacklisted::create(array_merge($data, [
             'by_user_id' => auth()->user()->id,
             'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null,
         ]));
 
-        return back()->with('success', __('User #:id has been added to the blacklist.', ['id' => $data['user_id']]));
+        return send_message_if(
+            boolean: filled($blacklist),
+            message: __('User #:id has been added to the blacklist.', ['id' => $blacklist?->user_id]),
+            unlessMessage: __('Blacklist cannot be created'),
+            allowBack: true
+        );
     }
 
     public function edit(UserBlacklisted $blacklisted)
     {
         return inertia('Admin/Blacklisted/User/Edit', [
-            'data' => $blacklisted->load(['user']),
+            'blacklisted' => $blacklisted->load(['user']),
         ]);
     }
 
@@ -76,22 +87,21 @@ class UserBlacklistedManagerController extends Controller
             'duration' => filled($data['duration']) ? Carbon::parse($data['duration'])->endOfDay() : null,
         ]));
 
-        if (! $status) {
-            return back()->with('error', __('Blacklist #:id cannot be updated', ['id' => $blacklisted->id]))
-                ->withErrors('Error', 'globalError');
-        }
-
-        return back()->with('success', __('Updated blacklist #:id', ['id' => $blacklisted->id]));
+        return send_message_if(
+            boolean: $status,
+            message: __('Updated blacklist #:id', ['id' => $blacklisted->id]),
+            unlessMessage: __('Blacklist #:id cannot be updated', ['id' => $blacklisted->id]),
+            allowBack: true
+        );
     }
 
     public function destroy(UserBlacklisted $blacklisted)
     {
-        $status = $blacklisted->delete();
-
-        if (! $status) {
-            return back()->with('error', __('Blacklist #:id cannot be deleted', ['id' => $blacklisted->id]))->withErrors('Error', 'globalError');
-        }
-
-        return back()->with('success', __('Deleted blacklist #:id', ['id' => $blacklisted->id]));
+        return send_message_if(
+            boolean: $blacklisted->delete(),
+            message: __('Deleted blacklist #:id', ['id' => $blacklisted->id]),
+            unlessMessage: __('Blacklist #:id cannot be deleted', ['id' => $blacklisted->id]),
+            allowBack: true
+        );
     }
 }

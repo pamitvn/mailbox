@@ -64,6 +64,7 @@ class HandleInertiaRequests extends Middleware
                 ]),
             ]),
             'notification' => fn () => settings(group: 'notification'),
+            'TinyMCE' => fn () => config('web-config.TinyMCE'),
         ]);
     }
 }

@@ -1,27 +1,36 @@
 <template>
    <form @submit.prevent='() => onSubmitForm()'>
       <slot
-         v-for='(field, key) in props.modelValue?.fields'
-         :key='key'
-         :name='key'
-         :attrs='getAttrs(field, key)'
-         :events='getEvent(field, key)'
+         v-for='field in getFields'
+         :key='field.key'
+         :name='field.key'
+         :attrs='getAttrs(field, field.key)'
+         :events='getEvent(field, field.key)'
       >
-         <div class='mt-4 first:mt-0'>
-            <component
-               :is='getComponent(field)'
-               v-model='values[key]'
-               v-bind='getAttrs(field, key)'
-               @keydown.stop='getEvent(field, key).keydown'
-            ></component>
-         </div>
+         <transition
+            enter-active-class='transition ease-out duration-300 transform'
+            enter-from-class='opacity-0 -translate-y-2'
+            enter-to-class='opacity-100 translate-y-0'
+            leave-active-class='transition ease-out duration-300'
+            leave-from-class='opacity-100'
+            leave-to-class='opacity-0'
+         >
+            <div v-if='field.show' class='mt-4 first:mt-0'>
+               <component
+                  :is='getComponent(field)'
+                  v-model='values[field.key]'
+                  v-bind='getAttrs(field, field.key)'
+                  @keydown.stop='getEvent(field, field.key).keydown'
+               ></component>
+            </div>
+         </transition>
       </slot>
    </form>
 </template>
 
 <script setup lang='ts'>
    import _ from 'lodash';
-   import { onBeforeMount, reactive, watch, watchEffect } from 'vue';
+   import { computed, onBeforeMount, reactive, watch, watchEffect } from 'vue';
    import { useForm } from '@inertiajs/inertia-vue3';
 
    import type Form from '~/types/Components/Form';
@@ -40,6 +49,19 @@
 
    const values = reactive({});
    const form = useForm({});
+
+   const getFields = computed(() => {
+      const list = _.cloneDeep(props.modelValue?.fields);
+
+      return _.map(list, (ite, key) => {
+         ite.show = true;
+
+         if (ite.show_if && !values[ite.show_if]) ite.show = false;
+         if (ite.show_unless && values[ite.show_unless]) ite.show = false;
+
+         return { ...ite, key };
+      });
+   });
 
    const getAttrs = (field: DynamicForm.Field, key: string) => {
       return {
@@ -80,7 +102,16 @@
       _.forEach(_.keys(fields), handleSetValueFn);
    };
    const onSubmitForm = () => {
-      emit('submit', form.transform(() => _.cloneDeep(values)), _.cloneDeep(values));
+      emit('submit', form.transform(() => _.cloneDeep(values)), _.cloneDeep(values), resetForm);
+   };
+   const resetForm = () => {
+      const fields = props.modelValue?.fields;
+
+      _.forEach(_.keys(fields), key => {
+         const defaultValue = _.get(values, key as string);
+
+         values[key] = _.get(props.modelValue.defaultValues, key, defaultValue);
+      });
    };
 
    onBeforeMount(() => {

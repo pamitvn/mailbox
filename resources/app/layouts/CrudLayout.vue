@@ -16,7 +16,7 @@
             <form v-if='hasSearch' class='relative' @submit.prevent>
                <label for='action-search' class='sr-only'>Search</label>
                <input v-model='search'
-                      id='action-search' class='form-input pl-9 focus:border-slate-300' type='search'
+                      id='action-search' class='form-input pl-9 focus:border-slate-300 max-w-xs w-full' type='search'
                       placeholder='Search…' />
                <button class='absolute inset-0 right-auto group' type='submit' aria-label='Search'>
                   <svg class='w-4 h-4 shrink-0 fill-current text-slate-400 group-hover:text-slate-500 ml-3 mr-2'

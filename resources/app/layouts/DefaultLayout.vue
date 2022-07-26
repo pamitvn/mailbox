@@ -7,20 +7,18 @@
       <div class='relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden'>
          <the-header />
 
-         <main>
-            <div class='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-               <transition v-if='props.withTransition'
-                           name='fade' mode='out-in' appear
-               >
-                  <main :key='$page.url'>
-                     <slot />
-                  </main>
-               </transition>
-               <main v-else>
+
+         <div class='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
+            <transition v-if='props.withTransition' name='fade' mode='out-in' appear
+            >
+               <main :key='$page.url'>
                   <slot />
                </main>
-            </div>
-         </main>
+            </transition>
+            <main v-else>
+               <slot />
+            </main>
+         </div>
 
          <div class='flex justify-center items-center space-x-1 font-serif text-lg antialiased capitalize align-middle'>
             <span>Powered by</span>
@@ -41,3 +39,15 @@
 
 
 </script>
+
+<style>
+   .fade-enter-active,
+   .fade-leave-active {
+      transition: opacity 0.5s ease;
+   }
+
+   .fade-enter-from,
+   .fade-leave-to {
+      opacity: 0;
+   }
+</style>

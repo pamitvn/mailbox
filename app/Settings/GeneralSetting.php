@@ -25,7 +25,7 @@ class GeneralSetting extends Settings
         return [
             'site_name' => [
                 'rule' => ['required', 'string'],
-                'attribute' => [
+                'attrs' => [
                     'type' => 'text',
                     'label' => 'Site Name',
                 ],

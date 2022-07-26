@@ -89,6 +89,7 @@ class Service extends Model
                 'rule' => [Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
+                    'type' => 'text',
                     'label' => 'Parent Count Key',
                 ],
             ],
@@ -96,6 +97,7 @@ class Service extends Model
                 'rule' => [Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
+                    'type' => 'text',
                     'label' => 'Parent Type',
                 ],
             ],

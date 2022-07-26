@@ -169,7 +169,7 @@
       }
 
       &warning {
-         @apply border-yellow-400 hover:bg-yellow-600 text-yellow-500 hover:text-black;
+         @apply border-yellow-400 hover:bg-yellow-600 text-yellow-500 hover:text-white;
       }
 
       &info {

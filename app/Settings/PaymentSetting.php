@@ -33,7 +33,7 @@ class PaymentSetting extends Settings
             //            ],
             'web2m_acb' => [
                 'rule' => ['required', 'url'],
-                'attribute' => [
+                'attrs' => [
                     'label' => 'Web2m ACB endpoint',
                 ],
             ],

@@ -46,7 +46,7 @@ class ProductManagerController extends Controller
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
             'statusLabel' => ProductStatus::toLabelArray(),
             'service' => $service,
-            'paginationData' => paginate_with_params($records, $params),
+            'paginationData' => cursor_paginate_with_params($records, $params),
         ]);
     }
 
