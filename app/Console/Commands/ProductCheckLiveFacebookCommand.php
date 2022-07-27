@@ -42,6 +42,7 @@ class ProductCheckLiveFacebookCommand extends Command
 
         $products = Product::query()
             ->whereServiceId($serviceId)
+            ->whereIsLocal(true)
             ->whereStatus(ProductStatus::LIVE);
 
         $products->chunk(1000, function (Collection $chunkData) use ($checkEndpoint) {
