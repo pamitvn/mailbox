@@ -69,16 +69,18 @@ class Service extends Model
     public function inStockCount(): Attribute
     {
         return Attribute::get(function () {
-            if ($this->is_local) {
-                $products = $this->products()
-                    ->select(['id'])
-                    ->whereStatus(ProductStatus::LIVE)
-                    ->withoutBought();
-
-                return $products->count();
+            if (! $this->is_local) {
+                return 0;
             }
 
-            return ParentManager::getCount($this->extras?->get('parent_count_key'));
+//            return ParentManager::getCount($this->extras?->get('parent_count_key'));
+
+            $products = $this->products()
+                ->select(['id'])
+                ->whereStatus(ProductStatus::LIVE)
+                ->withoutBought();
+
+            return $products->count();
         });
     }
 

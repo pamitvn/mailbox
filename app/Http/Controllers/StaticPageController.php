@@ -17,8 +17,6 @@ class StaticPageController extends Controller
 
         search_by_cols($services, $search, [
             'name',
-            'slug',
-            'lifetime',
         ]);
 
         return inertia('Home', [
