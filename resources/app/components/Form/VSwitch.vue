@@ -28,16 +28,17 @@
 
 <script setup lang='ts'>
    import { ref, useAttrs, watch } from 'vue';
+   import { parseToBoolean } from '~/utils';
    import VInput from '~/components/Form/VInput.vue';
 
    const props = defineProps<{
-      modelValue?: boolean
+      modelValue?: boolean | string | number
       error?: string
    }>();
    const emit = defineEmits(['update:modelValue']);
    const attrs = useAttrs();
 
-   const input = ref(props.modelValue || false);
+   const input = ref(parseToBoolean(props.modelValue) || false);
    const inputRef = ref<HTMLInputElement | null>(null);
 
    const onLabel = {
@@ -46,6 +47,10 @@
 
    watch(input, (val) => {
       emit('update:modelValue', val);
+   });
+
+   watch(() => props.modelValue, (val) => {
+      input.value = parseToBoolean(val);
    });
 </script>
 

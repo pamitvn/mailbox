@@ -85,8 +85,23 @@ class Service extends Model
     public static function extraFields(): array
     {
         return [
+            'check_live_facebook' => [
+                'rule' => ['nullable'],
+                'is' => 'v-switch',
+                'attribute' => [
+                    'label' => 'Check live facebook',
+                ],
+            ],
+            'check_live_facebook_after' => [
+                'rule' => [Rule::requiredIf(fn () => (bool) request()->get('extras.check_live_facebook') === false), 'string'],
+                'show_if' => 'extras.check_live_facebook',
+                'attribute' => [
+                    'type' => 'number',
+                    'label' => 'Check live facebook per N minutes',
+                ],
+            ],
             'parent_count_key' => [
-                'rule' => [Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
+                'rule' => ['nullable', Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
                     'type' => 'text',
@@ -94,7 +109,7 @@ class Service extends Model
                 ],
             ],
             'parent_type' => [
-                'rule' => [Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
+                'rule' => ['nullable', Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
                     'type' => 'text',

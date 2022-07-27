@@ -162,6 +162,9 @@
    };
 
    watchEffect(() => {
-      _.forEach(getExtraFields.value, item => setField(`extras[${item.key}]`, item));
+      _.forEach(getExtraFields.value, item => setField(`extras.${item.key}`, {
+         ...item,
+         resolveKey: `extras[${item.key}]`,
+      }));
    });
 </script>

@@ -25,36 +25,21 @@
          <template #row-pop3='{value}'>
             <td class='table--col'>
                <div class='font-medium'>
-                  <span v-if='value'>
-                     <font-awesome-icon icon='fa-regular fa-circle-check' />
-                  </span>
-                  <span v-else>
-                     <font-awesome-icon icon='fa-regular fa-circle-xmark' />
-                  </span>
+                  <v-checked-or-fails :value='value' />
                </div>
             </td>
          </template>
          <template #row-imap='{value}'>
             <td class='table--col'>
                <div class='font-medium'>
-                  <span v-if='value'>
-                     <font-awesome-icon icon='fa-regular fa-circle-check' />
-                  </span>
-                  <span v-else>
-                     <font-awesome-icon icon='fa-regular fa-circle-xmark' />
-                  </span>
+                  <v-checked-or-fails :value='value' />
                </div>
             </td>
          </template>
          <template #row-visible='{value}'>
             <td class='table--col'>
                <div class='font-medium'>
-                  <span v-if='value'>
-                     <font-awesome-icon icon='fa-regular fa-circle-check' />
-                  </span>
-                  <span v-else>
-                     <font-awesome-icon icon='fa-regular fa-circle-xmark' />
-                  </span>
+                  <v-checked-or-fails :value='value' />
                </div>
             </td>
          </template>
@@ -132,6 +117,7 @@
    import CrudLayout from '~/layouts/CrudLayout.vue';
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
    import VButton from '~/components/VButton.vue';
+   import VCheckedOrFails from '~/components/VCheckedOrFails.vue';
 
    const props = defineProps<{
       paginationData: Utils.Pagination.Cursor<Models.Service>

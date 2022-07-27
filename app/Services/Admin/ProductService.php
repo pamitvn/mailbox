@@ -77,7 +77,7 @@ class ProductService
 
                         $products = Product::where(function ($q) use ($products) {
                             foreach ($products as $product) {
-                                $q->orWhere('mail', Arr::get($product, 'mail'));
+                                $q->orWhere('payload', Arr::get($product, 'payload'));
                             }
                         })->get(['id']);
                     }
@@ -114,13 +114,7 @@ class ProductService
         }
 
         $products = $data->map(function ($item) use ($service) {
-            $data = explode('|', $item);
-
-            $mail = Arr::get($data, '0');
-            $password = Arr::get($data, '1');
-            $recoveryEmail = Arr::get($data, '2');
-
-            if (blank($mail) || blank($password)) {
+            if (blank($item)) {
                 return null;
             }
 
@@ -128,9 +122,7 @@ class ProductService
 
             return [
                 'service_id' => $service->id,
-                'mail' => $mail,
-                'password' => $password,
-                'recovery_mail' => $recoveryEmail,
+                'payload' => $item,
                 'status' => ProductStatus::LIVE,
                 'updated_at' => $now,
                 'created_at' => $now,

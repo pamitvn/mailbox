@@ -92,3 +92,27 @@ export const defineLayoutFor = (layout, pages: any[], namespaces: string[] = [])
 };
 
 export const numberFormat = (value) => Intl.NumberFormat('vi-VN').format(value);
+
+export const parseToBoolean = (value: any): boolean => {
+    try {
+        if (_.isBoolean(value)) return value;
+
+        switch (String(value)) {
+            case 'true':
+            case 'yes':
+            case '1':
+                return true;
+
+            case 'false':
+            case 'no':
+            case '0':
+            case 'null':
+            case 'undefined':
+                return false;
+            default:
+                return JSON.parse(value);
+        }
+    } catch (e) {
+        return false;
+    }
+};

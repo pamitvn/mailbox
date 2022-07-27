@@ -51,7 +51,11 @@ class ExportProductAction extends Action
                 function ($rows) use ($handle) {
                     foreach ($rows as $row) {
                         foreach ($row?->products ?? [] as $product) {
-                            fputcsv($handle, array_filter([$product?->mail, $product?->password, $product?->recovery_mail]), '|');
+                            if (! $product?->payload) {
+                                continue;
+                            }
+
+                            fwrite($handle, $product?->payload);
                         }
                     }
                 }

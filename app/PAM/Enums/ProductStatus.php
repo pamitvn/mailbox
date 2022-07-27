@@ -19,8 +19,8 @@ enum ProductStatus: int
     public static function toBadgeHtmlArray(): array
     {
         return [
-            self::LIVE => '<span class="badge bg-success text-white rounded-pill">'.self::label(self::LIVE).'</span>',
-            self::DIE => '<span class="badge bg-danger text-white rounded-pill">'.self::label(self::DIE).'</span>',
+            self::LIVE => '<span class="text-xs inline-flex font-medium bg-emerald-100 text-emerald-600 rounded-full text-center px-2.5 py-1">'.self::label(self::LIVE).'</span>',
+            self::DIE => '<span class="text-xs inline-flex font-medium bg-rose-100 text-rose-600 rounded-full text-center px-2.5 py-1">'.self::label(self::DIE).'</span>',
         ];
     }
 

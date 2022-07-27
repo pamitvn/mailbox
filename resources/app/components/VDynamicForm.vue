@@ -37,6 +37,7 @@
 
    import VInput from '~/components/Form/VInput.vue';
    import DynamicForm = Form.DynamicForm;
+   import { parseToBoolean } from '~/utils';
 
    const props = defineProps<{
       modelValue: {
@@ -56,8 +57,8 @@
       return _.map(list, (ite, key) => {
          ite.show = true;
 
-         if (ite.show_if && !values[ite.show_if]) ite.show = false;
-         if (ite.show_unless && values[ite.show_unless]) ite.show = false;
+         if (ite.show_if && !parseToBoolean(values[ite.show_if])) ite.show = false;
+         if (ite.show_unless && parseToBoolean(values[ite.show_unless])) ite.show = false;
 
          return { ...ite, key };
       });
@@ -102,7 +103,19 @@
       _.forEach(_.keys(fields), handleSetValueFn);
    };
    const onSubmitForm = () => {
-      emit('submit', form.transform(() => _.cloneDeep(values)), _.cloneDeep(values), resetForm);
+      emit('submit',
+         form.transform(() => {
+            const payloads = {};
+
+            _.forEach(getFields.value, field => {
+               _.set(payloads, field?.resolveKey ?? field.key, _.get(values, field.key));
+            });
+
+            return payloads;
+         }),
+         _.cloneDeep(values),
+         resetForm,
+      );
    };
    const resetForm = () => {
       const fields = props.modelValue?.fields;

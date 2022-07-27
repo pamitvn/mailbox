@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::whenTableDoesntHaveColumn('services', 'clean_after', function (Blueprint $table) {
             $table->integer('clean_after')
+                ->nullable()
                 ->default(4)
                 ->comment('Auto Clean After N hours')
                 ->after('visible');

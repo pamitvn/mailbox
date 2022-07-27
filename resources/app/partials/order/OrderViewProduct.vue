@@ -58,7 +58,9 @@
          let output = '';
 
          _.forEach(responseData || [], (item: Models.Product) => {
-            output += `${item.mail}|${item.password}${item.recovery_mail ? `|${item.recovery_mail}` : ''}` + '\n';
+            if (!item.payload) return;
+
+            output += item.payload + '\n';
          });
 
          payload.value = output;

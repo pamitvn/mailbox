@@ -28,19 +28,19 @@ class ProductManagerController extends Controller
         $params = $request->except('service');
         $serviceId = $request->get('service');
         $search = $request->get('search');
+        $inStock = $request->boolean('in_stock');
 
         $service = Service::findOrFail($serviceId);
         $records = Product::query()
             ->whereServiceId($service->id)
-            ->orderBy('id', 'desc');
+            ->orderBy('id', 'desc')
+            ->when(fn () => $request->filled('in_stock'), fn ($q) => $q->{$inStock ? 'withoutBought' : 'bought'}());
 
         search_by_cols($records, $search, [
-            'mail',
-            'recovery_mail',
-            'password',
+            'payload',
         ]);
 
-        query_by_cols($records, ['id', 'email', 'status'], $params);
+        query_by_cols($records, ['id', 'status'], $params);
 
         return inertia('Admin/Product/Manager', [
             'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),

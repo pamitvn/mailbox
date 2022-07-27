@@ -30,7 +30,14 @@
          @selected-rows='onSelectedRows'
       >
          <template #row-status='{value}'>
-            <td v-html='statusHtmlLabel[value]'></td>
+            <td class='table--col'>
+               <div v-html='statusHtmlLabel[value]'></div>
+            </td>
+         </template>
+         <template #row-in_stock='{value}'>
+            <td class='table--col'>
+               <v-checked-or-fails :value='value' />
+            </td>
          </template>
          <template #row-action='{row}'>
             <td class='table--col'>
@@ -75,6 +82,7 @@
    import CrudLayout from '~/layouts/CrudLayout.vue';
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
    import VButton from '~/components/VButton.vue';
+   import VCheckedOrFails from '~/components/VCheckedOrFails.vue';
 
    const props = defineProps<{
       statusHtmlLabel: {
@@ -90,6 +98,11 @@
 
    const filterFields = reactive<Components.Table.FilterCard.Fields>([
       {
+         is: 'v-switch',
+         name: 'in_stock',
+         label: 'In Stock',
+      },
+      {
          name: 'status',
          label: 'Filter by status',
          placeholder: 'Status',
@@ -103,20 +116,17 @@
          label: '#',
       },
       {
-         path: 'mail',
-         label: 'Mail',
-      },
-      {
-         path: 'password',
-         label: 'Password',
-      },
-      {
-         path: 'recovery_mail',
-         label: 'Recovery Mail',
+         path: 'payload',
+         label: 'Payload',
+         display: (row, path, lodash) => lodash.truncate(lodash.get(row, path, '') as string),
       },
       {
          path: 'status',
          label: 'Status',
+      },
+      {
+         path: 'in_stock',
+         label: 'In Stock',
       },
       {
          path: 'created_at',

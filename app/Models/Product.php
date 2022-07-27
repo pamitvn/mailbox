@@ -7,6 +7,7 @@ use Bavix\Wallet\Interfaces\Customer;
 use Bavix\Wallet\Interfaces\ProductLimitedInterface;
 use Bavix\Wallet\Traits\HasWallet;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,9 +18,7 @@ class Product extends Model implements ProductLimitedInterface
 
     protected $fillable = [
         'service_id',
-        'mail',
-        'password',
-        'recovery_mail',
+        'payload',
         'status',
     ];
 
@@ -27,10 +26,18 @@ class Product extends Model implements ProductLimitedInterface
         'status' => 'integer',
     ];
 
-//    protected $with = [
-//        'service',
-//        'order'
-//    ];
+    protected $with = [
+        'service',
+        'order',
+    ];
+
+    protected $withCount = [
+        'order',
+    ];
+
+    protected $appends = [
+        'in_stock',
+    ];
 
     public function getAmountProduct(Customer $customer): int|string
     {
@@ -76,5 +83,10 @@ class Product extends Model implements ProductLimitedInterface
             ->whereNot(fn (Builder $builder) => $builder->whereHas('order'))
             ->inRandomOrder()
             ->take($quantity);
+    }
+
+    public function inStock(): Attribute
+    {
+        return Attribute::get(fn () => ! $this->order_count);
     }
 }

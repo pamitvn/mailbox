@@ -163,12 +163,15 @@
    };
 
    watchEffect(() => {
-      _.forEach(getExtraFields.value, item => setField(`extras[${item.key}]`, item));
+      _.forEach(getExtraFields.value, item => setField(`extras.${item.key}`, {
+         ...item,
+         resolveKey: `extras[${item.key}]`,
+      }));
    });
 
    watchEffect(() => {
       _.forEach(_.keys(props.service.extras), key => {
-         setDefaultValue(`extras[${key}]`, _.get(props.service.extras, key), true);
+         setDefaultValue(`extras.${key}`, _.get(props.service.extras, key), true);
       });
    });
 </script>
