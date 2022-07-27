@@ -135,7 +135,7 @@
       lifetime: null,
       feature_image: null,
       price: null,
-      clean_after: null,
+      clean_after: 0,
       pop3: false,
       imap: false,
       visible: false,

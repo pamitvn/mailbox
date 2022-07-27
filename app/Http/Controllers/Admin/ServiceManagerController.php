@@ -22,7 +22,7 @@ class ServiceManagerController extends Controller
         'imap' => ['nullable', 'boolean'],
         'visible' => ['nullable', 'boolean'],
         'is_local' => ['nullable', 'boolean'],
-        'clean_after' => ['nullable', 'integer'],
+        'clean_after' => ['required', 'integer'],
         'extras' => ['nullable', 'array'],
         'feature_image' => [
             'nullable',

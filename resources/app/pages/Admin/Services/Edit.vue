@@ -139,7 +139,7 @@
       lifetime: props.service?.lifetime || null,
       feature_image: null,
       price: props.service?.price || null,
-      clean_after: props.service?.clean_after || null,
+      clean_after: props.service?.clean_after || 0,
       pop3: props.service?.pop3 || false,
       imap: props.service?.imap || false,
       visible: props.service?.visible || false,
