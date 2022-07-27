@@ -6,6 +6,8 @@ use App\Models\Service as ServiceModel;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use TheSeer\Tokenizer\Exception;
 
 class Service
@@ -66,8 +68,11 @@ class Service
 
     public function deleteFeatureImage($path): void
     {
-        if (File::exists($path)) {
-            File::delete($path);
+        $path = Str::start($path, '/');
+        $path = "public/$path";
+
+        if (Storage::exists($path)) {
+            Storage::delete($path);
         }
     }
 }

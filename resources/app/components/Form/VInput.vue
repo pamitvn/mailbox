@@ -9,11 +9,10 @@
    </slot>
    <slot v-bind='{event: onInput, attrs, classname }'>
       <input
-         v-bind='attrs'
+         v-bind='getAttrs'
          ref='inputRef'
          :class='classname'
          :type='type'
-         :value='input'
          v-on='onInput'
       />
    </slot>
@@ -27,10 +26,11 @@
 <script setup lang='ts'>
    import { computed, ref, useAttrs, watch } from 'vue';
    import { Form } from '~/types/Components/Form';
+   import _ from 'lodash';
 
    interface Props {
       label?: string;
-      modelValue?: string | number;
+      modelValue?: any;
       helper?: string;
       error?: string;
       allowChange?: boolean;
@@ -54,9 +54,18 @@
    const emit = defineEmits(['update:modelValue', 'input']);
    const attrs = useAttrs();
 
-   const input = ref<string | number | boolean | null>(props.modelValue ?? '');
+   const input = ref<any>(props.modelValue ?? '');
    const inputRef = ref<HTMLElement | null>(null);
 
+   const getAttrs = computed(() => {
+      let attr = _.cloneDeep(attrs);
+
+      if (props.type !== 'file') {
+         attr.value = input.value;
+      }
+
+      return attr;
+   });
    const inputProp = computed(() => props.modelValue);
    const classname = computed(() => {
       return {
@@ -73,12 +82,20 @@
    };
    const onInput = {
       input: (e: InputEvent) => {
-         const inputElement: HTMLInputElement = e?.target as HTMLInputElement;
+         try {
+            const inputElement: HTMLInputElement = e?.target as HTMLInputElement || null;
 
-         input.value = inputElement?.value;
+            if (props.type === 'file') {
+               input.value = _.head(inputElement?.files) || null;
+            } else {
+               input.value = _.get(inputElement, 'value', null);
+            }
 
-         emit('update:modelValue', input.value);
-         emit('input', e);
+            emit('update:modelValue', input.value);
+            emit('input', e);
+         } catch (e) {
+
+         }
       },
    };
 

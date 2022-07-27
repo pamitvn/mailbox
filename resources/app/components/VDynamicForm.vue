@@ -16,12 +16,14 @@
             leave-to-class='opacity-0'
          >
             <div v-if='field.show' class='mt-4 first:mt-0'>
-               <component
-                  :is='getComponent(field)'
-                  v-model='values[field.key]'
-                  v-bind='getAttrs(field, field.key)'
-                  @keydown.stop='getEvent(field, field.key).keydown'
-               ></component>
+               <keep-alive>
+                  <component
+                     :is='getComponent(field)'
+                     v-model='values[field.key]'
+                     v-bind='getAttrs(field, field.key)'
+                     @keydown.stop='getEvent(field, field.key).keydown'
+                  ></component>
+               </keep-alive>
             </div>
          </transition>
       </slot>
