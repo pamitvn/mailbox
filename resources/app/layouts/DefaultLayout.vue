@@ -20,10 +20,10 @@
             </main>
          </div>
 
-         <div class='flex justify-center items-center space-x-1 font-serif text-lg antialiased capitalize align-middle'>
-            <span>Powered by</span>
-            <a href='https://phamminhan.ceo' class='underline decoration-pink-500 hover:text-red-600' target='_blank'>PAM</a>
-         </div>
+         <!--         <div class='flex justify-center items-center space-x-1 font-serif text-lg antialiased capitalize align-middle'>-->
+         <!--            <span>Powered by</span>-->
+         <!--            <a href='https://phamminhan.ceo' class='underline decoration-pink-500 hover:text-red-600' target='_blank'>PAM</a>-->
+         <!--         </div>-->
       </div>
    </div>
 </template>
