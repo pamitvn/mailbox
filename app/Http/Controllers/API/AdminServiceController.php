@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\PAM\Facades\ApiResponse;
 use App\Services\Admin\ProductService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class AdminServiceController extends Controller
@@ -38,10 +40,16 @@ class AdminServiceController extends Controller
             'payload' => ['required', 'string'],
         ]);
 
-        $product = $this->_service->save($data['service_id'], trim($data['payload']));
+        try {
+            $product = $this->_service->save($data['service_id'], trim($data['payload']));
 
-        return filled($product?->id)
-            ? ApiResponse::withSuccess()->withData($product->toArray())
-            : ApiResponse::withFailed()->withMessage('Failed');
+            return filled($product?->id)
+                ? ApiResponse::withSuccess()->withData($product->toArray())
+                : ApiResponse::withFailed()->withMessage('Failed');
+        } catch (Exception $exception) {
+            Log::error($exception);
+
+            return ApiResponse::withFailed()->withMessage('Failed');
+        }
     }
 }
