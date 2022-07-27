@@ -45,7 +45,6 @@ function useCreateUpdateSocket<T = object>(
     const handleUpdateEvent = (event) => {
         const index = _.findIndex(records.value, i => i.id === event.id);
 
-        console.log(event);
         if (!event.id || index === -1) return;
 
         _.set(records.value, index, options?.transFormUpdate ? options.transFormUpdate(records.value, event, index) : event);

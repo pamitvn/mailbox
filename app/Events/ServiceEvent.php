@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithBroadcasting;
@@ -35,6 +36,12 @@ class ServiceEvent implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
-        return Service::find($this->service->id)->toArray();
+        return array_merge(Service::find($this->service->id)->toArray(), [
+            'in_stock_count' => Product::query()
+                ->whereServiceId($this->service->id)
+                ->select(['id'])
+                ->withoutBought()
+                ->count(),
+        ]);
     }
 }
