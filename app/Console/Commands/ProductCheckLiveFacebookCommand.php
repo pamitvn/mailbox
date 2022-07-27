@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Models\Service;
 use App\PAM\Enums\ProductStatus;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
@@ -40,9 +41,18 @@ class ProductCheckLiveFacebookCommand extends Command
             return;
         }
 
+        $service = Service::whereIsLocal(true)
+            ->whereJsonContains('extras->check_live_facebook', '1')
+            ->find($serviceId);
+
+        if (! $service) {
+            $this->error('Check live is disabled');
+
+            return;
+        }
+
         $products = Product::query()
-            ->whereServiceId($serviceId)
-            ->whereIsLocal(true)
+            ->whereServiceId($service->id)
             ->whereStatus(ProductStatus::LIVE);
 
         $products->chunk(1000, function (Collection $chunkData) use ($checkEndpoint) {
@@ -82,5 +92,7 @@ class ProductCheckLiveFacebookCommand extends Command
                     ]);
             });
         });
+
+        $this->info('Completed');
     }
 }
