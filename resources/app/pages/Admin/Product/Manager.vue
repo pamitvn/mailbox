@@ -6,11 +6,9 @@
                 has-search
                 :filter-fields='filterFields'
    >
-      <!--      <template #header-action>-->
-      <!--         <v-button outline>-->
-      <!--            Import-->
-      <!--         </v-button>-->
-      <!--      </template>-->
+      <template #header-action>
+         <import-product-modal :service='service' />
+      </template>
       <template v-if='!!selected.length' #selected-action>
          <div class='flex items-center'>
             <div class='hidden md:block text-sm italic mr-2 whitespace-nowrap'><span>{{ selected.length }}</span> items
@@ -72,7 +70,7 @@
    import dateFormat from 'dateformat';
    import { Inertia } from '@inertiajs/inertia';
 
-   import { usePagination, usePaginationCUSocket, useTableCheckbox } from '~/uses';
+   import { useModal, usePagination, usePaginationCUSocket, useTableCheckbox } from '~/uses';
    import { useRoute } from '~/utils';
 
    import type { Utils } from '~/types/Utils';
@@ -83,6 +81,9 @@
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
    import VButton from '~/components/VButton.vue';
    import VCheckedOrFails from '~/components/VCheckedOrFails.vue';
+   import VModal from '~/components/VModal.vue';
+   import ImportProductModalContent from '~/partials/product/ImportProductModalContent.vue';
+   import ImportProductModal from '~/partials/product/ImportProductModal.vue';
 
    const props = defineProps<{
       statusHtmlLabel: {

@@ -45,6 +45,7 @@ function useCreateUpdateSocket<T = object>(
     const handleUpdateEvent = (event) => {
         const index = _.findIndex(records.value, i => i.id === event.id);
 
+        console.log(event);
         if (!event.id || index === -1) return;
 
         _.set(records.value, index, options?.transFormUpdate ? options.transFormUpdate(records.value, event, index) : event);
@@ -53,8 +54,8 @@ function useCreateUpdateSocket<T = object>(
     onMounted(() => {
         const echoChannel = Echo[privateChannel ? 'private' : 'channel'](channel);
 
-        event.create && echoChannel.listen(event.create, handleCreateEvent);
-        event.update && echoChannel.listen(event.update, handleUpdateEvent);
+        if (event.create) echoChannel.listen(event.create, handleCreateEvent);
+        if (event.update) echoChannel.listen(event.update, handleUpdateEvent);
 
         onUnmounted(() => {
             event.create && echoChannel.stopListening(event.create, handleCreateEvent);

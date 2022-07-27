@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminServiceController;
+use App\Http\Controllers\API\AdminServiceController;
 use App\Http\Controllers\API\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

@@ -18,13 +18,11 @@ use TheSeer\Tokenizer\Exception;
 
 class ProductService
 {
-    public function save($serviceId, $email, $password, $recoveryEmail = null)
+    public function save($serviceId, $payload)
     {
-        return DB::transaction(function () use ($serviceId, $email, $password, $recoveryEmail) {
+        return DB::transaction(function () use ($serviceId, $payload) {
             return Product::create([
-                'mail' => $email,
-                'password' => $password,
-                'recovery_mail' => $recoveryEmail,
+                'payload' => trim($payload),
                 'status' => ProductStatus::LIVE,
                 'service_id' => $serviceId,
             ]);

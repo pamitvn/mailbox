@@ -11,7 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,16 +48,12 @@ class ImportProductJob implements ShouldQueue
         }
 
         foreach ($payload as $data) {
-            $email = Arr::get($data, 'email');
-            $password = Arr::get($data, 'password');
-            $recoveryEmail = Arr::get($data, 'recovery_mail');
-
-            if (blank($email) || blank($password)) {
+            if (blank($data)) {
                 continue;
             }
 
             try {
-                $this->_productService->save($this->service->id, $email, $password, $recoveryEmail);
+                $this->_productService->save($this->service->id, $data);
             } catch (Exception $exception) {
                 Log::error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
             }
@@ -73,18 +68,8 @@ class ImportProductJob implements ShouldQueue
 
         $content = Storage::get($filePath);
         $content = collect(explode("\n", $content))
-            ->map(function ($val) {
-                $item = explode('|', $val);
-
-                return [
-                    'email' => Arr::get($item, 0),
-                    'password' => Arr::get($item, 1),
-                    'recovery_mail' => Arr::get($item, 2),
-                ];
-            })
-            ->filter(function ($item) {
-                return filled(Arr::get($item, 'email')) && filled(Arr::get($item, 'password'));
-            });
+            ->map(fn ($val) => trim($val))
+            ->filter(fn ($item) => filled($item));
 
         Storage::delete($filePath);
 

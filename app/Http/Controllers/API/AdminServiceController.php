@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Models\Product;
+use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\PAM\Facades\ApiResponse;
 use App\Services\Admin\ProductService;
@@ -35,12 +35,10 @@ class AdminServiceController extends Controller
     {
         $data = $request->validate([
             'service_id' => ['required', 'string', Rule::exists(table_name_of_model(Service::class), 'id')],
-            'mail' => ['required', 'email', Rule::unique(table_name_of_model(Product::class), 'mail')],
-            'password' => ['required'],
-            'recovery_mail' => ['nullable', 'email'],
+            'payload' => ['required', 'string'],
         ]);
 
-        $product = $this->_service->save($data['service_id'], $data['mail'], $data['password'], $data['recovery_mail']);
+        $product = $this->_service->save($data['service_id'], trim($data['payload']));
 
         return filled($product?->id)
             ? ApiResponse::withSuccess()->withData($product->toArray())

@@ -54,7 +54,7 @@ class PurchaseProcessingJob implements ShouldQueue
                 'service_id' => $this->service->id,
                 'user_id' => $this->user->id,
                 'price' => $this->service->price,
-            ], $products);
+            ], $products, $this->service->is_local);
             $this->sendMessage('success', __('Your purchase has been completed.'));
         } catch (BalanceIsEmpty|InsufficientFunds $exception) {
             $this->sendMessage('danger', $exception->getMessage());

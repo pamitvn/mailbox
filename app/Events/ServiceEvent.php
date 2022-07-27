@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Models\Service;
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -11,12 +12,14 @@ use Illuminate\Queue\SerializesModels;
 
 class ServiceEvent implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, InteractsWithBroadcasting, SerializesModels;
 
     private ?Service $service;
 
     public function __construct(Service|string|int $service)
     {
+        $this->broadcastVia('pusher');
+
         $this->service = ! $service instanceof Service ? Service::find($service) : $service;
     }
 
@@ -27,11 +30,11 @@ class ServiceEvent implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return 'stock';
+        return 'stocks';
     }
 
-    public function broadcastWith(): array
+    public function broadcastWith()
     {
-        return $this->service?->refresh()?->toArray() ?? [];
+        return Service::find($this->service->id)->toArray();
     }
 }

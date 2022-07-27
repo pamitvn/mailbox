@@ -39,7 +39,7 @@ class Service extends Model
     ];
 
     protected $appends = [
-        //        'in_stock_count'
+        'in_stock_count',
     ];
 
     /**
