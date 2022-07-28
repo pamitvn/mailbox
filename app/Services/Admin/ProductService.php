@@ -89,14 +89,14 @@ class ProductService
             );
     }
 
-    public function buyRandomProduct(ServiceModel $service, $quantity): array
+    public function buyRandomProduct(ServiceModel $service, $quantity)
     {
         return $service->products()
             ->randomQuantity($quantity)
             ->get();
     }
 
-    public function buyProductFromParent(ServiceModel $service, $quantity): array
+    public function buyProductFromParent(ServiceModel $service, $quantity)
     {
         $parentManager = ParentManager::withAuth();
 
