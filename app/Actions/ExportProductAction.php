@@ -32,7 +32,7 @@ class ExportProductAction extends Action
             ->whereIn('id', $data['includes']);
 
         if ($action === 'view') {
-            return $this->handleView($builder, $data['includes']);
+            return $this->handleView($builder);
         }
 
         return $this->handle($builder);
@@ -53,7 +53,7 @@ class ExportProductAction extends Action
                                 continue;
                             }
 
-                            fwrite($handle, $product?->payload);
+                            fwrite($handle, $product?->payload."\n");
                         }
                     }
                 }
