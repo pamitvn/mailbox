@@ -14,10 +14,6 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'mail' => $this->mail,
-            'password' => $this->password,
-            'recovery_mail' => $this->recovery_mail,
-        ];
+        return $this->payload;
     }
 }
