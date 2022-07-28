@@ -18,7 +18,7 @@ const usePagination = <DataType = object>(columns?: Table.Columns<DataType>) => 
     const query = reactive(qs.parse(url.searchParams.toString()));
 
     const search = ref<string>(query.search as string ?? '');
-    const perPage = ref<number | string>(query.perPage as number ?? 10);
+    const perPage = ref<number | string>(query.perPage as number ?? 15);
     const isTableChange = ref(false);
 
     if (!columns) {

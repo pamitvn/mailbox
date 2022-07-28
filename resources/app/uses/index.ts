@@ -8,3 +8,4 @@ export { default as useCreateUpdateSocket } from './useCreateUpdateSocket';
 export { default as usePaginationCUSocket } from './usePaginationCUSocket';
 export { default as useDynamicForm } from './useDynamicForm';
 export { default as useModal } from './useModal';
+export { default as useSelfPage } from './useSelfPage';

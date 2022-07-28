@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import { reactive, ref, watch, watchEffect } from 'vue';
+import { ref, watch } from 'vue';
+import type { Utils } from '~/types/Utils';
 import CreateUpdateSocket, { Event, Options } from '~/uses/useCreateUpdateSocket';
-import { Utils } from '~/types';
 
-interface CUSOptions<T> {
+interface CUSOptions<T = object> {
     channel: string,
     event: Event,
     options?: Options<T>

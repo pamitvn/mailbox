@@ -7,13 +7,16 @@ export interface Event {
     update?: string;
 }
 
-export interface Options<T> {
+export interface Options<T = object> {
     privateChannel?: boolean;
     transFormCreate?: TransFormType<T>;
     transFormUpdate?: TransFormType<T>;
+    resolveCreate?: ResolveType<T>;
+    resolveUpdate?: ResolveType<T>;
 }
 
-type TransFormType<T> = (list: T[], data: T, index: string | number) => T
+export type TransFormType<T> = (list: T[], data: T, index: string | number) => T
+export type ResolveType<T> = (list: T[], data: T) => T[]
 
 function useCreateUpdateSocket<T = object>(
     channel: string,
@@ -27,6 +30,12 @@ function useCreateUpdateSocket<T = object>(
         records.value = values;
     };
     const handleCreateEvent = (event) => {
+
+        if (options?.resolveCreate && _.isFunction(options?.resolveCreate)) {
+            records.value = options?.resolveCreate(records.value, event);
+            return;
+        }
+
         const currentQuery = new URL(location.href);
         const currentPage = Number((currentQuery.searchParams.get('page') || 1));
         const index = _.findIndex(records.value, i => i.id === event.id);
@@ -43,6 +52,11 @@ function useCreateUpdateSocket<T = object>(
         records.value = newArray;
     };
     const handleUpdateEvent = (event) => {
+        if (options?.resolveUpdate && _.isFunction(options?.resolveUpdate)) {
+            records.value = options?.resolveUpdate(records.value, event);
+            return;
+        }
+
         const index = _.findIndex(records.value, i => i.id === event.id);
 
         if (!event.id || index === -1) return;

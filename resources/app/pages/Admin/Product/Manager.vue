@@ -70,8 +70,8 @@
    import dateFormat from 'dateformat';
    import { Inertia } from '@inertiajs/inertia';
 
-   import { useModal, usePagination, usePaginationCUSocket, useTableCheckbox } from '~/uses';
-   import { useRoute } from '~/utils';
+   import { usePagination, usePaginationCUSocket, useSelfPage, useTableCheckbox } from '~/uses';
+   import { resolveCreateByPerPage, useRoute } from '~/utils';
 
    import type { Utils } from '~/types/Utils';
    import type { Models } from '~/types/Models';
@@ -81,8 +81,6 @@
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
    import VButton from '~/components/VButton.vue';
    import VCheckedOrFails from '~/components/VCheckedOrFails.vue';
-   import VModal from '~/components/VModal.vue';
-   import ImportProductModalContent from '~/partials/product/ImportProductModalContent.vue';
    import ImportProductModal from '~/partials/product/ImportProductModal.vue';
 
    const props = defineProps<{
@@ -111,6 +109,7 @@
       },
    ]);
 
+   const { query } = useSelfPage();
    const { search, perPage, columns } = usePagination([
       {
          path: 'id',
@@ -143,11 +142,21 @@
    const {
       paginationData,
       setPaginationData,
-   } = usePaginationCUSocket<Models.Product>(_.cloneDeep(props.paginationData), {
+   } = usePaginationCUSocket(_.cloneDeep(props.paginationData), {
       channel: `user.admin`,
       event: {
          create: `.service.${props.service.id}.product.create`,
          update: `.service.${props.service.id}.product.update`,
+      },
+      options: {
+         resolveCreate: (list, data) => {
+            const status = query.value?.status;
+            const search = query.value?.search;
+
+            if (search || (status && data['status'] !== parseInt(status))) return list;
+
+            return resolveCreateByPerPage(list, data);
+         },
       },
    });
 
