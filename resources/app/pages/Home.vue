@@ -21,78 +21,34 @@
                </div>
             </th>
          </template>
-         <!--         <template #custom-lifetime-header='{label}'>-->
-         <!--            <th class='table-col pl-6'>-->
-         <!--               <div class='font-semibold w-full inline-flex justify-center items-center space-x-2'>-->
-         <!--                  <span>-->
-         <!--                     <svg xmlns='http://www.w3.org/2000/svg'-->
-         <!--                          viewBox='0 0 24 24'-->
-         <!--                          class='w-4 h-4 fill-current shrink-0'>-->
-         <!--                        <g stroke-linecap='square' stroke-miterlimit='10'-->
-         <!--                           fill='none' stroke='currentColor' stroke-linejoin='miter'-->
-         <!--                           class='nc-icon-wrapper'>-->
-         <!--                           <line x1='1' y1='9' x2='23' y2='9'></line>-->
-         <!--                           <rect x='1' y='3' width='22' height='20' rx='2'></rect>-->
-         <!--                           <line x1='6' y1='1' x2='5.999' y2='5'></line>-->
-         <!--                           <line x1='18' y1='1' x2='17.999' y2='5'></line>-->
-         <!--                        </g>-->
-         <!--                     </svg>-->
-         <!--                  </span>-->
-         <!--                  <span>{{ label }}</span>-->
-         <!--               </div>-->
-         <!--            </th>-->
-         <!--         </template>-->
-         <!--         <template #custom-pop3-header='{label}'>-->
-         <!--            <th class='table-col pl-6'>-->
-         <!--               <div class='font-semibold w-full inline-flex justify-center items-center space-x-2'>-->
-         <!--                  <span>-->
-         <!--                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' class='w-4 h-4 fill-current shrink-0'>-->
-         <!--                        <g fill='currentColor' class='nc-icon-wrapper'>-->
-         <!--                           <path d='M11.631,36.841,1,26l3-3,8,5L35,4l3,2L14.65,36.653A2,2,0,0,1,11.631,36.841Z'-->
-         <!--                                 data-color='color-2'></path>-->
-         <!--                           <path d='M46,13H41a1,1,0,0,1,0-2h5a1,1,0,0,1,0,2Z'></path>-->
-         <!--                           <path d='M46,22H34a1,1,0,0,1,0-2H46a1,1,0,0,1,0,2Z'></path>-->
-         <!--                           <path d='M46,31H27a1,1,0,0,1,0-2H46a1,1,0,0,1,0,2Z'></path>-->
-         <!--                           <path d='M46,40H20a1,1,0,0,1,0-2H46a1,1,0,0,1,0,2Z'></path>-->
-         <!--                        </g>-->
-         <!--                     </svg>-->
-         <!--                  </span>-->
-         <!--                  <span>{{ label }}</span>-->
-         <!--               </div>-->
-         <!--            </th>-->
-         <!--         </template>-->
-         <!--         <template #custom-imap-header='{label}'>-->
-         <!--            <th class='table-col pl-6'>-->
-         <!--               <div class='font-semibold w-full inline-flex justify-center items-center space-x-2'>-->
-         <!--                  <span>-->
-         <!--                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' class='w-4 h-4 fill-current shrink-0'>-->
-         <!--                        <g fill='currentColor' class='nc-icon-wrapper'>-->
-         <!--                           <path d='M11.631,36.841,1,26l3-3,8,5L35,4l3,2L14.65,36.653A2,2,0,0,1,11.631,36.841Z'-->
-         <!--                                 data-color='color-2'></path>-->
-         <!--                           <path d='M46,13H41a1,1,0,0,1,0-2h5a1,1,0,0,1,0,2Z'></path>-->
-         <!--                           <path d='M46,22H34a1,1,0,0,1,0-2H46a1,1,0,0,1,0,2Z'></path>-->
-         <!--                           <path d='M46,31H27a1,1,0,0,1,0-2H46a1,1,0,0,1,0,2Z'></path>-->
-         <!--                           <path d='M46,40H20a1,1,0,0,1,0-2H46a1,1,0,0,1,0,2Z'></path>-->
-         <!--                        </g>-->
-         <!--                     </svg>-->
-         <!--                  </span>-->
-         <!--                  <span>{{ label }}</span>-->
-         <!--               </div>-->
-         <!--            </th>-->
-         <!--         </template>-->
          <template #row-service='{row}'>
-            <td class='table--col text-left' style='min-width: 20%'>
-               <div class='flex space-x-2 justify-center align-items-center'>
-                  <div class='shrink'>
-                     <img v-if='row.feature_image' class='rounded-full'
-                          :src='`/storage/${row.feature_image}`'
-                          :alt='row.name'
-                          width='32'
-                          height='32'
-                     >
-                  </div>
-                  <div class='grow ms-2'>
-                     <span class='text-dark'><b>{{ row.name }}</b></span>
+            <td class='table--col text-left' style='min-width: 20%'
+                @click.prevent='() => {if(isMobile) showTableDescription[row?.id] = !(showTableDescription[row?.id] || false)}'>
+               <div :class='isMobile && "inline-flex items-center"'>
+                  <button
+                     v-if='isMobile'
+                     class='text-slate-400 hover:text-slate-500 transform'
+                     :class="showTableDescription[row?.id] && 'rotate-180'"
+                     :aria-expanded='showTableDescription[row?.id]'
+                     :aria-controls='`description-${row.id}`'
+                  >
+                     <span class='sr-only'>Menu</span>
+                     <svg class='w-8 h-8 fill-current' viewBox='0 0 32 32'>
+                        <path d='M16 20l-5.4-5.4 1.4-1.4 4 4 4-4 1.4 1.4z' />
+                     </svg>
+                  </button>
+                  <div class='flex space-x-2 justify-center align-items-center'>
+                     <div class='shrink'>
+                        <img v-if='row.feature_image' class='rounded-full'
+                             :src='`/storage/${row.feature_image}`'
+                             :alt='row.name'
+                             width='32'
+                             height='32'
+                        >
+                     </div>
+                     <div class='grow ms-2'>
+                        <span class='text-dark'><b>{{ isMobile ? _.truncate(row.name, { length: 13 }) : row.name }}</b></span>
+                     </div>
                   </div>
                </div>
             </td>
@@ -100,24 +56,14 @@
          <template #row-pop3='{value}'>
             <td class='table--col'>
                <div class='font-medium'>
-                  <span v-if='value'>
-                     <font-awesome-icon icon='fa-regular fa-circle-check' />
-                  </span>
-                  <span v-else>
-                     <font-awesome-icon icon='fa-regular fa-circle-xmark' />
-                  </span>
+                  <v-checked-or-fails :value='value' />
                </div>
             </td>
          </template>
          <template #row-imap='{value}'>
             <td class='table--col'>
                <div class='font-medium'>
-                  <span v-if='value'>
-                     <font-awesome-icon icon='fa-regular fa-circle-check' />
-                  </span>
-                  <span v-else>
-                     <font-awesome-icon icon='fa-regular fa-circle-xmark' />
-                  </span>
+                  <v-checked-or-fails :value='value' />
                </div>
             </td>
          </template>
@@ -137,16 +83,40 @@
          </template>
          <template #row-actions='{row}'>
             <td class='table--col' style='width: 10%'>
-               <v-button variant='danger'
-                         size='xs'
-                         icon outline just-mobile-icon
-                         @click='() => onClickBuy(row)'>
-                  <template #icon>
-                     <font-awesome-icon class='w-full h-full' icon='fa-solid fa-cart-shopping' />
-                  </template>
-                  Buy
-               </v-button>
+               <div>
+                  <v-button variant='danger'
+                            size='xs'
+                            icon outline just-mobile-icon
+                            @click='() => onClickBuy(row)'>
+                     <template #icon>
+                        <font-awesome-icon class='w-full h-full' icon='fa-solid fa-cart-shopping' />
+                     </template>
+                     Buy
+                  </v-button>
+               </div>
             </td>
+         </template>
+
+         <template v-if='isMobile' #after-row='{row}'>
+            <tr role='region' :class='!showTableDescription[row?.id] && "hidden"'>
+               <td colspan='10' class='px-2 first:pl-5 last:pr-5 py-3'>
+                  <div class='flex items-center bg-slate-50 p-3 -mt-3'>
+                     <div class='flex space-x-2 justify-center align-items-center'>
+                        <div class='shrink'>
+                           <img v-if='row.feature_image' class='rounded-full'
+                                :src='`/storage/${row.feature_image}`'
+                                :alt='row.name'
+                                width='32'
+                                height='32'
+                           >
+                        </div>
+                        <div class='grow ms-2'>
+                           <span class='text-dark'><b>{{ row.name }}</b></span>
+                        </div>
+                     </div>
+                  </div>
+               </td>
+            </tr>
          </template>
       </v-crud-table>
    </crud-layout>
@@ -156,9 +126,9 @@
 
 <script setup lang='ts'>
    import _ from 'lodash';
-   import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
+   import { onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
 
-   import { useCreateUpdateSocket, useModal, usePagination } from '~/uses';
+   import { useCreateUpdateSocket, useMobile, useModal, usePagination } from '~/uses';
    import { Echo, numberFormat } from '~/utils';
 
    import type { Models } from '~/types/Models';
@@ -168,12 +138,14 @@
    import BuyProductModal from '~/partials/home/BuyProductModal.vue';
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
    import VButton from '~/components/VButton.vue';
+   import VCheckedOrFails from '~/components/VCheckedOrFails.vue';
 
    const props = defineProps<{
       services: Models.Service[]
    }>();
 
    const service = ref<Models.Service | null>(null);
+   const showTableDescription = reactive({});
 
    const { columns } = usePagination<Models.Service>([
       {
@@ -211,6 +183,7 @@
    const { records, setRecords } = useCreateUpdateSocket('service', { update: '.stocks' }, {
       privateChannel: false,
    });
+   const { isMobile } = useMobile();
 
    const onClickBuy = (item: Models.Service) => {
       service.value = item;

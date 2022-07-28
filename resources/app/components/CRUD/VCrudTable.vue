@@ -30,33 +30,42 @@
                <tbody class='text-sm divide-y divide-slate-200'>
                <template v-if='getTableData.length'>
                   <slot name='rows' :data='data'>
-                     <tr v-for='(row, index) in getTableData' :key='index'>
-                        <td v-if='hasCheckbox' class='px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px'>
-                           <div class='flex items-center'>
-                              <label class='inline-flex'>
-                                 <span class='sr-only'>Select</span>
-                                 <input
-                                    class='form-checkbox'
-                                    type='checkbox'
-                                    :checked='selected[getCheckboxField(row)]'
-                                    @input='(val) => onSelected(row, val)' />
-                              </label>
-                           </div>
-                        </td>
-                        <slot v-for='(col, i) in getColumns'
-                              :key='i'
-                              :name='`row-${col.path}`'
-                              :column='col'
-                              :row='row'
-                              :value='getRowDisplay(row, col)'
-                        >
-                           <td class='table--col'>
-                              <div class='font-medium'>
-                                 {{ getRowDisplay(row, col) }}
+                     <template v-for='(row, index) in getTableData' :key='index'>
+                        <slot name='before-row' v-bind='{row}'></slot>
+                        <tr>
+                           <td v-if='hasCheckbox' class='px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px'>
+                              <div class='flex items-center'>
+                                 <label class='inline-flex'>
+                                    <span class='sr-only'>Select</span>
+                                    <input
+                                       class='form-checkbox'
+                                       type='checkbox'
+                                       :checked='selected[getCheckboxField(row)]'
+                                       @input='(val) => onSelected(row, val)' />
+                                 </label>
                               </div>
                            </td>
-                        </slot>
-                     </tr>
+                           <template v-for='(col, i) in getColumns' :key='i'>
+                              <slot :name='`before-row-${col.path}`'
+                                    v-bind='{column: col, row, value: getRowDisplay(row, col)}'
+                              />
+                              <slot
+                                 :name='`row-${col.path}`'
+                                 v-bind='{column: col, row, value: getRowDisplay(row, col)}'
+                              >
+                                 <td class='table--col'>
+                                    <div class='font-medium'>
+                                       {{ getRowDisplay(row, col) }}
+                                    </div>
+                                 </td>
+                              </slot>
+                              <slot :name='`after-row-${col.path}`'
+                                    v-bind='{column: col, row, value: getRowDisplay(row, col)}'
+                              />
+                           </template>
+                        </tr>
+                        <slot name='after-row' v-bind='{row}'></slot>
+                     </template>
                   </slot>
                </template>
                <template v-else>
