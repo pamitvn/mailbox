@@ -20,13 +20,11 @@ class ProductService
 {
     public function save($serviceId, $payload)
     {
-        return DB::transaction(function () use ($serviceId, $payload) {
-            return Product::create([
-                'payload' => trim($payload),
-                'status' => ProductStatus::LIVE,
-                'service_id' => $serviceId,
-            ]);
-        });
+        return DB::transaction(fn () => Product::create([
+            'payload' => $payload,
+            'status' => ProductStatus::LIVE,
+            'service_id' => $serviceId,
+        ]));
     }
 
     public function delete(Product $model)
@@ -62,8 +60,10 @@ class ProductService
         return app(DatabaseServiceInterface::class)
             ->transaction(
                 static function () use ($user, $orderAttrs, $products, $isLocal) {
-                    $orderAttrs['price'] = $orderAttrs['price'] * $products->count();
-                    $orderAttrs['quantity'] = $products->count();
+                    $count = $products->count();
+
+                    $orderAttrs['price'] = $orderAttrs['price'] * $count;
+                    $orderAttrs['quantity'] = $count;
 
                     $order = Order::create($orderAttrs);
 

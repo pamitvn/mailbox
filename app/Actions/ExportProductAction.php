@@ -3,7 +3,9 @@
 namespace App\Actions;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Action;
 use Lorisleiva\Actions\ActionRequest;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -27,14 +29,10 @@ class ExportProductAction extends Action
                 'id',
             ])
             ->with('products')
-            ->where(function ($query) use ($data) {
-                foreach ($data['includes'] as $id) {
-                    $query->orWhere('id', $id);
-                }
-            });
+            ->whereIn('id', $data['includes']);
 
         if ($action === 'view') {
-            return $this->handleView($builder);
+            return $this->handleView($builder, $data['includes']);
         }
 
         return $this->handle($builder);
@@ -73,7 +71,11 @@ class ExportProductAction extends Action
         $data = [];
 
         foreach ($builder->get() as $item) {
-            $data = array_merge($data, $item->products->toArray());
+            $data = Cache::remember(
+                sprintf('export.order.%s', $item->id),
+                Carbon::parse($item->created_at)->addHours(24)->timestamp,
+                fn () => array_merge($data, $item->products->toArray())
+            );
         }
 
         return $data;
