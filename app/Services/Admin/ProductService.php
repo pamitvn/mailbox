@@ -80,9 +80,9 @@ class ProductService
                         })->get(['id']);
                     }
 
-                    $productIds = $products->pluck('id');
+//                    $productIds = $products->pluck('id');
 
-                    $order->products()->sync($productIds);
+                    $order->products()->sync($products);
 
                     return $order;
                 }
