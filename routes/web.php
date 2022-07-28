@@ -144,6 +144,14 @@ Route::group([
             ]);
 
             Route::get('statistics', Admin\StatisticController::class)->name('statistics');
+
+            /**
+             * Manager Orders
+             */
+            Route::resource('orders', Admin\OrderManagerController::class, [
+                'names' => 'order',
+                'only' => ['index', 'destroy'],
+            ]);
         });
     });
 });

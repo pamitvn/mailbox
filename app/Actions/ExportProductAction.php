@@ -31,6 +31,10 @@ class ExportProductAction extends Action
             ->with('products')
             ->whereIn('id', $data['includes']);
 
+        if (! $request->user()?->is_admin) {
+            $builder = $builder->whereUserId($request->user()->id);
+        }
+
         if ($action === 'view') {
             return $this->handleView($builder);
         }

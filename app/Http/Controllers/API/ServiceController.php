@@ -9,8 +9,10 @@ use App\PAM\Facades\ApiResponse;
 use App\Services\Admin\ProductService;
 use Bavix\Wallet\Exceptions\BalanceIsEmpty;
 use Bavix\Wallet\Exceptions\InsufficientFunds;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class ServiceController extends Controller
@@ -72,13 +74,17 @@ class ServiceController extends Controller
                 'service_id' => $service->id,
                 'user_id' => $user->id,
                 'price' => $service->price,
-            ], collect($products));
+            ], collect($products), $service->is_local);
 
             return ApiResponse::withSuccess()
                 ->withData(new OrderProductResource($order))
                 ->withMessage(__('Your purchase has been completed.'));
         } catch (BalanceIsEmpty|InsufficientFunds $exception) {
             return ApiResponse::withFailed()->withMessage($exception->getMessage());
+        } catch (Exception $exception) {
+            Log::error($exception);
+
+            return ApiResponse::withFailed()->withMessage('Server error');
         }
     }
 }

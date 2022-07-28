@@ -63,7 +63,7 @@ if (! function_exists('search_relation_by_cols')) {
         }
 
         foreach ($relations as $relation => $cols) {
-            $query = $query->where(function (Builder $query) use ($relation, $value, $cols) {
+            $query = $query->orWhere(function (Builder $query) use ($relation, $value, $cols) {
                 foreach ($cols as $col) {
                     $query->orWhereRelation($relation, $col, 'like', '%'.$value.'%');
                 }
