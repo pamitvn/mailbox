@@ -48,8 +48,6 @@ class PurchaseProcessingJob implements ShouldQueue
         }
 
         try {
-            $products = collect($products);
-
             $this->_productService->createOrderAndBuy($this->user, [
                 'service_id' => $this->service->id,
                 'user_id' => $this->user->id,

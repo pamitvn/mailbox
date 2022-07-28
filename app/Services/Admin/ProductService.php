@@ -71,7 +71,7 @@ class ProductService
                     $user->withdraw($amount);
 
                     if (! $isLocal) {
-                        $order->products()->insert($products->toArray());
+                        $order->products()->insert(array_filter($products->toArray()));
 
                         $products = Product::where(function ($q) use ($products) {
                             foreach ($products as $product) {
@@ -80,9 +80,9 @@ class ProductService
                         })->get(['id']);
                     }
 
-//                    $productIds = $products->pluck('id');
+                    $productIds = $products->pluck('id');
 
-                    $order->products()->sync($products);
+                    $order->products()->sync($productIds);
 
                     return $order;
                 }
@@ -91,42 +91,33 @@ class ProductService
 
     public function buyRandomProduct(ServiceModel $service, $quantity): array
     {
-        $products = $service->products()
+        return $service->products()
             ->randomQuantity($quantity)
             ->get();
-
-        return $products->toArray();
     }
 
     public function buyProductFromParent(ServiceModel $service, $quantity): array
     {
         $parentManager = ParentManager::withAuth();
-        $data = $parentManager
+
+        return $parentManager
             ->withType($service->extras?->get('parent_type'))
             ->withQuantity($quantity)
-            ->getMail();
-        $products = [];
+            ->getMail()
+            ->map(function ($item) use ($service) {
+                if (blank($item)) {
+                    return null;
+                }
 
-        if (! $data->count()) {
-            return $products;
-        }
+                $now = now()->toDateTimeString();
 
-        $products = $data->map(function ($item) use ($service) {
-            if (blank($item)) {
-                return null;
-            }
-
-            $now = now()->toDateTimeString();
-
-            return [
-                'service_id' => $service->id,
-                'payload' => $item,
-                'status' => ProductStatus::LIVE,
-                'updated_at' => $now,
-                'created_at' => $now,
-            ];
-        })->filter(fn ($item) => filled($item));
-
-        return $products->toArray();
+                return [
+                    'service_id' => $service->id,
+                    'payload' => $item,
+                    'status' => ProductStatus::LIVE,
+                    'updated_at' => $now,
+                    'created_at' => $now,
+                ];
+            });
     }
 }
