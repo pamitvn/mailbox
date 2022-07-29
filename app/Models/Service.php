@@ -39,7 +39,7 @@ class Service extends Model
     ];
 
     protected $appends = [
-//        'in_stock_count',
+        //        'in_stock_count',
     ];
 
     /**
@@ -69,7 +69,7 @@ class Service extends Model
     public function inStockCount(): Attribute
     {
         return Attribute::get(function () {
-            if (!$this->is_local) {
+            if (! $this->is_local) {
                 return 0;
             }
 
@@ -95,7 +95,7 @@ class Service extends Model
                 ],
             ],
             'check_live_facebook_after' => [
-                'rule' => [Rule::requiredIf(fn() => (bool)request()->get('extras.check_live_facebook') === false), 'string'],
+                'rule' => [Rule::requiredIf(fn () => (bool) request()->get('extras.check_live_facebook') === false), 'string'],
                 'show_if' => 'extras.check_live_facebook',
                 'attribute' => [
                     'type' => 'number',
@@ -103,7 +103,7 @@ class Service extends Model
                 ],
             ],
             'parent_count_key' => [
-                'rule' => ['nullable', Rule::requiredIf(fn() => (bool)request()->get('is_local') === false), 'string'],
+                'rule' => ['nullable', Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
                     'type' => 'text',
@@ -111,7 +111,7 @@ class Service extends Model
                 ],
             ],
             'parent_type' => [
-                'rule' => ['nullable', Rule::requiredIf(fn() => (bool)request()->get('is_local') === false), 'string'],
+                'rule' => ['nullable', Rule::requiredIf(fn () => (bool) request()->get('is_local') === false), 'string'],
                 'show_unless' => 'is_local',
                 'attribute' => [
                     'type' => 'text',
