@@ -44,6 +44,17 @@ class StaticPageController extends Controller
 //        $product = Product::first();
 //        Order::query()->forceDelete();
 //        Product::query()->forceDelete();
+
+//        $duplicated = \DB::table('products')
+//            ->select('payload', \DB::raw('count(`payload`) as occurences'))
+//            ->groupBy('payload')
+//            ->having('occurences', '>', 1)
+//            ->pluck('payload');
+//
+//        Product::query()
+//            ->whereIn('payload', $duplicated)
+//            ->forceDelete();
+
         dd(Order::count(), Product::count());
     }
 }

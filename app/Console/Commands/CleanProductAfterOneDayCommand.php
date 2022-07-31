@@ -13,7 +13,9 @@ class CleanProductAfterOneDayCommand extends Command
 
     public function handle()
     {
-        $products = Product::query()->whereDate('created_at', '<=', now()->subHours(24)->toDateTimeString());
+        $products = Product::query()
+            ->bought()
+            ->whereDate('created_at', '<=', now()->subHours(24)->toDateTimeString());
 
         $products->forceDelete();
     }
