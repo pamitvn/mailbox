@@ -27,6 +27,11 @@ class ProductService
         ]));
     }
 
+    public function bulkSave($values)
+    {
+        return DB::transaction(fn () => Product::insertOrIgnore($values));
+    }
+
     public function delete(Product $model)
     {
         try {
@@ -71,7 +76,7 @@ class ProductService
                     $user->withdraw($amount);
 
                     if (! $isLocal) {
-                        $order->products()->insert(array_filter($products->toArray()));
+                        $order->products()->insertOrIgnore($products->filter()->toArray());
 
                         $products = Product::where(function ($q) use ($products) {
                             foreach ($products as $product) {

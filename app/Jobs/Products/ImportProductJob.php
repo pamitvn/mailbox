@@ -4,6 +4,7 @@ namespace App\Jobs\Products;
 
 use App\Models\Service;
 use App\Models\User;
+use App\PAM\Enums\ProductStatus;
 use App\Services\Admin\ProductService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -11,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,27 +45,34 @@ class ImportProductJob implements ShouldQueue
         $this->sendMessage('info', __('Begin processing import merchandise'));
         $payload = $this->payload;
 
-        if (is_string($this->payload)) {
-            $payload = $this->getFilePayload($payload);
-        }
+        $payload = is_string($this->payload)
+            ? $this->getFilePayload($payload)
+            : collect($this->payload)->filter();
 
-        foreach ($payload as $data) {
-            if (blank($data)) {
-                continue;
-            }
+        try {
+            $values = $payload
+                ->map(fn ($item) => filled($item) ? [
+                    'payload' => $item,
+                    'status' => ProductStatus::LIVE,
+                    'service_id' => $this->service->id,
+                ] : null);
 
-            try {
-                $this->_productService->save($this->service->id, $data);
-            } catch (Exception $exception) {
-                Log::error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
-            }
+            Log::info(sprintf('Product::Import::%s count %s', $this->service->id, $values->count()));
+
+            $this->_productService->bulkSave($values->toArray());
+
+            $this->sendMessage('success', __('Import finished product'));
+        } catch (Exception $exception) {
+            Log::error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
+
+            $this->sendMessage('danger', __('An error occurred while importing the product'));
         }
     }
 
-    private function getFilePayload($filePath): array
+    private function getFilePayload($filePath): Collection
     {
         if (! Storage::exists($filePath)) {
-            return [];
+            return collect();
         }
 
         $content = Storage::get($filePath);
@@ -73,7 +82,7 @@ class ImportProductJob implements ShouldQueue
 
         Storage::delete($filePath);
 
-        return array_unique($content->toArray(), SORT_REGULAR);
+        return $content->unique();
     }
 
     private function sendMessage($type, $message)
