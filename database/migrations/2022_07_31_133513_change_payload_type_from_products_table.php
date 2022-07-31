@@ -8,6 +8,12 @@ return new class extends Migration
 {
     public function up()
     {
+        Schema::whenTableDoesntHaveColumn('products', 'payload', function (Blueprint $table) {
+            $table->char('payload')
+                ->unique()
+                ->nullable(false)
+                ->after('service_id');
+        });
         Schema::whenTableHasColumn('products', 'payload', function (Blueprint $table) {
             $table->char('payload')
                 ->unique()
