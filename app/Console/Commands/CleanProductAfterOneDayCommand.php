@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\PAM\Enums\ProductStatus;
 use Illuminate\Console\Command;
 
 class CleanProductAfterOneDayCommand extends Command
@@ -13,9 +14,13 @@ class CleanProductAfterOneDayCommand extends Command
 
     public function handle()
     {
-        $products = Product::query()
+        Product::query()
             ->bought()
             ->whereDate('created_at', '<=', now()->subHours(24)->toDateTimeString())
+            ->forceDelete();
+
+        Product::query()
+            ->where('status', ProductStatus::DIE)
             ->forceDelete();
     }
 }
