@@ -26,6 +26,7 @@
                <v-input :model-value='getBankInfo?.accountId'
                         type='text'
                         label='Account ID'
+                        class='text-gray-900'
                         required
                         disabled
                />
@@ -35,6 +36,7 @@
                <v-input :model-value='getBankInfo?.accountName'
                         type='text'
                         label='Account Name'
+                        class='text-gray-900'
                         required
                         disabled
                />
@@ -43,6 +45,7 @@
                <v-input :model-value='props.transferContent'
                         type='text'
                         label='Content'
+                        class='text-gray-900'
                         required
                         disabled
                />
