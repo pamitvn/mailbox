@@ -29,6 +29,7 @@ class StatisticServiceImportProductPerHour extends BaseChart
             '15', '16', '17', '18', '19',
             '20', '21', '22', '23',
         ];
+        $initial = collect($hours)->map(fn () => 0);
         $service = Service::query()
             ->local()
             ->get();
@@ -43,7 +44,9 @@ class StatisticServiceImportProductPerHour extends BaseChart
                 ->map(fn ($subGroup) => $subGroup->count())
             );
 
-        $values = [];
+        $values = $service
+            ->keyBy('name')
+            ->map(fn () => $initial);
 
         foreach ($products as $id => $product) {
             $name = $service->first(fn ($ite) => $ite->id === (int) $id)->name;
