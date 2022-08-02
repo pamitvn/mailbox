@@ -14,13 +14,17 @@ class RechargeController extends Controller
         $params = $request->except('search');
         $search = $request->get('search');
 
-        $histories = RechargeHistory::query()
+        $records = RechargeHistory::query()
             ->with('bank')
             ->whereUserId(auth()->id())
             ->orderByDesc('id');
 
-        search_by_cols($histories, $search, [
+        search_by_cols($records, $search, [
             'note',
+        ]);
+
+        search_relation_by_cols($records, $search, [
+            'bank' => ['name'],
         ]);
 
         return inertia('RechargeManager', [
@@ -28,7 +32,7 @@ class RechargeController extends Controller
                 'hostname' => request()->getHttpHost(),
             ])),
             'banks' => Bank::get(),
-            'paginationData' => cursor_paginate_with_params($histories, $params),
+            'paginationData' => cursor_paginate_with_params($records, $params),
         ]);
     }
 }
