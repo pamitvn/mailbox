@@ -13,7 +13,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ImportProductJob implements ShouldQueue
@@ -59,7 +58,7 @@ class ImportProductJob implements ShouldQueue
                     'created_at' => $now,
                 ] : null);
 
-            Log::info(sprintf('Product::Import::%s count %s', $this->service->id, $values->count()));
+            pam_system_log()->info(sprintf('Product::Import::%s count %s', $this->service->id, $values->count()));
 
             foreach ($values->chunk(1000) as $item) {
                 $this->_productService->bulkSave($item->toArray());
@@ -67,7 +66,7 @@ class ImportProductJob implements ShouldQueue
 
             $this->sendMessage('success', __('Import finished product'));
         } catch (Exception $exception) {
-            Log::error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
+            pam_system_log()->error(sprintf('Product::Import::%s %s', $this->service->id, $exception->getMessage()));
 
             $this->sendMessage('danger', __('An error occurred while importing the product'));
         }

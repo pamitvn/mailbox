@@ -9,7 +9,6 @@ use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 
 class ProductCheckLiveFacebookCommand extends Command
 {
@@ -33,7 +32,7 @@ class ProductCheckLiveFacebookCommand extends Command
         $serviceId = $this->argument('serviceId');
         $checkEndpoint = config('services.facebook.check_live');
 
-        Log::info(sprintf('Service::%s Starting check live facebook', $serviceId));
+        pam_system_log()->info(sprintf('Service::%s Starting check live facebook', $serviceId));
 
         if (blank($checkEndpoint)) {
             $this->error('Missing facebook check live endpoint');

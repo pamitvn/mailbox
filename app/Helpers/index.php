@@ -7,6 +7,7 @@ use Carbon\CarbonPeriod;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Psr\Log\LoggerInterface;
 
 if (! function_exists('table_name_of_model')) {
     function table_name_of_model(string $model)
@@ -108,6 +109,13 @@ if (! function_exists('group_date_chart_by_day')) {
         }
 
         return $values;
+    }
+}
+
+if (! function_exists('pam_system_log')) {
+    function pam_system_log($channel = 'pam-system'): LoggerInterface
+    {
+        return \Illuminate\Support\Facades\Log::channel($channel);
     }
 }
 

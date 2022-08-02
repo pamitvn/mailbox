@@ -11,7 +11,6 @@ use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Log;
 
 class CheckACBRechargeCommand extends Command
 {
@@ -92,12 +91,12 @@ class CheckACBRechargeCommand extends Command
                         ]);
                     });
                 } catch (Exception $exception) {
-                    Log::error('[Check::Recharge::ABC] '.$exception->getMessage());
+                    pam_system_log()->error('[Check::Recharge::ABC] '.$exception->getMessage());
                     continue;
                 }
             }
         } catch (Exception  $exception) {
-            Log::error('[Check::Recharge::ABC] fetching failed : '.$exception->getMessage());
+            pam_system_log()->error('[Check::Recharge::ABC] fetching failed : '.$exception->getMessage());
         }
     }
 }
