@@ -58,7 +58,7 @@ class StatisticServiceImportProductPerHour extends BaseChart
             foreach ($hours as $hour) {
                 $parseHour = Carbon::now()->hour((int) $hour)->hour;
 
-                $values[$name][$parseHour === 0 ? $parseHour : --$parseHour] = $product->get($hour, 0);
+                $values[$name][$parseHour] = $product->get($hour, 0);
             }
         }
 
