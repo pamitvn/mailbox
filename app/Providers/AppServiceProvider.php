@@ -53,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
             Charts\Admin\StatisticUserChart::class,
             Charts\Admin\StatisticOrderChart::class,
             Charts\Admin\StatisticOrderRevenueChart::class,
+            Charts\Admin\StatisticServiceImportProductPerHour::class,
         ]);
     }
 

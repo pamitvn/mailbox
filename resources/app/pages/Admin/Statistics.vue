@@ -25,6 +25,10 @@
          <h3 class='text-xl'>Statistic by Order revenues</h3>
          <div ref='orderRevenueChart' style='height: 300px'></div>
       </div>
+      <div class='bg-white w-full px-6 py-4 rounded-lg'>
+         <h3 class='text-xl'>Statistic import product of services</h3>
+         <div ref='serviceImportProductChart' style='height: 300px'></div>
+      </div>
    </div>
 
 </template>
@@ -43,6 +47,7 @@
    const userChart = ref(null);
    const orderChart = ref(null);
    const orderRevenueChart = ref(null);
+   const serviceImportProductChart = ref(null);
 
    const stats = [
       { id: 1, name: 'Orders', stat: props.total_orders, icon: 'fa-solid fa-bag-shopping' },
@@ -76,6 +81,17 @@
       new Chartisan({
          el: orderRevenueChart.value,
          url: '/api/chart/statistic_order_revenue_chart',
+         hooks: new ChartisanHooks()
+            .colors()
+            .beginAtZero()
+            .datasets('bar')
+            .responsive(true),
+         options: {},
+      });
+
+      new Chartisan({
+         el: serviceImportProductChart.value,
+         url: '/api/chart/statistic_service_import_product_per_hour',
          hooks: new ChartisanHooks()
             .colors()
             .beginAtZero()

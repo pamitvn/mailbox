@@ -20,6 +20,7 @@ class Product extends Model implements ProductLimitedInterface
         'service_id',
         'payload',
         'status',
+        'created_at',
     ];
 
     protected $casts = [

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\PAM\Enums\ProductStatus;
 use App\PAM\Facades\ParentManager;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,6 +65,11 @@ class Service extends Model
     public function expiredProducts(): BelongsTo
     {
         return $this->products()->whereDate('created_at', '<', now()->subHours($this->clean_after));
+    }
+
+    public function scopeLocal(Builder $query): Builder
+    {
+        return $query->where('is_local', true);
     }
 
     public function inStockCount(): Attribute
