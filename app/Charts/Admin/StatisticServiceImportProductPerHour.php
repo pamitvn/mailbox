@@ -29,7 +29,10 @@ class StatisticServiceImportProductPerHour extends BaseChart
             '15', '16', '17', '18', '19',
             '20', '21', '22', '23',
         ];
-        $initial = collect($hours)->map(fn () => 0)->toArray();
+        $initial = collect($hours)
+            ->keyBy(fn ($val) => Carbon::now()->hour((int) $val)->hour)
+            ->map(fn () => 0)
+            ->toArray();
         $service = Service::query()
             ->local()
             ->get();
@@ -44,18 +47,18 @@ class StatisticServiceImportProductPerHour extends BaseChart
                 ->map(fn ($subGroup) => $subGroup->count())
             );
 
-        $values = [
-            ...$service
-                ->keyBy('name')
-                ->map(fn () => $initial)
-                ->toArray(),
-        ];
+        $values = $service
+            ->keyBy('name')
+            ->map(fn () => $initial)
+            ->toArray();
 
         foreach ($products as $id => $product) {
             $name = $service->first(fn ($ite) => $ite->id === (int) $id)->name;
 
             foreach ($hours as $hour) {
-                $values[$name][] = $product->get($hour, 0);
+                $parseHour = Carbon::now()->hour((int) $hour)->hour;
+
+                $values[$name][$parseHour === 0 ? $parseHour : --$parseHour] = $product->get($hour, 0);
             }
         }
 
