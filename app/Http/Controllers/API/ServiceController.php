@@ -31,25 +31,53 @@ class ServiceController extends Controller
 
         $services = Service::query()
             ->whereVisible(true)
-            ->orderByDesc('id');
+            ->orderByDesc('id')
+            ->withCanAccess(auth()->id());
 
         search_by_cols($services, $search, ['name', 'slug', 'lifetime']);
         query_by_cols($services, ['id', 'name'], $params);
 
+        $services = $services->get([
+            'id',
+            'name',
+            'price',
+            'imap',
+            'pop3',
+        ])
+            ->filter(function ($item) {
+                $enablePermission = $item->extras->get('permission', false);
+
+                if (! $enablePermission) {
+                    return true;
+                }
+
+                return filled($item->userCanAccess->first(fn ($ite) => $ite->id === auth()->id()));
+            });
+
         return ApiResponse::withSuccess()
-            ->withData($services->get([
-                'id',
-                'name',
-                'price',
-                'imap',
-                'pop3',
-            ]));
+            ->withData($services);
     }
 
     public function buyProduct(Request $request)
     {
         $data = $request->validate([
-            'service_id' => ['required', 'string', Rule::exists(table_name_of_model(Service::class), 'id')],
+            'service_id' => [
+                'required', 'string',
+                Rule::exists(table_name_of_model(Service::class), 'id'),
+                function ($attribute, $value, $fail) use ($request) {
+                    $userId = $request->user()->id;
+                    $service = Service::withCanAccess($userId)
+                        ->find($value);
+
+                    if (blank($service)) {
+                        return $fail('The '.$attribute.' is invalid.');
+                    }
+
+                    if ((bool) $service->extras->get('permission', false) && blank($service->userCanAccess->first(fn ($ite) => $ite->id === $userId))) {
+                        return $fail('The '.$attribute.' is invalid.');
+                    }
+                },
+            ],
             'quantity' => ['required', 'int', 'min:1'],
         ]);
 
