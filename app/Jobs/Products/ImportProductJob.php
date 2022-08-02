@@ -50,16 +50,20 @@ class ImportProductJob implements ShouldQueue
             : collect($this->payload)->filter();
 
         try {
+            $now = now()->toDateTimeString();
             $values = $payload
                 ->map(fn ($item) => filled($item) ? [
                     'payload' => $item,
                     'status' => ProductStatus::LIVE,
                     'service_id' => $this->service->id,
+                    'created_at' => $now,
                 ] : null);
 
             Log::info(sprintf('Product::Import::%s count %s', $this->service->id, $values->count()));
 
-            $this->_productService->bulkSave($values->toArray());
+            foreach ($values->chunk(1000) as $item) {
+                $this->_productService->bulkSave($item->toArray());
+            }
 
             $this->sendMessage('success', __('Import finished product'));
         } catch (Exception $exception) {

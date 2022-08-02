@@ -10,7 +10,6 @@ use App\PAM\Enums\ProductStatus;
 use App\PAM\Facades\ParentManager;
 use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -76,13 +75,12 @@ class ProductService
                     $user->withdraw($amount);
 
                     if (! $isLocal) {
-                        $order->products()->insertOrIgnore($products->filter()->toArray());
+                        foreach ($products->filter()->chunk(1000) as $product) {
+                            $order->products()->insertOrIgnore($product->toArray());
+                        }
 
-                        $products = Product::where(function ($q) use ($products) {
-                            foreach ($products as $product) {
-                                $q->orWhere('payload', Arr::get($product, 'payload'));
-                            }
-                        })->get(['id']);
+                        $products = Product::whereIn('payload', $products->pluck('payload'))
+                            ->get(['id']);
                     }
 
                     $productIds = $products->pluck('id');
