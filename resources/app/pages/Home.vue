@@ -213,6 +213,6 @@
    });
 
    watchEffect(() => {
-      setRecords(_.cloneDeep(props.services));
+      setRecords(_.compact(_.filter(_.cloneDeep(props.services))));
    });
 </script>
