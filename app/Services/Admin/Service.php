@@ -4,8 +4,11 @@ namespace App\Services\Admin;
 
 use App\Models\Service as ServiceModel;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use TheSeer\Tokenizer\Exception;
@@ -27,6 +30,14 @@ class Service
     {
         try {
             return DB::transaction(function () use ($model, $data) {
+                $extras = $model->extras;
+
+                foreach (Arr::get($data, 'extras', []) as $key => $value) {
+                    $extras->put($key, $value);
+                }
+
+                $data['extras'] = $extras;
+
                 return $model->update($data);
             });
         } catch (Exception $exception) {
@@ -73,6 +84,30 @@ class Service
 
         if (Storage::exists($path)) {
             Storage::delete($path);
+        }
+    }
+
+    public function updatePermission(ServiceModel $service, bool $enable, array $users = []): bool
+    {
+        try {
+            return DB::transaction(function () use ($service, $enable, $users) {
+                /** @var Collection $serviceExtras */
+                $serviceExtras = $service->extras;
+                $serviceExtras->put('permission', $enable);
+
+                $serviceUpdateStatus = $service->update([
+                    'extras' => $serviceExtras->toArray(),
+                ]);
+                $syncPermissionForUserStatus = $service
+                    ->userCanAccess()
+                    ->sync($enable ? $users : []);
+
+                return $serviceUpdateStatus && $syncPermissionForUserStatus;
+            });
+        } catch (\Exception $exception) {
+            Log::error($exception);
+
+            return false;
         }
     }
 }

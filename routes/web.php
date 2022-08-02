@@ -135,6 +135,8 @@ Route::group([
                     'names' => 'service.product',
                     'only' => ['index', 'store', 'destroy'],
                 ]);
+                Route::get('{service}/permission', [Admin\ServiceManagerController::class, 'permission'])->name('service.permission');
+                Route::post('{service}/permission', [Admin\ServiceManagerController::class, 'updatePermission']);
                 Route::post('{service}', [Admin\ServiceManagerController::class, 'update'])->name('service.update');
             });
 

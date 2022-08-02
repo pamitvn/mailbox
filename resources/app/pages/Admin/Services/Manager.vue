@@ -52,7 +52,22 @@
          </template>
          <template #row-action='{row}'>
             <td class='table--col'>
-               <the-link :href='$route("admin.service.product.index", {service: row.id})'>
+               <v-button size='xs' variant='secondary' outline only-icon
+                         @click='() => onOpenPermissionModal(row)'
+               >
+                  <template #icon>
+                     <svg xmlns='http://www.w3.org/2000/svg' class='w-full h-full' width='24' height='24'
+                          viewBox='0 0 24 24' stroke-width='2' stroke='currentColor' fill='none' stroke-linecap='round'
+                          stroke-linejoin='round'>
+                        <path stroke='none' d='M0 0h24v24H0z' fill='none'></path>
+                        <circle cx='8' cy='15' r='4'></circle>
+                        <line x1='10.85' y1='12.15' x2='19' y2='4'></line>
+                        <line x1='18' y1='5' x2='20' y2='7'></line>
+                        <line x1='15' y1='8' x2='17' y2='10'></line>
+                     </svg>
+                  </template>
+               </v-button>
+               <the-link :href='$route("admin.service.product.index", {service: row.id})' class='ml-2'>
                   <v-button size='xs' variant='warning' outline only-icon>
                      <template #icon>
                         <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'
@@ -103,9 +118,12 @@
          </template>
       </v-crud-table>
    </crud-layout>
+
+   <service-permission-modal v-model:service='service' />
 </template>
 
 <script setup lang='ts'>
+   import { ref } from 'vue';
    import dateFormat from 'dateformat';
 
    import { usePagination } from '~/uses';
@@ -118,10 +136,13 @@
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
    import VButton from '~/components/VButton.vue';
    import VCheckedOrFails from '~/components/VCheckedOrFails.vue';
+   import ServicePermissionModal from '~/partials/service/ServicePermissionModal.vue';
 
    const props = defineProps<{
       paginationData: Utils.Pagination.Cursor<Models.Service>
    }>();
+
+   const service = ref<Models.Service | null>(null);
 
    const { search, perPage, columns } = usePagination([
       {
@@ -167,4 +188,8 @@
          label: '',
       },
    ]);
+
+   const onOpenPermissionModal = (item: Models.Service) => {
+      service.value = item ?? null;
+   };
 </script>

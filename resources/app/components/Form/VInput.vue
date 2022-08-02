@@ -37,7 +37,7 @@
 
       required?: boolean;
 
-      type: Form.Input.BaseType;
+      type?: Form.Input.BaseType;
       BSize?: Form.Input.Size;
       BStyle?: Form.Input.Style;
 

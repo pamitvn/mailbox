@@ -4,8 +4,8 @@
       v-model='selected'
       :filterable='false'
       :options='options'
-      :multiple='props.multiple'
       :reduce='reduceOption'
+      :multiple='props.multiple'
       :disabled='props.disabled'
       placeholder='Select user'
       class='rounded-md'
@@ -63,7 +63,8 @@
    const elmId = `user_selector_${(Math.random() + 1).toString(36).substring(7)}`;
 
    const props = withDefaults(defineProps<{
-      modelValue: string | number | null
+      modelValue: string | number | any[] | null
+      options?: object | object[]
       label?: string
       error?: string
       allowChange?: boolean
@@ -76,8 +77,8 @@
    });
    const emit = defineEmits(['update:modelValue']);
 
-   const options = ref([]);
-   const selected = ref(props.modelValue || null);
+   const options = ref<object | object[]>(props.options || []);
+   const selected = ref<string | number | any[] | null>(props.modelValue || null);
 
    const reduceOption = option => option.id;
    const onSearch = function(search: string, loading: (loading: boolean) => void) {
@@ -105,11 +106,19 @@
             throw action.message;
          }
 
-         options.value = _.map(action.data ?? [], (item: Models.User) => ({
-            label: item.name ?? item.username ?? 'Unknown Name',
-            email: item.email ?? '',
-            id: item.id,
-         }));
+         options.value = _.filter(options.value, ite => _.includes(selected.value as any, ite?.id));
+         options.value.push(
+            ..._.compact(
+               _.filter(
+                  _.map(action.data ?? [], (item: Models.User) => ({
+                        label: item.name ?? item.username ?? 'Unknown Name',
+                        email: item.email ?? '',
+                        id: item.id,
+                     }),
+                  ), i => !_.filter(options.value, { id: i.id }).length,
+               ),
+            ),
+         );
       } catch (e) {
          const message = _.isString(e) ? e : e.message;
 
@@ -123,6 +132,13 @@
       }
    }, 1000);
 
+
+   watch(() => props.options, (val) => {
+      if (!(val && props.options?.length) || options.value === val) return;
+
+      options.value = props.options;
+   });
+
    watch(() => props.modelValue, () => {
       if (!props.allowChange) return;
 
@@ -130,8 +146,12 @@
    });
 
    watch(selected, (val) => {
-      const item = val as RecordType;
-      emit('update:modelValue', _.get(item, 'id', val));
+      const item = val as RecordType | RecordType[];
+      const value = _.isArray(item) ? _.compact(item) : _.get(item, 'id', val);
+
+      if (val === props.modelValue) return;
+
+      emit('update:modelValue', value);
    });
 </script>
 

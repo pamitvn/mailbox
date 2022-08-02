@@ -13,14 +13,27 @@ class StaticPageController extends Controller
     public function home(Request $request)
     {
         $search = $request->get('search');
-        $services = Service::query()->whereVisible(true);
+        $services = Service::query()
+            ->whereVisible(true)
+            ->withCanAccess(auth()->id());
 
         search_by_cols($services, $search, [
             'name',
         ]);
 
+        $services = $services->get()
+            ->filter(function ($item) {
+                $enablePermission = $item->extras->get('permission', false);
+
+                if (! $enablePermission) {
+                    return true;
+                }
+
+                return filled($item->userCanAccess->first(fn ($ite) => $ite->id === auth()->id()));
+            });
+
         return inertia('Home', [
-            'services' => ServiceResource::collection($services->get())->toArray($request),
+            'services' => ServiceResource::collection($services)->toArray($request),
         ]);
     }
 

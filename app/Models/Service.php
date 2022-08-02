@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Validation\Rule;
 
 class Service extends Model
@@ -67,9 +68,19 @@ class Service extends Model
         return $this->products()->whereDate('created_at', '<', now()->subHours($this->clean_after));
     }
 
+    public function userCanAccess(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_can_access_service');
+    }
+
     public function scopeLocal(Builder $query): Builder
     {
         return $query->where('is_local', true);
+    }
+
+    public function scopeWithCanAccess(Builder $query, $userId): Builder
+    {
+        return $query->with('userCanAccess', fn ($q) => $q->whereUserId($userId));
     }
 
     public function inStockCount(): Attribute

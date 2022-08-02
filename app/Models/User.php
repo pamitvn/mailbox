@@ -5,6 +5,7 @@ namespace App\Models;
 use Bavix\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -71,5 +72,10 @@ class User extends Authenticatable implements Wallet\Interfaces\Wallet, Wallet\I
     public function orders(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'id', 'user_id');
+    }
+
+    public function canAccessServices(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class, 'user_can_access_service');
     }
 }
