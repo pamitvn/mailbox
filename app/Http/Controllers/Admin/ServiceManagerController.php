@@ -51,7 +51,9 @@ class ServiceManagerController extends Controller
         $params = $request->all();
         $search = $request->get('search');
 
-        $records = Service::query()->orderBy('id', 'desc');
+        $records = Service::query()
+            ->withCount('products')
+            ->orderBy('id', 'desc');
 
         search_by_cols($records, $search, [
             'name',

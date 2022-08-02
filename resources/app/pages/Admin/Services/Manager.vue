@@ -141,6 +141,11 @@
          label: 'Feature Image',
       },
       {
+         path: 'products_count',
+         label: 'Products',
+         display: (row, value, lodash) => numberFormat(lodash.get(row, value, '0')),
+      },
+      {
          path: 'pop3',
          label: 'Pop3',
       },
