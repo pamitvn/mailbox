@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AdminServiceController;
 use App\Http\Controllers\API\ServiceController;
+use App\Http\Controllers\API\StorageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,16 @@ Route::group([
 ], function () {
     Route::get('services', 'index');
     Route::get('buy-product', 'buyProduct')->middleware('auth.api');
+});
+
+Route::group([
+    'controller' => StorageController::class,
+    'middleware' => ['auth.api', 'can:storage'],
+    'prefix' => 'storages',
+], function () {
+    Route::get('', 'index');
+    Route::get('{storage}/import', 'import');
+    Route::get('{storage}', 'show');
 });
 
 Route::group([
