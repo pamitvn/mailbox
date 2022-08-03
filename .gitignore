@@ -14,3 +14,4 @@ yarn-error.log
 /.vscode
 yarn.lock
 composer.lock
+pnpm-lock.yaml
