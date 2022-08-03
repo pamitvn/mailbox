@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('email')->unique()->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('is_admin')->default(false);
             $table->string('api_key')->nullable();
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('has_storage')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

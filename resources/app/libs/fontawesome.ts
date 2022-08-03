@@ -10,6 +10,7 @@ import {
     faUserPlus,
     faUsers,
     faInfo,
+    faDiamond,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -17,5 +18,5 @@ library.add(
     faCircleXmark, faArrowRightToBracket, faDollarSign,
     faMoneyCheckDollar, faBagShopping, faListOl,
     faCartShopping, faUserPlus, faUsers,
-    faInfo,
+    faInfo, faDiamond,
 );

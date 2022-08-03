@@ -5,6 +5,7 @@ use App\Http\Controllers\Account;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\RechargeController;
 use App\Http\Controllers\StaticPageController;
+use App\Http\Controllers\Storages;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,8 +28,32 @@ Route::group([
     Route::group([
         'middleware' => ['auth'],
     ], function () {
+        Route::get('recharge', [RechargeController::class, 'index'])->name('recharge');
+        Route::get('orders', \App\Http\Controllers\OrderController::class)->name('orders');
+        Route::get('statistic', [StaticPageController::class, 'statistic'])->name('statistic');
         Route::post('buy-product', Actions\BuyProductAction::class)->name('product.buy');
         Route::post('export-product', Actions\ExportProductAction::class)->name('product.export');
+
+        Route::post('storages/{storage}/exports', [Storages\StorageController::class, 'bulkExport'])->name('storage.export');
+        Route::resource('storages', Storages\StorageController::class, [
+            'names' => 'storage',
+            'middleware' => 'can:storage',
+            'except' => ['show'],
+        ]);
+
+        Route::group([
+            'prefix' => 'storages/{storage}/containers',
+            'as' => 'storages.container.',
+            'controller' => Storages\ContainerController::class,
+        ], function () {
+            Route::post('bulk-destroy', 'bulkDestroy')->name('bulk-destroy');
+            Route::post('bulk-export', 'bulkExport')->name('bulk-export');
+        });
+        Route::resource('storages.containers', Storages\ContainerController::class, [
+            'names' => 'storage.container',
+            'middleware' => 'can:storage',
+            'only' => ['index', 'store', 'destroy'],
+        ]);
 
         Route::group([
             'prefix' => 'account',
@@ -58,10 +83,6 @@ Route::group([
                 Route::put('/', 'update');
             });
         });
-
-        Route::get('recharge', [RechargeController::class, 'index'])->name('recharge');
-        Route::get('orders', \App\Http\Controllers\OrderController::class)->name('orders');
-        Route::get('statistic', [StaticPageController::class, 'statistic'])->name('statistic');
 
         Route::group([
             'prefix' => 'admin',

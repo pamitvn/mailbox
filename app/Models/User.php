@@ -26,8 +26,9 @@ class User extends Authenticatable implements Wallet\Interfaces\Wallet, Wallet\I
         'username',
         'email',
         'password',
-        'is_admin',
         'api_key',
+        'is_admin',
+        'has_storage',
     ];
 
     /**
@@ -77,5 +78,10 @@ class User extends Authenticatable implements Wallet\Interfaces\Wallet, Wallet\I
     public function canAccessServices(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'user_can_access_service');
+    }
+
+    public function storages(): BelongsTo
+    {
+        return $this->belongsTo(Storage::class, 'id', 'user_id');
     }
 }

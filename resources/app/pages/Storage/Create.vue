@@ -1,10 +1,10 @@
 <template>
    <the-head>
-      <title>Edit User Detail #{{ user.id }}</title>
+      <title>Create New Storage</title>
    </the-head>
-   <crud-layout :title='`Edit User Detail #${user.id}`' :has-per-page='false'>
+   <crud-layout title='Create New Storage' :has-per-page='false'>
       <template #header-action>
-         <the-link :href='$route("admin.user.index")'>
+         <the-link :href='$route("storage.index")'>
             <v-button variant='dark' size='sm' outline icon>
                <template #icon>
                   <svg class='w-full h-full' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
@@ -29,7 +29,7 @@
                       :loading='dynamicFormRef?.form?.processing'
                       @click='() => onSubmitForm()'
             >
-               Save Changes
+               Create
             </v-button>
          </div>
       </div>
@@ -38,18 +38,13 @@
 
 <script setup lang='ts'>
    import { useDynamicForm } from '~/uses';
-   import { parseToBoolean, useRoute } from '~/utils';
+   import { useRoute } from '~/utils';
 
    import type { Form } from '~/types/Components/Form';
-   import type { Models } from '~/types/Models';
 
    import CrudLayout from '~/layouts/CrudLayout.vue';
    import VDynamicForm from '~/components/VDynamicForm.vue';
    import VButton from '~/components/VButton.vue';
-
-   const props = defineProps<{
-      user: Models.User
-   }>();
 
    const { dynamicFormRef, payload, onSubmitForm } = useDynamicForm({
       name: {
@@ -60,45 +55,16 @@
             placeholder: 'Enter name',
          },
       },
-      username: {
-         attrs: {
-            required: true,
-            label: 'Username',
-            type: 'text',
-            placeholder: 'Enter username',
-         },
-      },
-      email: {
-         attrs: {
-            required: true,
-            label: 'Email',
-            type: 'email',
-            placeholder: 'Enter email address',
-         },
-      },
-      password: {
-         attrs: {
-            required: true,
-            label: 'Password',
-            type: 'password',
-            placeholder: 'Enter password',
-         },
-      },
-      has_storage: {
-         is: 'v-switch',
-         attrs: {
-            label: 'Has storages',
-         },
-      },
    }, {
-      name: props.user.name ?? null,
-      username: props.user.username ?? null,
-      email: props.user.email ?? null,
-      password: null,
-      has_storage: parseToBoolean(props.user.has_storage) || false,
+      name: null,
    });
 
-   const handleSubmitForm: Form.DynamicForm.HandleSubmitForm = form => {
-      return form.put(useRoute('admin.user.update', props.user.id));
+   const handleSubmitForm: Form.DynamicForm.HandleSubmitForm = (form, values, resetForm) => {
+      return form.post(useRoute('storage.store'), {
+         forceFormData: true,
+         onSuccess: () => {
+            resetForm();
+         },
+      });
    };
 </script>

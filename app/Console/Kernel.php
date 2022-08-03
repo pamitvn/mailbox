@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('clean:products')->hourly();
         $schedule->command('clean:product-after-one-day')->hourly();
         $schedule->command('recharge:acb')->everyMinute();
+        $schedule->command('storage:check-fb-live-container')->everyFiveMinutes();
 
         $this->serviceCheckLiveFbSchedule($schedule);
     }

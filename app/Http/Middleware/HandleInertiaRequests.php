@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\PAM\Enums\ProductStatus;
 use App\PAM\Layout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -63,6 +64,8 @@ class HandleInertiaRequests extends Middleware
                         : Layout::make()->all('menu.main'),
                 ]),
             ]),
+            'statusHtmlLabel' => ProductStatus::toBadgeHtmlArray(),
+            'statusLabel' => ProductStatus::toLabelArray(),
             'notification' => fn () => settings(group: 'notification'),
             'TinyMCE' => fn () => config('web-config.TinyMCE'),
         ]);

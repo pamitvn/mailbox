@@ -42,9 +42,9 @@ class ProductService
         }
     }
 
-    public function uploadFile(UploadedFile $file): string
+    public function uploadFile(UploadedFile $file, $dirname = 'products'): string
     {
-        $dir = 'handlers/products';
+        $dir = sprintf('handlers/%s', $dirname);
         $rootLocation = storage_path("app/$dir");
         $fileName = sprintf('%s.%s', md5(now().$file->getClientOriginalName()), $file->getClientOriginalExtension());
 

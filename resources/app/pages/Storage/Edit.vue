@@ -1,10 +1,10 @@
 <template>
    <the-head>
-      <title>Edit User Detail #{{ user.id }}</title>
+      <title>Edit Storage Detail #{{ storage.id }}</title>
    </the-head>
-   <crud-layout :title='`Edit User Detail #${user.id}`' :has-per-page='false'>
+   <crud-layout :title='`Edit Storage Detail #${storage.id}`' :has-per-page='false'>
       <template #header-action>
-         <the-link :href='$route("admin.user.index")'>
+         <the-link :href='$route("storage.index")'>
             <v-button variant='dark' size='sm' outline icon>
                <template #icon>
                   <svg class='w-full h-full' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
@@ -48,7 +48,7 @@
    import VButton from '~/components/VButton.vue';
 
    const props = defineProps<{
-      user: Models.User
+      storage: Models.Storage
    }>();
 
    const { dynamicFormRef, payload, onSubmitForm } = useDynamicForm({
@@ -60,45 +60,11 @@
             placeholder: 'Enter name',
          },
       },
-      username: {
-         attrs: {
-            required: true,
-            label: 'Username',
-            type: 'text',
-            placeholder: 'Enter username',
-         },
-      },
-      email: {
-         attrs: {
-            required: true,
-            label: 'Email',
-            type: 'email',
-            placeholder: 'Enter email address',
-         },
-      },
-      password: {
-         attrs: {
-            required: true,
-            label: 'Password',
-            type: 'password',
-            placeholder: 'Enter password',
-         },
-      },
-      has_storage: {
-         is: 'v-switch',
-         attrs: {
-            label: 'Has storages',
-         },
-      },
    }, {
-      name: props.user.name ?? null,
-      username: props.user.username ?? null,
-      email: props.user.email ?? null,
-      password: null,
-      has_storage: parseToBoolean(props.user.has_storage) || false,
+      name: props.storage.name ?? null,
    });
 
    const handleSubmitForm: Form.DynamicForm.HandleSubmitForm = form => {
-      return form.put(useRoute('admin.user.update', props.user.id));
+      return form.put(useRoute('storage.update', props.storage.id));
    };
 </script>

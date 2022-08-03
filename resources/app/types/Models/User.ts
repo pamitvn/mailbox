@@ -9,8 +9,9 @@ interface User {
     email: string;
     password?: string;
     balance: number | string;
-    is_admin: boolean;
     api_key: string;
+    is_admin: boolean;
+    has_storage: boolean;
     updated_at: string;
     created_at: string;
 

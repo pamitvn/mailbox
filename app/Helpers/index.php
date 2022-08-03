@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 if (! function_exists('table_name_of_model')) {
     function table_name_of_model(string $model)
@@ -116,6 +117,30 @@ if (! function_exists('pam_system_log')) {
     function pam_system_log($channel = 'pam-system'): LoggerInterface
     {
         return \Illuminate\Support\Facades\Log::channel($channel);
+    }
+}
+
+if (! function_exists('stream_export_storage_containers')) {
+    function stream_export_storage_containers($builder, $isDelete): StreamedResponse
+    {
+        return new StreamedResponse(function () use ($builder, $isDelete) {
+            $handle = fopen('php://output', 'w');
+
+            foreach ($builder->get()->chunk(1000) as $rows) {
+                foreach ($rows as $row) {
+                    fwrite($handle, $row?->payload."\n");
+                }
+            }
+
+            if ($isDelete) {
+                $builder->forceDelete();
+            }
+
+            // Close the output stream
+            fclose($handle);
+        }, 200, [
+            'Content-Type' => 'text/plain;charset=utf-8',
+        ]);
     }
 }
 

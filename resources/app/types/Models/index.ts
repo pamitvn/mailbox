@@ -6,4 +6,6 @@ export namespace Models {
     export { default as Service } from './Service';
     export { default as Product } from './Product';
     export { default as Order } from './Order';
+    export { default as Storage } from './Storage';
+    export { default as StorageContainer } from './StorageContainer';
 }

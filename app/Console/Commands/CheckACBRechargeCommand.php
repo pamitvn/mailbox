@@ -92,6 +92,7 @@ class CheckACBRechargeCommand extends Command
                     });
                 } catch (Exception $exception) {
                     pam_system_log()->error('[Check::Recharge::ABC] '.$exception->getMessage());
+
                     continue;
                 }
             }
