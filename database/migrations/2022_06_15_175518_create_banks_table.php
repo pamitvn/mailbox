@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('accountName');
             $table->string('accountId');
-            $table->string('image');
             $table->timestamps();
         });
     }

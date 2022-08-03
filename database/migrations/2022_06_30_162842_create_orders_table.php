@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('service_id')->index()->constrained('services')->cascadeOnDelete();
             $table->foreignId('user_id')->index()->constrained('users')->cascadeOnDelete();
             $table->integer('price')->default(0);
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

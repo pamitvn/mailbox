@@ -15,9 +15,12 @@ return new class extends Migration
             $table->string('feature_image')->nullable();
             $table->string('lifetime');
             $table->integer('price', false)->default(0)->index();
+            $table->integer('clean_after')->default(4)->comment('Auto Clean After N hours');
             $table->boolean('pop3')->default(false);
             $table->boolean('imap')->default(false);
             $table->boolean('visible')->default(false)->index();
+            $table->boolean('is_local')->default(true);
+            $table->json('extras')->nullable();
             $table->timestamps();
         });
     }

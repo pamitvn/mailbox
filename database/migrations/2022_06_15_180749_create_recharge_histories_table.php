@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('before_transaction', 191);
             $table->string('after_transaction', 191);
             $table->text('note')->nullable();
+            $table->json('extras')->nullable();
             $table->timestamps();
         });
     }

@@ -12,9 +12,9 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->index()->constrained('services')->cascadeOnDelete();
-            $table->string('mail', 255)->unique()->index();
-            $table->string('password', 255)->index();
-            $table->string('recovery_mail', 255)->index()->nullable();
+            $table->char('payload')
+                ->unique()
+                ->nullable(false);
             $table->integer('status')->default(ProductStatus::LIVE);
             $table->timestamps();
         });
