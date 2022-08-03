@@ -56,19 +56,19 @@ class AppServiceProvider extends ServiceProvider
 
     protected function defineGate()
     {
+        Gate::define('storage', fn (User $user) => $user->has_storage
+            ? Response::allow()
+            : Response::denyWithStatus(404));
+
+        Gate::define('storage.container', fn (User $user, Storage $storage) => $user->is_admin || $user->has_storage && $storage->user_id === $user->id
+            ? Response::allow()
+            : Response::denyWithStatus(404));
+
         Gate::after(function ($user, $ability, $result, $arguments) {
             if ($user->isAdministrator()) {
                 return true;
             }
         });
-
-        Gate::define('storage', fn (User $user) => $user->has_storage
-            ? Response::allow()
-            : Response::denyWithStatus(404));
-
-        Gate::define('storage.container', fn (User $user, Storage $storage) => $user->has_storage && $storage->user_id === $user->id
-            ? Response::allow()
-            : Response::denyWithStatus(404));
     }
 
     protected function defineObserver()
