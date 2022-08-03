@@ -46,7 +46,7 @@ class StorageCheckFbLiveContainerCommand extends Command
             ->inRandomOrder()
             ->whereStatus(ProductStatus::LIVE);
 
-        $containers->chunk(500, function (Collection $chunkData) use ($checkEndpoint, $messages) {
+        $containers->chunk(1000, function (Collection $chunkData) use ($checkEndpoint, $messages) {
             $data = $chunkData
                 ->keyBy('id')
                 ->map(fn (StorageContainer $container) => [
