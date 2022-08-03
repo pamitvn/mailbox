@@ -52,14 +52,15 @@ class UserManagerController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => ['required', 'string', 'max:150'],
             'username' => ['required', 'string', 'min:6', 'max:32', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:150', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
+            'has_storage' => ['boolean'],
         ]);
 
-        $user = User::create(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
+        $user = User::create(array_merge($data, [
             'password' => Hash::make($request->input('password')),
         ]));
 
@@ -80,14 +81,15 @@ class UserManagerController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => ['required', 'string', 'max:150'],
             'username' => ['required', 'string', 'min:6', 'max:32', Rule::unique('users', 'username')->ignoreModel($user)],
             'email' => ['required', 'string', 'email', 'max:150', Rule::unique('users', 'email')->ignoreModel($user)],
             'password' => ['nullable', 'string', 'min:8'],
+            'has_storage' => ['boolean'],
         ]);
 
-        $status = $user->update(array_merge($request->only(['name', 'username', 'email', 'password', 'balance']), [
+        $status = $user->update(array_merge($data, [
             'password' => $request->input('password') ? Hash::make($request->input('password')) : $user->password,
         ]));
 
