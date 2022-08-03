@@ -28,6 +28,13 @@
          title='All storages'
          @selected-rows='onSelectedRows'
       >
+         <template #row-user='{value}'>
+            <td class='table--col'>
+               <div style='min-width: 10rem'>
+                  <v-user-label :data='value' :gravatar='value.email' has-avatar />
+               </div>
+            </td>
+         </template>
          <template #row-action='{row}'>
             <td class='table--col'>
                <v-button size='xs' variant='success' outline only-icon
@@ -112,6 +119,7 @@
    import VButton from '~/components/VButton.vue';
    import VSimpleStatCard from '~/components/VSimpleStatCard.vue';
    import ExportStorageDataModal from '~/partials/storages/ExportStorageDataModal.vue';
+   import VUserLabel from '~/components/VUserLabel.vue';
 
    const props = defineProps<{
       statistics: {
@@ -119,6 +127,7 @@
          live_count: number
          die_count: number
       }
+      is_admin: boolean
       paginationData: Utils.Pagination.Cursor<Models.Storage>
    }>();
 
@@ -135,6 +144,12 @@
          path: 'id',
          label: '#',
       },
+      ...(props.is_admin ? [
+         {
+            path: 'user',
+            label: 'User',
+         },
+      ] : []),
       {
          path: 'name',
          label: 'Name',

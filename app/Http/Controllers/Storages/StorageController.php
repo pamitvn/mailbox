@@ -23,7 +23,8 @@ class StorageController extends Controller
         $user = $request->user();
 
         $records = Storage::query()
-            ->whereUserId($user->id)
+            ->when(! $user->is_admin, fn ($q) => $q->whereUserId($user->id))
+            ->when($user->is_admin, fn ($q) => $q->with('user'))
             ->orderByDesc('id');
         $storageQuery = $records;
 
@@ -39,6 +40,7 @@ class StorageController extends Controller
                     ->withCount(['containers' => fn ($q) => $q->whereStatus(ProductStatus::DIE)])
                     ->get('id')->sum('containers_count'),
             ],
+            'is_admin' => $user->is_admin,
             'paginationData' => cursor_paginate_with_params($records->withCount('containers'), $params),
         ]);
     }
