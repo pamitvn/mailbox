@@ -82,7 +82,7 @@ class Product extends Model implements ProductLimitedInterface
     {
         return $query->where('status', ProductStatus::LIVE)
             ->whereNot(fn (Builder $builder) => $builder->whereHas('order'))
-            ->inRandomOrder()
+//            ->inRandomOrder()
             ->limit($quantity);
     }
 

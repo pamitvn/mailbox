@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\PAM\Facades\ApiResponse;
+use App\Rules\ProductPayloadUniqueUidRule;
 use App\Services\Admin\ProductService;
 use Exception;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class AdminServiceController extends Controller
     {
         $data = $request->validate([
             'service_id' => ['required', 'string', Rule::exists(table_name_of_model(Service::class), 'id')],
-            'payload' => ['required', 'string'],
+            'payload' => ['required', 'string', new ProductPayloadUniqueUidRule],
         ]);
 
         try {
