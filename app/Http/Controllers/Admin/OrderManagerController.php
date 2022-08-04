@@ -22,7 +22,6 @@ class OrderManagerController extends Controller
             ->get(['id', 'name'])
             ->pluck('name', 'id');
 
-        search_by_cols($records, $search, ['id']);
         search_relation_by_cols($records, $search, [
             'service' => [
                 'name',
