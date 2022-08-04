@@ -27,7 +27,7 @@ class OrderManagerController extends Controller
                 'name',
             ],
             'user' => [
-                'id', 'name', 'username', 'email',
+                'name', 'username', 'email',
             ],
             'products' => ['id', 'payload'],
         ]);
