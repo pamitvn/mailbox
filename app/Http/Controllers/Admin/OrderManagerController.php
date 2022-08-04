@@ -27,8 +27,9 @@ class OrderManagerController extends Controller
                 'name',
             ],
             'user' => [
-                'name', 'username', 'email',
+                'id', 'name', 'username', 'email',
             ],
+            'products' => ['id', 'payload'],
         ]);
 
         query_by_cols($records, ['id', 'service_id', 'user_id'], $params);
