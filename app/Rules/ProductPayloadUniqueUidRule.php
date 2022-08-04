@@ -15,7 +15,7 @@ class ProductPayloadUniqueUidRule implements Rule
         try {
             $uid = Arr::first(explode('|', $value));
             $productExist = Product::query()
-                ->whereJsonContains('payload', $uid)
+                ->where('payload', 'LIKE', "%$uid%")
                 ->exists();
 
             return ! $productExist;

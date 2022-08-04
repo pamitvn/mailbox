@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->index()->constrained('services')->cascadeOnDelete();
-            $table->char('payload')
+            $table->string('payload', 768)
                 ->unique()
                 ->nullable(false);
             $table->integer('status')->default(ProductStatus::LIVE);
