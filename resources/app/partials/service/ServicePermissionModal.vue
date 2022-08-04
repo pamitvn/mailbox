@@ -2,7 +2,7 @@
    <teleport to='body'>
       <v-modal v-model:open='open'
                :title='`Manager permission for service #${service?.id}`'
-               max-width='md'
+               max-width='xl'
       >
          <div class='p-6 mb-3'>
             <form @submit.prevent='() => onSubmitForm()'>
