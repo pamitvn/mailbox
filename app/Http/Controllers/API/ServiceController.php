@@ -45,7 +45,7 @@ class ServiceController extends Controller
             'pop3',
         ])
             ->filter(function ($item) {
-                $enablePermission = $item->extras->get('permission', false);
+                $enablePermission = $item->extras?->get('permission', false);
 
                 if (! $enablePermission) {
                     return true;
@@ -73,7 +73,7 @@ class ServiceController extends Controller
                         return $fail('The '.$attribute.' is invalid.');
                     }
 
-                    if ((bool) $service->extras->get('permission', false) && blank($service->userCanAccess->first(fn ($ite) => $ite->id === $userId))) {
+                    if ((bool) $service->extras?->get('permission', false) && blank($service->userCanAccess->first(fn ($ite) => $ite->id === $userId))) {
                         return $fail('The '.$attribute.' is invalid.');
                     }
                 },
