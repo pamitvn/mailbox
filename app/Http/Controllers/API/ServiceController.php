@@ -53,7 +53,13 @@ class ServiceController extends Controller
                 }
 
                 return filled($item->userCanAccess->first(fn ($ite) => $ite->id === auth()->id()));
-            });
+            })
+            ->map(function ($item) {
+                $item->unsetRelations();
+
+                return Arr::except($item->toArray(), 'extras');
+            })
+            ->values();
 
         return ApiResponse::withSuccess()
             ->withData($services);
