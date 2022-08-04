@@ -37,7 +37,14 @@ class ServiceController extends Controller
         search_by_cols($services, $search, ['name', 'slug', 'lifetime']);
         query_by_cols($services, ['id', 'name'], $params);
 
-        $services = $services->get()
+        $services = $services->get([
+            'id',
+            'name',
+            'price',
+            'imap',
+            'pop3',
+            'extras',
+        ])
             ->filter(function ($item) {
                 $enablePermission = $item->extras?->get('permission', false);
 
