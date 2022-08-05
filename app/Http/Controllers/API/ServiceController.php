@@ -9,6 +9,7 @@ use App\PAM\Facades\ApiResponse;
 use App\Services\Admin\ProductService;
 use Bavix\Wallet\Exceptions\BalanceIsEmpty;
 use Bavix\Wallet\Exceptions\InsufficientFunds;
+use Bavix\Wallet\Internal\Exceptions\TransactionFailedException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -98,28 +99,42 @@ class ServiceController extends Controller
             return ApiResponse::withFailed()->withMessage(__('The balance in the account is not enough to make the request'));
         }
 
-        $products = $this->_service->{$service->is_local ? 'buyRandomProduct' : 'buyProductFromParent'}($service, $quantity);
+        $index = 1;
 
-        if (blank($products)) {
-            return ApiResponse::withFailed()->withMessage(__('The product is out of stock'));
-        }
+        do {
+            $index++;
 
-        try {
-            $order = $this->_service->createOrderAndBuy($user, [
-                'service_id' => $service->id,
-                'user_id' => $user->id,
-                'price' => $service->price,
-            ], collect($products), $service->is_local);
+            $products = $this->_service->{$service->is_local ? 'buyRandomProduct' : 'buyProductFromParent'}($service, $quantity);
 
-            return ApiResponse::withSuccess()
-                ->withData(new OrderProductResource($order))
-                ->withMessage(__('Your purchase has been completed.'));
-        } catch (BalanceIsEmpty|InsufficientFunds $exception) {
-            return ApiResponse::withFailed()->withMessage($exception->getMessage());
-        } catch (Exception $exception) {
-            Log::error($exception);
+            if (blank($products)) {
+                return ApiResponse::withFailed()->withMessage(__('The product is out of stock'));
+            }
 
-            return ApiResponse::withFailed()->withMessage('Server error');
-        }
+            try {
+                $order = $this->_service->createOrderAndBuy($user, [
+                    'service_id' => $service->id,
+                    'user_id' => $user->id,
+                    'price' => $service->price,
+                ], collect($products), $service->is_local);
+
+                return ApiResponse::withSuccess()
+                    ->withData(new OrderProductResource($order))
+                    ->withMessage(__('Your purchase has been completed.'));
+            } catch (BalanceIsEmpty|InsufficientFunds $exception) {
+                $message = $exception->getMessage();
+                break;
+            } catch (Exception $exception) {
+                $message = 'Server error';
+
+                if ($exception instanceof TransactionFailedException) {
+                    continue;
+                }
+
+                Log::error($exception);
+                break;
+            }
+        } while ($index <= 10);
+
+        return ApiResponse::withFailed()->withMessage($message);
     }
 }
