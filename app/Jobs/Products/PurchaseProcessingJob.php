@@ -48,7 +48,7 @@ class PurchaseProcessingJob implements ShouldQueue
         do {
             $index++;
 
-            $products = $this->_productService->{$this->service->is_local ? 'buyRandomProduct' : 'buyProductFromParent'}($this->service, $this->quantity);
+            $products = $this->_productService->{$this->service->is_local ? 'buyProduct' : 'buyProductFromParent'}($this->service, $this->quantity);
 
             if (blank($products)) {
                 return $this->sendMessage('danger', __('The product is out of stock'));

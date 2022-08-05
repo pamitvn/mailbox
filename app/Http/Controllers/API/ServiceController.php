@@ -104,7 +104,7 @@ class ServiceController extends Controller
         do {
             $index++;
 
-            $products = $this->_service->{$service->is_local ? 'buyRandomProduct' : 'buyProductFromParent'}($service, $quantity);
+            $products = $this->_service->{$service->is_local ? 'buyProduct' : 'buyProductFromParent'}($service, $quantity);
 
             if (blank($products)) {
                 return ApiResponse::withFailed()->withMessage(__('The product is out of stock'));

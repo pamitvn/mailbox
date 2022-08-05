@@ -8,6 +8,7 @@ use App\Models\Service as ServiceModel;
 use App\Models\User;
 use App\PAM\Enums\ProductStatus;
 use App\PAM\Facades\ParentManager;
+use App\Settings\GeneralSetting;
 use Bavix\Wallet\Internal\Service\DatabaseServiceInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -92,10 +93,13 @@ class ProductService
             );
     }
 
-    public function buyRandomProduct(ServiceModel $service, $quantity)
+    public function buyProduct(ServiceModel $service, $quantity)
     {
+        $isRandom = app(GeneralSetting::class)?->buy_random ?? false;
+
         return $service->products()
-            ->randomQuantity($quantity)
+            ->when($isRandom, fn ($q) => $q->randomQuantity($quantity))
+            ->when(! $isRandom, fn ($q) => $q->quantity($quantity))
             ->get();
     }
 

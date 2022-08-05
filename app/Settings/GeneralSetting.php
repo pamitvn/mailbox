@@ -15,6 +15,8 @@ class GeneralSetting extends Settings
 
     public string $site_name;
 
+    public bool $buy_random;
+
     public static function group(): string
     {
         return 'general';
@@ -28,6 +30,13 @@ class GeneralSetting extends Settings
                 'attrs' => [
                     'type' => 'text',
                     'label' => 'Site Name',
+                ],
+            ],
+            'buy_random' => [
+                'rule' => ['required', 'boolean'],
+                'is' => 'v-switch',
+                'attrs' => [
+                    'label' => 'Buy random',
                 ],
             ],
         ];
