@@ -11,7 +11,7 @@
         "php": "^8.1",
         "bavix/laravel-wallet": "^9.0",
         "beyondcode/laravel-websockets": "^1.13",
-        "consoletvs/charts": "^7.3",
+        "pamitvn/consoletvs-charts": "^7.3",
         "cviebrock/eloquent-sluggable": "^9.0",
         "guzzlehttp/guzzle": "^7.2",
         "http-interop/http-factory-guzzle": "^1.2",
