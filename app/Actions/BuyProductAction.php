@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Jobs\Products\PurchaseProcessingJob;
 use App\Models\Service;
 use App\Models\User;
+use App\Rules\ServicePermissionRule;
 use App\Services\Admin\ProductService;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
@@ -19,6 +20,7 @@ class BuyProductAction extends Action
             'service' => [
                 'required',
                 Rule::exists(table_name_of_model(Service::class), 'id'),
+                new ServicePermissionRule(auth()->id()),
             ],
             'quantity' => [
                 'required',

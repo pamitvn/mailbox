@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderProductResource;
 use App\Models\Service;
 use App\PAM\Facades\ApiResponse;
+use App\Rules\ServicePermissionRule;
 use App\Services\Admin\ProductService;
 use Bavix\Wallet\Exceptions\BalanceIsEmpty;
 use Bavix\Wallet\Exceptions\InsufficientFunds;
@@ -72,19 +73,7 @@ class ServiceController extends Controller
             'service_id' => [
                 'required', 'string',
                 Rule::exists(table_name_of_model(Service::class), 'id'),
-                function ($attribute, $value, $fail) use ($request) {
-                    $userId = $request->user()->id;
-                    $service = Service::withCanAccess($userId)
-                        ->find($value);
-
-                    if (blank($service)) {
-                        return $fail('The '.$attribute.' is invalid.');
-                    }
-
-                    if ((bool) $service->extras?->get('permission', false) && blank($service->userCanAccess->first(fn ($ite) => $ite->id === $userId))) {
-                        return $fail('The '.$attribute.' is invalid.');
-                    }
-                },
+                new ServicePermissionRule($request->user()->id, true),
             ],
             'quantity' => ['required', 'int', 'min:1'],
         ]);
