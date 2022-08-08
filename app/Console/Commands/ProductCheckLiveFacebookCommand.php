@@ -57,6 +57,7 @@ class ProductCheckLiveFacebookCommand extends Command
         $products = Product::query()
             ->whereServiceId($serviceId)
             ->whereStatus(ProductStatus::LIVE)
+            ->withoutBought()
             ->get();
 
         foreach ($products->chunk(1000) as $chunkData) {
