@@ -55,6 +55,7 @@ class ProductCheckLiveFacebookCommand extends Command
         pam_system_log()->info($messages['start']);
 
         $products = $service->products()
+            ->whereServiceId($serviceId)
             ->whereStatus(ProductStatus::LIVE)
             ->get();
 
