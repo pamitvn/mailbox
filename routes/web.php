@@ -24,6 +24,7 @@ Route::group([
     'middleware' => ['user.not.blacklisted'],
 ], function () {
     Route::get('/', [StaticPageController::class, 'home']);
+    Route::get('recent-orders', Actions\GetRecentOrderAction::class)->name('recent-orders');
 
     Route::group([
         'middleware' => ['auth'],

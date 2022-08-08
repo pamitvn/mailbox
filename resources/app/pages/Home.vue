@@ -118,6 +118,9 @@
             </tr>
          </template>
       </v-crud-table>
+      <div class='mt-12'>
+         <list-recent-orders />
+      </div>
    </crud-layout>
    <buy-product-modal v-model:service='service' />
    <system-notification />
@@ -138,6 +141,7 @@
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
    import VButton from '~/components/VButton.vue';
    import VCheckedOrFails from '~/components/VCheckedOrFails.vue';
+   import ListRecentOrders from '~/partials/home/ListRecentOrders.vue';
 
    const props = defineProps<{
       services: Models.Service[]
