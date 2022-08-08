@@ -32,7 +32,12 @@ class ProductCheckLiveFacebookCommand extends Command
         $serviceId = $this->argument('serviceId');
         $checkEndpoint = config('services.facebook.check_live');
 
-        pam_system_log()->info(sprintf('Service::%s Starting check live facebook', $serviceId));
+        $messages = [
+            'start' => "Service::$serviceId Starting check live facebook",
+            'status' => "Service::$serviceId %s items has status %s",
+        ];
+
+        pam_system_log()->info($messages['start']);
 
         if (blank($checkEndpoint)) {
             $this->error('Missing facebook check live endpoint');
@@ -54,7 +59,7 @@ class ProductCheckLiveFacebookCommand extends Command
             ->whereServiceId($service->id)
             ->whereStatus(ProductStatus::LIVE);
 
-        $products->chunk(1000, function (Collection $chunkData) use ($checkEndpoint) {
+        $products->chunk(1000, function (Collection $chunkData) use ($checkEndpoint, $messages) {
             $data = $chunkData
                 ->keyBy('id')
                 ->map(fn (Product $product) => [
@@ -77,7 +82,7 @@ class ProductCheckLiveFacebookCommand extends Command
                 ->mapToGroups(fn ($group, $ite) => [$group => Arr::get($data->first(fn ($product) => $product['uid'] === $ite), 'id')])
                 ->filter(fn ($ite) => filled($ite));
 
-            $groupByStatus->each(function (\Illuminate\Support\Collection $ids, $group) {
+            $groupByStatus->each(function (\Illuminate\Support\Collection $ids, $group) use ($messages) {
                 $status = match ($group) {
                     'die' => ProductStatus::DIE,
                     'live' => ProductStatus::LIVE,
@@ -89,6 +94,11 @@ class ProductCheckLiveFacebookCommand extends Command
                     ->update([
                         'status' => $status,
                     ]);
+
+                $logMessage = sprintf($messages['status'], $ids->count(), $status);
+
+                pam_system_log()->info($logMessage);
+                $this->info($logMessage);
             });
         });
 
