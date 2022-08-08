@@ -7,7 +7,7 @@ use App\PAM\Facades\AdminSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class SettingManagerController extends Controller
+class SettingController extends Controller
 {
     public function index(Request $request, $group = null)
     {

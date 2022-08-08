@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\RechargeHistory;
 use Illuminate\Http\Request;
 
-class RechargeHistoryManagerController extends Controller
+class RechargeHistoryController extends Controller
 {
     public function index(Request $request)
     {

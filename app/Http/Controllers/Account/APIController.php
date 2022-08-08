@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Str;
 
-class APIManagerController extends Controller
+class APIController extends Controller
 {
     public function index()
     {

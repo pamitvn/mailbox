@@ -70,7 +70,7 @@ Route::group([
 
             Route::group([
                 'prefix' => 'api',
-                'controller' => Account\APIManagerController::class,
+                'controller' => Account\APIController::class,
             ], function () {
                 Route::get('/', 'index')->name('api');
                 Route::post('/', 'store');
@@ -101,7 +101,7 @@ Route::group([
              */
             Route::group([
                 'prefix' => 'settings',
-                'controller' => Admin\SettingManagerController::class,
+                'controller' => Admin\SettingController::class,
             ], function () {
                 Route::get('{setting?}', 'index')->name('setting');
                 Route::post('{setting?}', 'update');
@@ -110,17 +110,17 @@ Route::group([
             /**
              * Manager Users
              */
-            Route::resource('users', Admin\UserManagerController::class, [
+            Route::resource('users', Admin\UserController::class, [
                 'names' => 'user',
                 'except' => ['show'],
             ]);
-            Route::get('users/{user}/balance', [Admin\UserManagerController::class, 'balance'])->name('user.balance');
-            Route::post('users/{user}/balance', [Admin\UserManagerController::class, 'storeBalance']);
+            Route::get('users/{user}/balance', [Admin\UserController::class, 'balance'])->name('user.balance');
+            Route::post('users/{user}/balance', [Admin\UserController::class, 'storeBalance']);
 
             /**
              * Manager User Blacklisted
              */
-            Route::resource('user-blacklisted', Admin\UserBlacklistedManagerController::class, [
+            Route::resource('user-blacklisted', Admin\UserBlacklistedController::class, [
                 'names' => 'blacklisted.user',
                 'except' => ['show'],
                 'blacklisted_user' => 'user_blacklisted',
@@ -129,7 +129,7 @@ Route::group([
             /**
              * Manager Banks
              */
-            Route::resource('banks', Admin\BankManagerController::class, [
+            Route::resource('banks', Admin\BankController::class, [
                 'names' => 'bank',
                 'except' => ['show'],
             ]);
@@ -137,7 +137,7 @@ Route::group([
             /**
              * Manager Recharge Histories
              */
-            Route::resource('recharge-histories', Admin\RechargeHistoryManagerController::class, [
+            Route::resource('recharge-histories', Admin\RechargeHistoryController::class, [
                 'names' => 'recharge-history',
                 'only' => ['index', 'destroy'],
             ]);
@@ -149,20 +149,20 @@ Route::group([
 
             Route::group([
                 'prefix' => $servicePrefix,
-                'controller' => Admin\ProductManagerController::class,
+                'controller' => Admin\ProductController::class,
             ], function () {
                 Route::post('products/bulk-destroy', 'bulkDestroy')->name('service.product.bulk-destroy');
-                Route::post('{service}/orders/bulk-destroy', [Admin\ServiceManagerController::class, 'bulkDestroy'])->name('service.order.bulk-destroy');
-                Route::resource('products', Admin\ProductManagerController::class, [
+                Route::post('{service}/orders/bulk-destroy', [Admin\ServiceController::class, 'bulkDestroy'])->name('service.order.bulk-destroy');
+                Route::resource('products', Admin\ProductController::class, [
                     'names' => 'service.product',
                     'only' => ['index', 'store', 'destroy'],
                 ]);
-                Route::get('{service}/permission', [Admin\ServiceManagerController::class, 'permission'])->name('service.permission');
-                Route::post('{service}/permission', [Admin\ServiceManagerController::class, 'updatePermission']);
-                Route::post('{service}', [Admin\ServiceManagerController::class, 'update'])->name('service.update');
+                Route::get('{service}/permission', [Admin\ServiceController::class, 'permission'])->name('service.permission');
+                Route::post('{service}/permission', [Admin\ServiceController::class, 'updatePermission']);
+                Route::post('{service}', [Admin\ServiceController::class, 'update'])->name('service.update');
             });
 
-            Route::resource($servicePrefix, Admin\ServiceManagerController::class, [
+            Route::resource($servicePrefix, Admin\ServiceController::class, [
                 'names' => 'service',
                 'except' => ['update'],
             ]);
@@ -172,7 +172,7 @@ Route::group([
             /**
              * Manager Orders
              */
-            Route::resource('orders', Admin\OrderManagerController::class, [
+            Route::resource('orders', Admin\OrderController::class, [
                 'names' => 'order',
                 'only' => ['index', 'destroy'],
             ]);

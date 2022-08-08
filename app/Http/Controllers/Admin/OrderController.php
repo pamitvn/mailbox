@@ -8,7 +8,7 @@ use App\Models\Service;
 use App\PAM\Enums\ProductStatus;
 use Illuminate\Http\Request;
 
-class OrderManagerController extends Controller
+class OrderController extends Controller
 {
     public function index(Request $request)
     {

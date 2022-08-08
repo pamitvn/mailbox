@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
-class ServiceManagerController extends Controller
+class ServiceController extends Controller
 {
     protected array $rules = [
         'name' => ['required', 'string', 'max:150'],

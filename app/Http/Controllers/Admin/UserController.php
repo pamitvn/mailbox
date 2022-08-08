@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
-class UserManagerController extends Controller
+class UserController extends Controller
 {
     public function index(Request $request)
     {

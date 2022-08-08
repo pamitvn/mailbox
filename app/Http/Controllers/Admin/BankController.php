@@ -7,7 +7,7 @@ use App\Models\Bank;
 use File;
 use Illuminate\Http\Request;
 
-class BankManagerController extends Controller
+class BankController extends Controller
 {
     public function index(Request $request)
     {

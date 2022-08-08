@@ -14,7 +14,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
-class ProductManagerController extends Controller
+class ProductController extends Controller
 {
     private ProductService $_productService;
 

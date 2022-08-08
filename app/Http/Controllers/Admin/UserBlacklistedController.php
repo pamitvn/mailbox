@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class UserBlacklistedManagerController extends Controller
+class UserBlacklistedController extends Controller
 {
     public function index(Request $request)
     {
