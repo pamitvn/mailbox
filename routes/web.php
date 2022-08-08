@@ -164,8 +164,9 @@ Route::group([
             ]);
             Route::get('services/{service}/permission', [Admin\Services\ServicePermissionController::class, 'index'])->name('service.permission');
             Route::post('services/{service}/permission', [Admin\Services\ServicePermissionController::class, 'update']);
-            Route::get('services/{service}/user-purchased', Admin\Services\ServiceUserPurchasedController::class)
-                ->name('service.user-purchased');
+            Route::get('services/{service}/user-purchased', [Admin\Services\ServiceUserPurchasedController::class, 'index'])->name('service.user-purchased');
+            Route::delete('services/{service}/user-purchased/{user}', [Admin\Services\ServiceUserPurchasedController::class, 'destroy'])->name('service.user-purchased.destroy');
+            Route::post('services/{service}/user-purchased/bulk-destroy', Admin\Services\ServiceUserPurchasedBulkDestroyController::class)->name('service.user-purchased.bulk-destroy');
 
             /**
              * Manager Products

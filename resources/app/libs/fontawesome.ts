@@ -11,6 +11,7 @@ import {
     faUsers,
     faInfo,
     faDiamond,
+    faRotateLeft,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -18,5 +19,5 @@ library.add(
     faCircleXmark, faArrowRightToBracket, faDollarSign,
     faMoneyCheckDollar, faBagShopping, faListOl,
     faCartShopping, faUserPlus, faUsers,
-    faInfo, faDiamond,
+    faInfo, faDiamond, faRotateLeft,
 );

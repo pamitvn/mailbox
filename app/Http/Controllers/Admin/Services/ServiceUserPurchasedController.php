@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Admin\Services;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\UserPurchasedDestroyJob;
 use App\Models\Service;
 use App\Models\User;
+use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ServiceUserPurchasedController extends Controller
 {
-    public function __invoke(Request $request, Service $service)
+    public function __construct(protected ProductService $productService)
+    {
+    }
+
+    public function index(Request $request, Service $service)
     {
         $params = $request->except('search');
 
@@ -23,5 +29,14 @@ class ServiceUserPurchasedController extends Controller
             'service' => $service,
             'paginationData' => cursor_paginate_with_params($records, $params),
         ]);
+    }
+
+    public function destroy(Service $service, User $user)
+    {
+        dispatch(new UserPurchasedDestroyJob(auth()->user(), $service, [$user->id]));
+
+        send_current_user_message('info', __('Added to the delete queue'));
+
+        return back();
     }
 }
