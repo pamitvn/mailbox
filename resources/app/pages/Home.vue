@@ -41,7 +41,6 @@
                      <div class='shrink'>
                         <img v-if='row.feature_image' class='rounded-full'
                              :src='`/storage/${row.feature_image}`'
-                             :alt='row.name'
                              width='32'
                              height='32'
                         >
