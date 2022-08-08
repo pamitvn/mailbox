@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
                     continue;
                 }
 
-                $schedule->command('product:check-live-facebook', ['serviceId' => $service->id])->cron("*/$time * * * *");
+                $schedule->command('product:check-live-facebook', $service->id)->cron("*/$time * * * *");
             }
         });
     }
