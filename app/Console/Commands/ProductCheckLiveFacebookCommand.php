@@ -39,7 +39,6 @@ class ProductCheckLiveFacebookCommand extends Command
         }
 
         $service = Service::whereIsLocal(true)
-            ->whereJsonContains('extras->check_live_facebook', '1')
             ->orWhereJsonContains('extras->check_live_facebook', true)
             ->find($serviceId);
 
