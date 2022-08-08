@@ -1,6 +1,7 @@
 <template>
    <v-crud-table :data='records'
                  :columns='columns'
+                 :loading='loading'
                  :has-pagination='false'
                  title='Recent Orders'
    >
@@ -57,10 +58,12 @@
 
 <script setup lang='ts'>
    import axios from 'axios';
-   import { onMounted } from 'vue';
+   import { onMounted, ref } from 'vue';
    import { resolveCreateByPerPage, useRoute } from '~/utils';
    import { useCreateUpdateSocket, useMobile, usePagination } from '~/uses';
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
+
+   const loading = ref<boolean>(false);
 
    const { isMobile } = useMobile();
    const { columns } = usePagination([
@@ -95,6 +98,8 @@
 
    const fetchRecords = async () => {
       try {
+         loading.value = true;
+
          const endpoint = useRoute('recent-orders');
 
          const { data } = await axios.get<object[]>(endpoint);
@@ -104,6 +109,8 @@
          setRecords(data);
       } catch (e) {
          console.log('Fetching Recent Orders :', e);
+      } finally {
+         loading.value = false;
       }
    };
 
