@@ -16,12 +16,17 @@ class ServicePermissionRule implements Rule
     public function passes($attribute, $value): bool
     {
         $service = Service::withCanAccess($this->userId)->find($value);
+        $permissionEnable = (bool) $service->extras?->get('permission', false);
 
         $this->message = $this->api
             ? __('The :attribute is invalid.', compact('attribute'))
             : __('You are not allowed to perform this action');
 
-        return blank($service) || ((bool) $service->extras?->get('permission', false) && blank($service->userCanAccess->first(fn ($ite) => $ite->id === $this->userId)));
+        if (blank($service)) {
+            return false;
+        }
+
+        return ! $permissionEnable || filled($service->userCanAccess->first(fn ($ite) => $ite->id === $this->userId));
     }
 
     public function message(): string
