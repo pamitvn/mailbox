@@ -20,6 +20,7 @@ class GetRecentOrderAction extends Action
             ->with([
                 'user' => fn ($q) => $q->select(['id', 'username']),
             ])
+            ->orderByDesc('id')
             ->limit(10)
             ->get()
             ->map(function ($item) {
