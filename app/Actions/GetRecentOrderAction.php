@@ -25,7 +25,7 @@ class GetRecentOrderAction extends Action
             ->get()
             ->map(function ($item) {
                 if ($item->user?->username) {
-                    $item->user->username = Str::mask($item->user?->username, '*', (40 / 100) * strlen($item->user?->username));
+                    $item->user->username = Str::mask($item->user?->username, '*', round((40 / 100) * strlen($item->user?->username)));
                 }
 
                 $time = $item->created_at->diffForHumans();
