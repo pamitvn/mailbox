@@ -157,7 +157,7 @@
    }));
 
    const handleSubmitForm: Form.DynamicForm.HandleSubmitForm = form => {
-      return form.post(useRoute('admin.service.update', { service: props.service.id }), {
+      return form.put(useRoute('admin.service.update', { service: props.service.id }), {
          forceFormData: true,
       });
    };
