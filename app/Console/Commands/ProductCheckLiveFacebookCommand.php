@@ -68,7 +68,7 @@ class ProductCheckLiveFacebookCommand extends Command
                 ->filter(fn ($ite) => filled($ite));
 
             $uuid = $data->pluck('uid');
-
+            $this->info($uuid);
             $response = $this->client->post($checkEndpoint, [
                 'json' => [
                     'uuid' => $uuid->toArray(),
