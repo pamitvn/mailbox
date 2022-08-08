@@ -21,14 +21,12 @@ class ProductController extends Controller
         $this->_productService = $service;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, Service $service)
     {
         $params = $request->except('service');
-        $serviceId = $request->get('service');
         $search = $request->get('search');
         $inStock = $request->boolean('in_stock');
 
-        $service = Service::findOrFail($serviceId);
         $records = Product::query()
             ->whereServiceId($service->id)
             ->orderBy('id', 'desc')
@@ -48,9 +46,8 @@ class ProductController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Service $service)
     {
-        $service = Service::findOrFail($request->get('service'));
         $data = $request->validate([
             'products' => [
                 'nullable',

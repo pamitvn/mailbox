@@ -157,16 +157,6 @@ Route::group([
             ]);
 
             /**
-             * Manager Products
-             */
-            Route::resource('products', Admin\Products\ProductController::class, [
-                'names' => 'service.product',
-                'only' => ['index', 'store', 'destroy'],
-            ]);
-            Route::post('products/bulk-destroy', Admin\Products\BulkDestroyController::class)
-                ->name('service.product.bulk-destroy');
-
-            /**
              * Manager Services
              */
             Route::resource('services', Admin\Services\ServiceController::class, [
@@ -174,6 +164,16 @@ Route::group([
             ]);
             Route::get('services/{service}/permission', [Admin\Services\ServicePermissionController::class, 'index'])->name('service.permission');
             Route::post('services/{service}/permission', [Admin\Services\ServicePermissionController::class, 'update']);
+
+            /**
+             * Manager Products
+             */
+            Route::resource('services.products', Admin\Products\ProductController::class, [
+                'names' => 'service.product',
+                'only' => ['index', 'store', 'destroy'],
+            ]);
+            Route::post('products/bulk-destroy', Admin\Products\BulkDestroyController::class)
+                ->name('service.product.bulk-destroy');
 
             /**
              * Statistics
