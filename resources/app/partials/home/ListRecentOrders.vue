@@ -57,7 +57,7 @@
 
 <script setup lang='ts'>
    import axios from 'axios';
-   import { onMounted, ref } from 'vue';
+   import { onMounted, onUnmounted, ref } from 'vue';
    import { useRoute, numberFormat } from '~/utils';
    import { useMobile, usePagination } from '~/uses';
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
@@ -107,5 +107,13 @@
 
    onMounted(() => {
       fetchRecords();
+
+      const intervalId = setInterval(fetchRecords, 3000);
+
+      onUnmounted(
+         () => {
+            clearInterval(intervalId);
+         },
+      );
    });
 </script>
