@@ -32,13 +32,6 @@ class ProductCheckLiveFacebookCommand extends Command
         $serviceId = $this->argument('serviceId');
         $checkEndpoint = config('services.facebook.check_live');
 
-        $messages = [
-            'start' => "Service::$serviceId Starting check live facebook",
-            'status' => "Service::$serviceId %s items has status %s",
-        ];
-
-        pam_system_log()->info($messages['start']);
-
         if (blank($checkEndpoint)) {
             $this->error('Missing facebook check live endpoint');
 
@@ -54,6 +47,13 @@ class ProductCheckLiveFacebookCommand extends Command
 
             return;
         }
+
+        $messages = [
+            'start' => "Service::$serviceId Starting check live facebook",
+            'status' => "Service::$serviceId %s items has status %s",
+        ];
+
+        pam_system_log()->info($messages['start']);
 
         $products = Product::query()
             ->whereServiceId($service->id)
