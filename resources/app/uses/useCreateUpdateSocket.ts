@@ -16,7 +16,7 @@ export interface Options<T = object> {
 }
 
 export type TransFormType<T> = (list: T[], data: T, index: string | number) => T
-export type ResolveType<T> = (list: T[], data: T) => T[]
+export type ResolveType<T> = (list: T[], data: T, ...rest: any) => T[]
 
 function useCreateUpdateSocket<T = object>(
     channel: string,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -45,5 +46,12 @@ class Order extends Model
         return Attribute::get(function () {
             return $this->created_at <= now()->subDay();
         });
+    }
+
+    public function scopeWithRecentOrder(Builder $query): Builder
+    {
+        return $query
+            ->withWhereHas('service', fn ($q) => $q->whereVisible(true)->select(['id', 'name', 'feature_image']))
+            ->withWhereHas('user', fn ($q) => $q->select(['id', 'username']));
     }
 }

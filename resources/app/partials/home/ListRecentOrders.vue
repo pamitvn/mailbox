@@ -57,12 +57,10 @@
 
 <script setup lang='ts'>
    import axios from 'axios';
-   import { onMounted, onUnmounted, ref } from 'vue';
-   import { useRoute, numberFormat } from '~/utils';
-   import { useMobile, usePagination } from '~/uses';
+   import { onMounted } from 'vue';
+   import { resolveCreateByPerPage, useRoute } from '~/utils';
+   import { useCreateUpdateSocket, useMobile, usePagination } from '~/uses';
    import VCrudTable from '~/components/CRUD/VCrudTable.vue';
-
-   const records = ref([]);
 
    const { isMobile } = useMobile();
    const { columns } = usePagination([
@@ -90,6 +88,10 @@
          label: 'Time',
       },
    ]);
+   const { records, setRecords } = useCreateUpdateSocket('recent-orders', { create: '.create' }, {
+      privateChannel: false,
+      resolveCreate: (list, data) => resolveCreateByPerPage(list, data, 10),
+   });
 
    const fetchRecords = async () => {
       try {
@@ -99,7 +101,7 @@
 
          if (!data || !data.length) throw 'Empty';
 
-         records.value = data;
+         setRecords(data);
       } catch (e) {
          console.log('Fetching Recent Orders :', e);
       }

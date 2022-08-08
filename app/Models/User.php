@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Bavix\Wallet;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements Wallet\Interfaces\Wallet, Wallet\Interfaces\Customer
@@ -53,6 +55,11 @@ class User extends Authenticatable implements Wallet\Interfaces\Wallet, Wallet\I
     public function isAdministrator()
     {
         return $this->is_admin;
+    }
+
+    public function maskUsername(): Attribute
+    {
+        return Attribute::get(fn () => Str::mask($this?->username, '*', round((40 / 100) * strlen($this?->username))));
     }
 
     public function blacklisted(): HasOne
