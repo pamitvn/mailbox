@@ -107,13 +107,5 @@
 
    onMounted(() => {
       fetchRecords();
-
-      const intervalId = setInterval(fetchRecords, 3000);
-
-      onUnmounted(
-         () => {
-            clearInterval(intervalId);
-         },
-      );
    });
 </script>
