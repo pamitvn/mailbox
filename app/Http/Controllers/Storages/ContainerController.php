@@ -10,7 +10,6 @@ use App\PAM\Enums\ProductStatus;
 use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class ContainerController extends Controller
@@ -91,42 +90,5 @@ class ContainerController extends Controller
             unlessMessage: __('Storage item #:id cannot be deleted', ['id' => $storageContainerId]),
             allowBack: true
         );
-    }
-
-    public function bulkDestroy(Request $request, Storage $storage)
-    {
-        $data = $request->validate([
-            'includes' => ['required', 'array', 'min:1'],
-        ]);
-
-        $results = DB::transaction(function () use ($storage, $data) {
-            return StorageContainer::query()
-                ->whereStorageId($storage->id)
-                ->whereIn('id', $data['includes'])
-                ->delete();
-        });
-
-        send_message_if(
-            $results,
-            __('The specified records were successfully removed.'),
-            __('There was a problem with the deletion.')
-        );
-
-        return back();
-    }
-
-    public function bulkExport(Request $request, Storage $storage)
-    {
-        $data = $request->validate([
-            'includes' => ['required', 'array', 'min:1'],
-            'delete' => ['boolean'],
-        ]);
-        $isDelete = $request->boolean('delete');
-
-        $builder = StorageContainer::query()
-            ->whereStorageId($storage->id)
-            ->whereIn('id', $data['includes']);
-
-        return stream_export_storage_containers($builder, $isDelete);
     }
 }

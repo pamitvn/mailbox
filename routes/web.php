@@ -29,33 +29,44 @@ Route::group([
     Route::group([
         'middleware' => ['auth'],
     ], function () {
+        Route::get('statistic', [StaticPageController::class, 'statistic'])->name('statistic');
         Route::get('recharge', [RechargeController::class, 'index'])->name('recharge');
         Route::get('orders', \App\Http\Controllers\OrderController::class)->name('orders');
-        Route::get('statistic', [StaticPageController::class, 'statistic'])->name('statistic');
+
         Route::post('buy-product', Actions\BuyProductAction::class)->name('product.buy');
         Route::post('export-product', Actions\ExportProductAction::class)->name('product.export');
 
-        Route::post('storages/{storage}/exports', [Storages\StorageController::class, 'bulkExport'])->name('storage.export');
+        /**
+         * Manager storages
+         */
         Route::resource('storages', Storages\StorageController::class, [
             'names' => 'storage',
             'middleware' => 'can:storage',
             'except' => ['show'],
         ]);
+        Route::post('storages/{storage}/exports', Storages\StorageExportController::class)
+            ->middleware('can:storage')
+            ->name('storage.export');
 
-        Route::group([
-            'prefix' => 'storages/{storage}/containers',
-            'as' => 'storages.container.',
-            'controller' => Storages\ContainerController::class,
-        ], function () {
-            Route::post('bulk-destroy', 'bulkDestroy')->name('bulk-destroy');
-            Route::post('bulk-export', 'bulkExport')->name('bulk-export');
-        });
+        /**
+         * Manager storage containers
+         */
         Route::resource('storages.containers', Storages\ContainerController::class, [
             'names' => 'storage.container',
             'middleware' => 'can:storage',
             'only' => ['index', 'store', 'destroy'],
         ]);
+        Route::group([
+            'prefix' => 'storages/{storage}/containers',
+            'as' => 'storages.container.',
+        ], function () {
+            Route::post('bulk-destroy', Storages\StorageContainerBulkDestroyController::class)->name('bulk-destroy');
+            Route::post('bulk-export', Storages\StorageContainerExportController::class)->name('bulk-export');
+        });
 
+        /**
+         * Manager Account
+         */
         Route::group([
             'prefix' => 'account',
             'as' => 'account.',
@@ -85,6 +96,9 @@ Route::group([
             });
         });
 
+        /**
+         * Admin Areas
+         */
         Route::group([
             'prefix' => 'admin',
             'as' => 'admin.',
@@ -110,12 +124,12 @@ Route::group([
             /**
              * Manager Users
              */
-            Route::resource('users', Admin\UserController::class, [
+            Route::resource('users', Admin\Users\UserController::class, [
                 'names' => 'user',
                 'except' => ['show'],
             ]);
-            Route::get('users/{user}/balance', [Admin\UserController::class, 'balance'])->name('user.balance');
-            Route::post('users/{user}/balance', [Admin\UserController::class, 'storeBalance']);
+            Route::get('users/{user}/balance', [Admin\Users\UserBalanceController::class, 'index'])->name('user.balance');
+            Route::post('users/{user}/balance', [Admin\Users\UserBalanceController::class, 'update']);
 
             /**
              * Manager User Blacklisted
@@ -143,30 +157,27 @@ Route::group([
             ]);
 
             /**
+             * Manager Products
+             */
+            Route::resource('products', Admin\Products\ProductController::class, [
+                'names' => 'service.product',
+                'only' => ['index', 'store', 'destroy'],
+            ]);
+            Route::post('products/bulk-destroy', Admin\Products\BulkDestroyController::class)
+                ->name('service.product.bulk-destroy');
+
+            /**
              * Manager Services
              */
-            $servicePrefix = 'services';
-
-            Route::group([
-                'prefix' => $servicePrefix,
-                'controller' => Admin\ProductController::class,
-            ], function () {
-                Route::post('products/bulk-destroy', 'bulkDestroy')->name('service.product.bulk-destroy');
-                Route::post('{service}/orders/bulk-destroy', [Admin\ServiceController::class, 'bulkDestroy'])->name('service.order.bulk-destroy');
-                Route::resource('products', Admin\ProductController::class, [
-                    'names' => 'service.product',
-                    'only' => ['index', 'store', 'destroy'],
-                ]);
-                Route::get('{service}/permission', [Admin\ServiceController::class, 'permission'])->name('service.permission');
-                Route::post('{service}/permission', [Admin\ServiceController::class, 'updatePermission']);
-                Route::post('{service}', [Admin\ServiceController::class, 'update'])->name('service.update');
-            });
-
-            Route::resource($servicePrefix, Admin\ServiceController::class, [
+            Route::resource('services', Admin\Services\ServiceController::class, [
                 'names' => 'service',
-                'except' => ['update'],
             ]);
+            Route::get('services/{service}/permission', [Admin\Services\ServicePermissionController::class, 'index'])->name('service.permission');
+            Route::post('services/{service}/permission', [Admin\Services\ServicePermissionController::class, 'update']);
 
+            /**
+             * Statistics
+             */
             Route::get('statistics', Admin\StatisticController::class)->name('statistics');
 
             /**

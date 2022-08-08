@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Storages;
 
 use App\Http\Controllers\Controller;
 use App\Models\Storage;
-use App\Models\StorageContainer;
 use App\PAM\Enums\ProductStatus;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class StorageController extends Controller
 {
@@ -97,20 +95,5 @@ class StorageController extends Controller
             unlessMessage: __('Storage #:id cannot be deleted', ['id' => $storage->id]),
             allowBack: true
         );
-    }
-
-    public function bulkExport(Request $request, Storage $storage)
-    {
-        $data = $request->validate([
-            'deleteAfterExport' => ['boolean'],
-            'status' => ['nullable', Rule::in(ProductStatus::toArray())],
-        ]);
-        $isDelete = $request->boolean('deleteAfterExport');
-
-        $containers = StorageContainer::query()
-            ->whereStorageId($storage->id)
-            ->when(filled($data['status']), fn ($q) => $q->whereStatus($data['status']));
-
-        return stream_export_storage_containers($containers, $isDelete);
     }
 }

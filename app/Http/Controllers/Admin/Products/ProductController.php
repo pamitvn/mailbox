@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Products;
 
-use App\Events\ServiceEvent;
 use App\Http\Controllers\Controller;
 use App\Jobs\Products\ImportProductJob;
 use App\Models\Product;
@@ -11,7 +10,6 @@ use App\PAM\Enums\ProductStatus;
 use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
@@ -89,36 +87,6 @@ class ProductController extends Controller
             $this->_productService->delete($product),
             __('Deleted product #:id', ['id' => $product->id]),
             __('Product #:id cannot be deleted', ['id' => $product->id])
-        );
-
-        return back();
-    }
-
-    public function bulkDestroy(Request $request)
-    {
-        $data = $request->validate([
-            'includes' => ['required', 'array', 'min:1'],
-        ]);
-
-        $service = Service::findOrFail($request->get('service'));
-        $results = DB::transaction(function () use ($service, $data) {
-            return Product::query()
-                ->select(['id', 'service_id'])
-                ->whereServiceId($service->id)
-                ->where(function ($query) use ($data) {
-                    foreach ($data['includes'] as $id) {
-                        $query->orWhere('id', $id);
-                    }
-                })
-                ->delete();
-        });
-
-        ServiceEvent::dispatch($service->id);
-
-        send_message_if(
-            $results,
-            __('The specified records were successfully removed.'),
-            __('There was a problem with the deletion.')
         );
 
         return back();

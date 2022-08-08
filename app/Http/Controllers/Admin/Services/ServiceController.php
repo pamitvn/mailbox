@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Services;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
@@ -8,7 +8,6 @@ use App\Models\Service;
 use App\PAM\Enums\ProductStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -152,60 +151,6 @@ class ServiceController extends Controller
             boolean: $this->_service->delete($service),
             message: __('Deleted service #:id', ['id' => $service->id]),
             unlessMessage: __('Service #:id cannot be deleted', ['id' => $service->id]),
-            allowBack: true
-        );
-    }
-
-    public function bulkDestroy(Request $request, Service $service)
-    {
-        $data = $request->validate([
-            'includes' => ['required', 'array', 'min:1'],
-        ]);
-
-        $results = DB::transaction(function () use ($service, $data) {
-            return Order::query()
-                ->select(['id', 'service_id'])
-                ->withWhereHas('product', fn ($query) => $query->where('service_id', $service->id))
-                ->where(function ($query) use ($data) {
-                    foreach ($data['includes'] as $id) {
-                        $query->orWhere('id', $id);
-                    }
-                })
-                ->delete();
-        });
-
-        send_message_if(
-            $results,
-            __('The specified records were successfully removed.'),
-            __('There was a problem with the deletion.')
-        );
-
-        return back();
-    }
-
-    public function permission(Request $request, Service $service)
-    {
-        $service->load('userCanAccess');
-
-        return collect($service->userCanAccess)
-            ->map(fn ($ite) => [
-                'id' => $ite->id,
-                'label' => $ite?->name ?? $ite?->username ?? 'Unknown Name',
-                'email' => $ite?->email,
-            ]);
-    }
-
-    public function updatePermission(Request $request, Service $service)
-    {
-        $data = $request->validate([
-            'enable' => ['required', 'boolean'],
-            'users' => ['nullable', 'array'],
-        ]);
-
-        return send_message_if(
-            $this->_service->updatePermission($service, $data['enable'], $data['users'] ?? []),
-            message: __('Updated permission for service #:id', ['id' => $service->id]),
-            unlessMessage: __('Service #:id cannot be updated permission', ['id' => $service->id]),
             allowBack: true
         );
     }
