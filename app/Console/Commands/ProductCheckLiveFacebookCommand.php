@@ -7,7 +7,6 @@ use App\Models\Service;
 use App\PAM\Enums\ProductStatus;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 class ProductCheckLiveFacebookCommand extends Command
@@ -57,9 +56,10 @@ class ProductCheckLiveFacebookCommand extends Command
 
         $products = Product::query()
             ->whereServiceId($service->id)
-            ->whereStatus(ProductStatus::LIVE);
+            ->whereStatus(ProductStatus::LIVE)
+            ->get();
 
-        $products->chunk(1000, function (Collection $chunkData) use ($checkEndpoint, $messages) {
+        foreach ($products->chunk(1000) as $chunkData) {
             $data = $chunkData
                 ->keyBy('id')
                 ->map(fn (Product $product) => [
@@ -100,8 +100,7 @@ class ProductCheckLiveFacebookCommand extends Command
                 pam_system_log()->info($logMessage);
                 $this->info($logMessage);
             });
-        });
-
+        }
         $this->info('Completed');
     }
 }
