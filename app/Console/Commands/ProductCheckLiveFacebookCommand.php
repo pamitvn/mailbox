@@ -94,11 +94,15 @@ class ProductCheckLiveFacebookCommand extends Command
 
                 $productIds = $data->whereIn('uid', $ids->toArray());
 
-                Product::query()
-                    ->whereIn('id', $productIds->pluck('id'))
-                    ->update([
-                        'status' => $status,
-                    ]);
+                if ($status === ProductStatus::DIE) {
+                    $productId = $productIds->pluck('id');
+                    Product::query()
+                        ->whereIn('id', $productId)
+                        ->update([
+                            'status' => $status,
+                        ]);
+                    info($productId);
+                }
 
                 $logMessage = sprintf($messages['status'], $productIds->count(), $status);
 
