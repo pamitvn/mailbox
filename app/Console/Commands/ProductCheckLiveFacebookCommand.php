@@ -57,7 +57,7 @@ class ProductCheckLiveFacebookCommand extends Command
 
         $products = Product::query()
             ->whereServiceId($serviceId)
-//            ->whereStatus(ProductStatus::LIVE)
+            ->whereStatus(ProductStatus::LIVE)
             ->withoutBought()
             ->get();
 
