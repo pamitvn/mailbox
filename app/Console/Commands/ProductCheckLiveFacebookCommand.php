@@ -82,7 +82,7 @@ class ProductCheckLiveFacebookCommand extends Command
             $body = collect(json_decode($response->getBody()->getContents(), true));
 
             $groupByStatus = $body
-                ->mapToGroups(fn ($group, $ite) => [$group => Arr::get($data->first(fn ($product) => $product['uid'] === $ite), 'id')])
+                ->mapToGroups(fn ($group, $ite) => [$group => Arr::get($data->first(fn ($product) => (string) $product['uid'] === (string) $ite), 'id')])
                 ->filter(fn ($ite) => filled($ite));
 
             foreach ($groupByStatus as $group => $ids) {
@@ -101,7 +101,6 @@ class ProductCheckLiveFacebookCommand extends Command
                         ->update([
                             'status' => $status,
                         ]);
-                    info($productId);
                 }
 
                 $logMessage = sprintf($messages['status'], $productIds->count(), $status);
