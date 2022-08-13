@@ -61,7 +61,6 @@ class ProductController extends Controller
                 'file',
                 'mimes:txt',
                 'mimetypes:text/plain',
-                'max:10240',
             ],
         ]);
 
