@@ -85,14 +85,18 @@ class ProductCheckLiveFacebookCommand extends Command
                 ->mapToGroups(fn ($group, $ite) => [$group => Arr::get($data->first(fn ($product) => $product['uid'] === $ite), 'id')])
                 ->filter(fn ($ite) => filled($ite));
 
-            $groupByStatus->each(function (Collection $ids, $group) use ($data, $messages) {
+            foreach ($groupByStatus as $group => $ids) {
                 $status = match ($group) {
                     'die' => ProductStatus::DIE,
                     'live' => ProductStatus::LIVE,
                     default => null,
                 };
 
+                $this->info($ids->toArray());
+
                 $productIds = $data->whereIn('uid', $ids->toArray());
+
+                $this->info($productIds->toArray());
 
                 if ($status === ProductStatus::DIE) {
                     $productId = $productIds->pluck('id');
@@ -108,7 +112,7 @@ class ProductCheckLiveFacebookCommand extends Command
 
                 pam_system_log()->info($logMessage);
                 $this->info($logMessage);
-            });
+            }
         }
         $this->info('Completed');
     }
