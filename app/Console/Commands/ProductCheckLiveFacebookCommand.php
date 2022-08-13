@@ -93,7 +93,7 @@ class ProductCheckLiveFacebookCommand extends Command
                 Product::query()
                     ->where(function ($q) use ($ids) {
                         foreach ($ids->toArray() as $id) {
-                            $q->orWhere('payload', 'LIKE', "%$id%");
+                            $q->where('payload', 'LIKE', "%$id%");
                         }
                     })
                     ->update([
