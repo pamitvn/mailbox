@@ -91,7 +91,11 @@ class ProductCheckLiveFacebookCommand extends Command
                 };
 
                 Product::query()
-                    ->whereIn('id', $ids->toArray())
+                    ->where(function ($q) use ($ids) {
+                        foreach ($ids->toArray() as $id) {
+                            $q->orWhere('payload', 'LIKE', "%$id%");
+                        }
+                    })
                     ->update([
                         'status' => $status,
                     ]);
