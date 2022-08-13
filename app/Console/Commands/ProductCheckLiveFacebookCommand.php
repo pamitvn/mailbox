@@ -56,7 +56,7 @@ class ProductCheckLiveFacebookCommand extends Command
 
         $products = Product::query()
             ->whereServiceId($serviceId)
-            ->whereStatus(ProductStatus::LIVE)
+//            ->whereStatus(ProductStatus::LIVE)
             ->withoutBought()
             ->get();
 
@@ -93,7 +93,7 @@ class ProductCheckLiveFacebookCommand extends Command
                 Product::query()
                     ->where(function ($q) use ($ids) {
                         foreach ($ids->toArray() as $id) {
-                            $q->where('payload', 'LIKE', "%$id%");
+                            $q->orWhere('payload', 'LIKE', "%$id%");
                         }
                     })
                     ->update([
