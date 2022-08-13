@@ -92,7 +92,7 @@ class ProductCheckLiveFacebookCommand extends Command
                     default => null,
                 };
 
-                $productIds = $data->whereIn('uid', $ids->toArray());
+                $productIds = $data->whereIn('id', $ids->toArray());
 
                 if ($status === ProductStatus::DIE) {
                     $productId = $productIds->pluck('id');
