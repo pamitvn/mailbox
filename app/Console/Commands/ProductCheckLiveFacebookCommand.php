@@ -8,6 +8,7 @@ use App\PAM\Enums\ProductStatus;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class ProductCheckLiveFacebookCommand extends Command
 {
@@ -61,6 +62,7 @@ class ProductCheckLiveFacebookCommand extends Command
             ->get();
 
         foreach ($products->chunk(1000) as $chunkData) {
+            /** @var Collection $data */
             $data = $chunkData
                 ->keyBy('id')
                 ->map(fn (Product $product) => [
@@ -83,24 +85,22 @@ class ProductCheckLiveFacebookCommand extends Command
                 ->mapToGroups(fn ($group, $ite) => [$group => Arr::get($data->first(fn ($product) => $product['uid'] === $ite), 'id')])
                 ->filter(fn ($ite) => filled($ite));
 
-            $groupByStatus->each(function (\Illuminate\Support\Collection $ids, $group) use ($messages) {
+            $groupByStatus->each(function (Collection $ids, $group) use ($data, $messages) {
                 $status = match ($group) {
                     'die' => ProductStatus::DIE,
                     'live' => ProductStatus::LIVE,
                     default => null,
                 };
 
+                $productIds = $data->whereIn('uid', $ids->toArray());
+
                 Product::query()
-                    ->where(function ($q) use ($ids) {
-                        foreach ($ids->toArray() as $id) {
-                            $q->orWhere('payload', 'LIKE', "%$id%");
-                        }
-                    })
+                    ->whereIn('id', $productIds->pluck('id'))
                     ->update([
                         'status' => $status,
                     ]);
 
-                $logMessage = sprintf($messages['status'], $ids->count(), $status);
+                $logMessage = sprintf($messages['status'], $productIds->count(), $status);
 
                 pam_system_log()->info($logMessage);
                 $this->info($logMessage);
