@@ -48,7 +48,7 @@ class Kernel extends ConsoleKernel
                 $enable = (bool) $service->extras?->get('check_live_facebook', false);
                 $time = $service->extras?->get('check_live_facebook_after', 5);
 
-                if (! $enable) {
+                if (! $enable || $time <= 0) {
                     continue;
                 }
 
