@@ -82,7 +82,7 @@ class ProductCheckLiveFacebookCommand extends Command
             $body = collect(json_decode($response->getBody()->getContents(), true));
 
             $groupByStatus = $body
-                ->mapToGroups(fn ($group, $ite) => [$group => Arr::get($data->first(fn ($product) => (string) $product['uid'] === (string) $ite), 'id')])
+                ->mapToGroups(fn ($group, $ite) => [$group => (string) Arr::get($data->first(fn ($product) => (string) $product['uid'] === (string) $ite), 'id')])
                 ->filter(fn ($ite) => filled($ite));
 
             foreach ($groupByStatus as $group => $ids) {
