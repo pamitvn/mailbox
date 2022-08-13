@@ -68,6 +68,7 @@ class HandleInertiaRequests extends Middleware
             'statusLabel' => ProductStatus::toLabelArray(),
             'notification' => fn () => settings(group: 'notification'),
             'TinyMCE' => fn () => config('web-config.TinyMCE'),
+            'show_recent_order' => fn () => settings(key: 'recent_order', default: false, group: 'general'),
         ]);
     }
 }

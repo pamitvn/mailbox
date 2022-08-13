@@ -119,7 +119,7 @@
          </template>
       </v-crud-table>
       <div class='mt-12'>
-         <list-recent-orders />
+         <list-recent-orders v-if='showRecentOrder' />
       </div>
    </crud-layout>
    <buy-product-modal v-model:service='service' />
@@ -128,10 +128,11 @@
 
 <script setup lang='ts'>
    import _ from 'lodash';
-   import { onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
+   import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
+   import { usePage } from '@inertiajs/inertia-vue3';
 
-   import { useCreateUpdateSocket, useMobile, useModal, usePagination } from '~/uses';
-   import { Echo, numberFormat } from '~/utils';
+   import { useCreateUpdateSocket, useMobile, usePagination } from '~/uses';
+   import { Echo, numberFormat, parseToBoolean } from '~/utils';
 
    import type { Models } from '~/types/Models';
 
@@ -149,6 +150,8 @@
 
    const service = ref<Models.Service | null>(null);
    const showTableDescription = reactive({});
+
+   const showRecentOrder = computed(() => parseToBoolean(_.get(usePage().props.value, 'show_recent_order', false)));
 
    const { columns } = usePagination<Models.Service>([
       {

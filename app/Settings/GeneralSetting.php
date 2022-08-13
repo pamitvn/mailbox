@@ -17,6 +17,8 @@ class GeneralSetting extends Settings
 
     public bool $buy_random;
 
+    public bool $recent_order;
+
     public static function group(): string
     {
         return 'general';
@@ -37,6 +39,13 @@ class GeneralSetting extends Settings
                 'is' => 'v-switch',
                 'attrs' => [
                     'label' => 'Buy random',
+                ],
+            ],
+            'recent_order' => [
+                'rule' => ['required', 'boolean'],
+                'is' => 'v-switch',
+                'attrs' => [
+                    'label' => 'Show recent order',
                 ],
             ],
         ];
