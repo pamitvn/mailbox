@@ -31,7 +31,7 @@ class SettingController extends Controller
         return send_message_if(
             boolean: AdminSetting::fillAndSave($group, $data),
             message: __('Updated :group settings', ['group' => $groupName]),
-            unlessMessage: __(':group settings cannot be updated', ['group' => ucfirst($groupName)]),
+            unlessMessage: __(':group settings cannot be updated', ['group' => $groupName]),
             allowBack: true
         );
     }
